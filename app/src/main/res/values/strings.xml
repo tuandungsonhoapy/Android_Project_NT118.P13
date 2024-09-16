@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AndroidProject</string>
+    <string-array name="operarion">
+        <item>+</item>
+        <item>-</item>
+        <item>*</item>
+        <item>/</item>
+    </string-array>
+</resources>
