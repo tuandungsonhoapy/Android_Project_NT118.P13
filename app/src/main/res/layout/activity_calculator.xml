@@ -11,7 +11,7 @@
         android:id="@+id/textView1"
         android:layout_width="214dp"
         android:layout_height="32dp"
-        android:text="Result"
+        android:text=""
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@id/textView3"
         app:layout_constraintLeft_toLeftOf="@id/editTextNumber"
@@ -91,7 +91,7 @@
         android:id="@+id/sp1"
         android:layout_width="107dp"
         android:layout_height="45dp"
-        android:entries="@array/operarion"
+        android:entries="@array/operator"
         app:layout_constraintRight_toRightOf="@id/textView1"
         app:layout_constraintTop_toTopOf="@+id/button" />
 

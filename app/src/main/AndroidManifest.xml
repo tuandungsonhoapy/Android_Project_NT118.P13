@@ -13,6 +13,9 @@
         android:theme="@style/Theme.AndroidProject"
         tools:targetApi="31">
         <activity
+            android:name=".Bottom_Navigation_Activity"
+            android:exported="false" />
+        <activity
             android:name=".SubmitFormActivity"
             android:exported="true">
             <intent-filter>
