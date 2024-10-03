@@ -1,9 +1,6 @@
-package com.example.androidproject;
+package com.example.androidproject.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,12 +10,11 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import java.util.Objects;
+import com.example.androidproject.R;
 
 public class CalculatorActivity extends AppCompatActivity {
     private TextView textView, textView1, textView2, textView3;
