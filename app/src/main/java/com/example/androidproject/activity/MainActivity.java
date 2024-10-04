@@ -1,4 +1,4 @@
-package com.example.androidproject;
+package com.example.androidproject.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.androidproject.databinding.ActivityMainBinding;
+
+import com.example.androidproject.R;
 
 public class MainActivity extends AppCompatActivity {
 
