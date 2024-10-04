@@ -1,4 +1,4 @@
-package com.example.androidproject;
+package com.example.androidproject.activity;
 
 import android.os.Bundle;
 
@@ -8,6 +8,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.androidproject.R;
 import com.example.androidproject.databinding.ActivityMainBinding;
 
 public class Bottom_Navigation_Activity extends AppCompatActivity {
