@@ -1,9 +1,6 @@
 package com.example.androidproject.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +11,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.androidproject.fragment.ProfileFragment;
+import com.example.androidproject.fragment.StoreFragment;
 import com.example.androidproject.databinding.ActivityMainBinding;
 
 import com.example.androidproject.R;
+import com.example.androidproject.fragment.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
