@@ -1,4 +1,4 @@
-package com.example.androidproject.auth.presentation;
+package com.example.androidproject.features.auth.presentation;
 
 import android.os.Bundle;
 

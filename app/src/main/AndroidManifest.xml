@@ -13,7 +13,7 @@
         android:theme="@style/Theme.AndroidProject"
         tools:targetApi="31">
         <activity
-            android:name=".shared.presentation.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,7 +58,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".auth.presentation.LoginActivity"
+            android:name=".features.auth.presentation.LoginActivity"
             android:exported="true" />
     </application>
 

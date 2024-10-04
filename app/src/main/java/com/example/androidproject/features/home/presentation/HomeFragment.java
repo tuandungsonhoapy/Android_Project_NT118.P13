@@ -1,4 +1,4 @@
-package com.example.androidproject.home.presentation;
+package com.example.androidproject.features.home.presentation;
 
 import android.os.Bundle;
 
