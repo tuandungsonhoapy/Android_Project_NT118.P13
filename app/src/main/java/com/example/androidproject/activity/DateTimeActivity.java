@@ -1,4 +1,4 @@
-package com.example.androidproject;
+package com.example.androidproject.activity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.androidproject.R;
 
 import java.util.Calendar;
 

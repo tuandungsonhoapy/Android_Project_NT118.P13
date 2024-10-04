@@ -1,4 +1,4 @@
-package com.example.androidproject;
+package com.example.androidproject.activity;
 
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.androidproject.R;
 
 public class ChangeYearActivity extends AppCompatActivity {
     private EditText editText;
