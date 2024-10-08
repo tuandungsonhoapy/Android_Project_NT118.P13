@@ -17,6 +17,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.androidproject.databinding.ActivityMainBinding;
 
 import com.example.androidproject.R;
+import com.example.androidproject.fragment.HomeFragment;
+import com.example.androidproject.fragment.ProfileFragment;
+import com.example.androidproject.fragment.StoreFragment;
 
 public class MainActivity extends AppCompatActivity {
 

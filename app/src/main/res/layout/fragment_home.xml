@@ -44,7 +44,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_search"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/linear_header"
             app:layout_constraintStart_toStartOf="parent"
@@ -97,5 +97,61 @@
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"/>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_banner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_categories_view">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/view_pager"
+                app:layout_constraintTop_toTopOf="@+id/constraint_banner"
+                app:layout_constraintStart_toStartOf="@+id/constraint_banner"
+                app:layout_constraintEnd_toEndOf="@+id/constraint_banner"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_product"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraint_banner"
+            >
+
+            <TextView
+                android:id="@+id/tv_popular_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sản phẩm phổ biến"
+                android:textStyle="bold"
+                android:textSize="14dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="20dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tất cả"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="30dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_products_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:scrollbars="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/tv_popular_product"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

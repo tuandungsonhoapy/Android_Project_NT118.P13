@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "182190283726",
+    "project_id": "nt118-techno",
+    "storage_bucket": "nt118-techno.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182190283726:android:c4e09d934ebf5ca242a99f",
+        "android_client_info": {
+          "package_name": "com.example.androidproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182190283726-d9femfs5snnseg7scf0ts8pnk4ghcr9v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwbjTVmF_vkYGNoZpRAu2vG9cg5ysgA4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182190283726-d9femfs5snnseg7scf0ts8pnk4ghcr9v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
