@@ -14,10 +14,10 @@ import com.example.androidproject.R;
 import java.util.List;
 
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerViewHolder> {
-    private List<Banner> banners;
+    private int[] images;
     private Context context;
-    public BannerAdapter(Context context,List<Banner> banners) {
-        this.banners = banners;
+    public BannerAdapter(Context context,int[] images) {
+        this.images = images;
         this.context = context;
     }
 
@@ -30,13 +30,12 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerView
 
     @Override
     public void onBindViewHolder(@NonNull BannerViewHolder holder, int position){
-        Banner banner = banners.get(position);
-        holder.imageView.setImageResource(banner.getImage());
+        holder.imageView.setImageResource(images[position]);
     }
 
     @Override
     public int getItemCount(){
-        return banners.size();
+        return images.length;
     }
 
     public static class BannerViewHolder extends RecyclerView.ViewHolder {

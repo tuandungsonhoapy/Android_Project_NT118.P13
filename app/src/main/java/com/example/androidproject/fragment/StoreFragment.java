@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.androidproject.R;
+import com.example.androidproject.adapter.Brand;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +28,8 @@ public class StoreFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private List<Brand> brandList;
+    
     public StoreFragment() {
         // Required empty public constructor
     }

@@ -8,13 +8,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.os.Looper;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.androidproject.R;
-import com.example.androidproject.adapter.Banner;
 import com.example.androidproject.adapter.BannerAdapter;
 import com.example.androidproject.adapter.Category;
 import com.example.androidproject.adapter.CategoryAdapter;
@@ -23,9 +22,6 @@ import com.example.androidproject.adapter.ProductAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Handler;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,9 +44,12 @@ public class HomeFragment extends Fragment {
     private CategoryAdapter categoryAdapter;
     private List<Category> categoryList;
     private BannerAdapter bannerAdapter;
-    private List<Banner> bannerList;
     private ProductAdapter productAdapter;
     private List<Product> productList;
+
+    private Handler handler;
+    private Runnable runnable;
+    private int currentPage = 0;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -92,19 +91,29 @@ public class HomeFragment extends Fragment {
         recyclerProductView = view.findViewById(R.id.recycler_products_view);
         viewPagerBanner = view.findViewById(R.id.view_pager);
         categoryList = new ArrayList<>();
-        categoryList.add(new Category("Category 1", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Category 2", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Category 3", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Category 4", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Category 5", R.drawable.ic_launcher_background));
+        categoryList.add(new Category("Laptop", R.drawable.image_laptop));
+        categoryList.add(new Category("Phone", R.drawable.image_phone));
+        categoryList.add(new Category("Controller", R.drawable.image_controller));
+        categoryList.add(new Category("Monitor", R.drawable.image_monitor));
+        categoryList.add(new Category("Keyboard", R.drawable.image_keyboard));
 
         categoryAdapter = new CategoryAdapter(getContext(), categoryList);
         recyclerCategoryView.setAdapter(categoryAdapter);
 
-        bannerList = new ArrayList<>();
-        bannerList.add(new Banner(R.drawable.ic_launcher_background));
-        bannerList.add(new Banner(R.drawable.ic_launcher_background));
-        bannerList.add(new Banner(R.drawable.ic_launcher_background));
+        int[] images = {R.drawable.img, R.drawable.warning_icon};
+        bannerAdapter = new BannerAdapter(getContext(), images);
+
+        handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (currentPage == images.length) {
+                    currentPage = 0;
+                }
+                viewPagerBanner.setCurrentItem(currentPage++, true); // Chuyển đến trang tiếp theo
+                handler.postDelayed(this, 3000); // Thay đổi sau mỗi 3 giây
+            }
+        };
 
         productList = new ArrayList<>();
         productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
@@ -120,7 +129,6 @@ public class HomeFragment extends Fragment {
         recyclerProductView.setAdapter(productAdapter);
         int columns = 2;
         recyclerProductView.setLayoutManager(new GridLayoutManager(getContext(), columns));
-        BannerAdapter bannerAdapter = new BannerAdapter(getContext(),bannerList);
         viewPagerBanner.setAdapter(bannerAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerCategoryView.setLayoutManager(layoutManager);
