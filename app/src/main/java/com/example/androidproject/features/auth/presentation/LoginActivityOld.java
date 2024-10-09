@@ -1,11 +1,10 @@
-package com.example.androidproject.activity;
+package com.example.androidproject.features.auth.presentation;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
-import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -14,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.androidproject.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivityOld extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                AlertDialog.Builder mydialog = new AlertDialog.Builder(LoginActivity.this);
+                AlertDialog.Builder mydialog = new AlertDialog.Builder(LoginActivityOld.this);
                 mydialog.setTitle("Confirm");
                 mydialog.setMessage("Are you sure You want to exit!");
                 mydialog.setIcon(R.drawable.warning_icon);

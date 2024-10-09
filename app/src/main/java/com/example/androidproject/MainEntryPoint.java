@@ -58,7 +58,7 @@ public class MainEntryPoint extends AppCompatActivity {
     }
 
     private void fetchCredential() {
-        boolean isLogin = false;
+        boolean isLogin = true;
         if (isLogin) {
             navigateToMainScreen();
         } else {
@@ -69,7 +69,7 @@ public class MainEntryPoint extends AppCompatActivity {
     // Navigate
     private void navigateToMainScreen() {
         Log.i(TAG, "Intent to Main Screen");
-        Intent intent = new Intent(MainEntryPoint.this, AuthLoginActivity.class);
+        Intent intent = new Intent(MainEntryPoint.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
