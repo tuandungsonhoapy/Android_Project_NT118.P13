@@ -2,9 +2,7 @@ package com.example.androidproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -17,7 +15,7 @@ import com.example.androidproject.features.auth.presentation.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class AuthLoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     //    private Spinner sp1;
@@ -29,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.auth__login_page);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -40,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // Map UI components
-        tvUserName = findViewById(R.id.tvUserName);
-        btnLogout = findViewById(R.id.btnLogout);
+        btnLogout = findViewById(R.id.btnLogin);
 
         // Get current user and display their name
         FirebaseUser user = mAuth.getCurrentUser();
@@ -60,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleLogout() {
         mAuth.signOut();
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Intent intent = new Intent(AuthLoginActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

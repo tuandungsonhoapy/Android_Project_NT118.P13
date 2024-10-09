@@ -69,7 +69,7 @@ public class MainEntryPoint extends AppCompatActivity {
     // Navigate
     private void navigateToMainScreen() {
         Log.i(TAG, "Intent to Main Screen");
-        Intent intent = new Intent(MainEntryPoint.this, MainActivity.class);
+        Intent intent = new Intent(MainEntryPoint.this, AuthLoginActivity.class);
         startActivity(intent);
         finish();
     }

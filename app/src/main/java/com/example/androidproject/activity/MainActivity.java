@@ -1,6 +1,9 @@
 package com.example.androidproject.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,16 +14,37 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.androidproject.fragment.ProfileFragment;
-import com.example.androidproject.fragment.StoreFragment;
 import com.example.androidproject.databinding.ActivityMainBinding;
 
 import com.example.androidproject.R;
-import com.example.androidproject.fragment.HomeFragment;
+import com.example.androidproject.features.home.presentation.HomeFragment;
+import com.example.androidproject.fragment.ProfileFragment;
+import com.example.androidproject.fragment.StoreFragment;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.example.androidproject.features.auth.presentation.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
+
+    private FirebaseAuth mAuth;
+    //    private Spinner sp1;
+    private TextView tvUserName;
+    private Button btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

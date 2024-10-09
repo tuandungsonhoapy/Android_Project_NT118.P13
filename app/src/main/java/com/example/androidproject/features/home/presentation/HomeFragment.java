@@ -3,12 +3,29 @@ package com.example.androidproject.features.home.presentation;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.androidproject.R;
+import com.example.androidproject.adapter.Banner;
+import com.example.androidproject.adapter.BannerAdapter;
+import com.example.androidproject.adapter.Category;
+import com.example.androidproject.adapter.CategoryAdapter;
+import com.example.androidproject.adapter.Product;
+import com.example.androidproject.adapter.ProductAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Handler;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +42,15 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private RecyclerView recyclerCategoryView;
+    private RecyclerView recyclerProductView;
+    private ViewPager2 viewPagerBanner;
+    private CategoryAdapter categoryAdapter;
+    private List<Category> categoryList;
+    private BannerAdapter bannerAdapter;
+    private List<Banner> bannerList;
+    private ProductAdapter productAdapter;
+    private List<Product> productList;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -61,6 +86,45 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        recyclerCategoryView = view.findViewById(R.id.recycler_categories_view);
+        recyclerProductView = view.findViewById(R.id.recycler_products_view);
+        viewPagerBanner = view.findViewById(R.id.view_pager);
+        categoryList = new ArrayList<>();
+        categoryList.add(new Category("Category 1", R.drawable.ic_launcher_background));
+        categoryList.add(new Category("Category 2", R.drawable.ic_launcher_background));
+        categoryList.add(new Category("Category 3", R.drawable.ic_launcher_background));
+        categoryList.add(new Category("Category 4", R.drawable.ic_launcher_background));
+        categoryList.add(new Category("Category 5", R.drawable.ic_launcher_background));
+
+        categoryAdapter = new CategoryAdapter(getContext(), categoryList);
+        recyclerCategoryView.setAdapter(categoryAdapter);
+
+        bannerList = new ArrayList<>();
+        bannerList.add(new Banner(R.drawable.ic_launcher_background));
+        bannerList.add(new Banner(R.drawable.ic_launcher_background));
+        bannerList.add(new Banner(R.drawable.ic_launcher_background));
+
+        productList = new ArrayList<>();
+        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
+        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
+        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
+        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
+        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
+        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
+        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
+        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
+
+        ProductAdapter productAdapter = new ProductAdapter(getContext(), productList);
+        recyclerProductView.setAdapter(productAdapter);
+        int columns = 2;
+        recyclerProductView.setLayoutManager(new GridLayoutManager(getContext(), columns));
+        BannerAdapter bannerAdapter = new BannerAdapter(getContext(),bannerList);
+        viewPagerBanner.setAdapter(bannerAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerCategoryView.setLayoutManager(layoutManager);
+        return view;
     }
+
 }

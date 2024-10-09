@@ -15,7 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.androidproject.MainActivity;
+import com.example.androidproject.AuthLoginActivity;
 import com.example.androidproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Update
     private void reload(FirebaseUser user) {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, AuthLoginActivity.class);
         startActivity(intent);
         finish();
     }

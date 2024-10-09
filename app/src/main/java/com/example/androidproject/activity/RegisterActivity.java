@@ -1,4 +1,4 @@
-package com.example.androidproject.other_activity;
+package com.example.androidproject.activity;
 
 import android.os.Bundle;
 import android.widget.Toast;
@@ -34,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
                     backToast.cancel();
                     finish();
                 } else {
-                    backToast = Toast.makeText(RegisterActivity.this, "Nhấn lại lần nữa để thoát", Toast.LENGTH_SHORT);
+                    backToast = Toast.makeText(com.example.androidproject.activity.RegisterActivity.this, "Nhấn lại lần nữa để thoát", Toast.LENGTH_SHORT);
                     backToast.show();
                 }
                 backPressTime = System.currentTimeMillis();
