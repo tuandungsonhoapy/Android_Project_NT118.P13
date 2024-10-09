@@ -8,24 +8,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.androidproject.R;
-import com.example.androidproject.adapter.Banner;
-import com.example.androidproject.adapter.BannerAdapter;
-import com.example.androidproject.adapter.Category;
-import com.example.androidproject.adapter.CategoryAdapter;
-import com.example.androidproject.adapter.Product;
-import com.example.androidproject.adapter.ProductAdapter;
+import com.example.androidproject.features.banner.data.model.BannerModel;
+import com.example.androidproject.features.banner.presentation.BannerAdapter;
+import com.example.androidproject.features.category.data.model.Category;
+import com.example.androidproject.features.category.presentation.CategoryAdapter;
+import com.example.androidproject.features.product.data.model.Product;
+import com.example.androidproject.features.product.presentation.ProductAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Handler;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,7 +44,7 @@ public class HomeFragment extends Fragment {
     private CategoryAdapter categoryAdapter;
     private List<Category> categoryList;
     private BannerAdapter bannerAdapter;
-    private List<Banner> bannerList;
+    private List<BannerModel> bannerList;
     private ProductAdapter productAdapter;
     private List<Product> productList;
     public HomeFragment() {
@@ -102,9 +98,9 @@ public class HomeFragment extends Fragment {
         recyclerCategoryView.setAdapter(categoryAdapter);
 
         bannerList = new ArrayList<>();
-        bannerList.add(new Banner(R.drawable.ic_launcher_background));
-        bannerList.add(new Banner(R.drawable.ic_launcher_background));
-        bannerList.add(new Banner(R.drawable.ic_launcher_background));
+        bannerList.add(new BannerModel(R.drawable.ic_launcher_background));
+        bannerList.add(new BannerModel(R.drawable.ic_launcher_background));
+        bannerList.add(new BannerModel(R.drawable.ic_launcher_background));
 
         productList = new ArrayList<>();
         productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));

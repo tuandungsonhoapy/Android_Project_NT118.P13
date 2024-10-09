@@ -1,4 +1,4 @@
-package com.example.androidproject.adapter;
+package com.example.androidproject.features.category.presentation;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.features.category.data.model.Category;
 
 import java.util.List;
 

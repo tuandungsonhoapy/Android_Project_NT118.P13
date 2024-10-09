@@ -1,4 +1,4 @@
-package com.example.androidproject.adapter;
+package com.example.androidproject.features.category.data.model;
 
 public class Category {
     private String name;

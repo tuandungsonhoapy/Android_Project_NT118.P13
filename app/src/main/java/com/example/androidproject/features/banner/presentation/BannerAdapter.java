@@ -1,4 +1,4 @@
-package com.example.androidproject.adapter;
+package com.example.androidproject.features.banner.presentation;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,13 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.features.banner.data.model.BannerModel;
 
 import java.util.List;
 
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerViewHolder> {
-    private List<Banner> banners;
+    private List<BannerModel> banners;
     private Context context;
-    public BannerAdapter(Context context,List<Banner> banners) {
+    public BannerAdapter(Context context,List<BannerModel> banners) {
         this.banners = banners;
         this.context = context;
     }
@@ -30,7 +31,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerView
 
     @Override
     public void onBindViewHolder(@NonNull BannerViewHolder holder, int position){
-        Banner banner = banners.get(position);
+        BannerModel banner = banners.get(position);
         holder.imageView.setImageResource(banner.getImage());
     }
 

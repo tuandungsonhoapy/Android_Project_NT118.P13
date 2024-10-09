@@ -1,9 +1,9 @@
-package com.example.androidproject.adapter;
+package com.example.androidproject.features.banner.data.model;
 
-public class Banner {
+public class BannerModel {
     private int image;
 
-    public Banner(int image) {
+    public BannerModel(int image) {
         this.image = image;
     }
 

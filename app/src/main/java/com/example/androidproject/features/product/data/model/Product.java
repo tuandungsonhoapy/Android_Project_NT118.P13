@@ -1,4 +1,4 @@
-package com.example.androidproject.adapter;
+package com.example.androidproject.features.product.data.model;
 
 public class Product {
     private String name;
