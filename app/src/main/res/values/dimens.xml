@@ -9,4 +9,34 @@
     <dimen name="text_small">16sp</dimen>
     <dimen name="text_medium">18dp</dimen>
     <dimen name="text_large">20dp</dimen>
+    <!--  START:by size  -->
+    <!--  dp  -->
+    <dimen name="_12dp">12dp</dimen>
+    <dimen name="_16dp">16dp</dimen>
+    <dimen name="_200dp">200dp</dimen>
+    <!--  END:by size  -->
+
+    <!--  START:custom  -->
+    <dimen name="et_vertical">@dimen/_12dp</dimen>
+    <dimen name="screen_vertical">@dimen/_16dp</dimen>
+    <dimen name="screen_horizontal">@dimen/_16dp</dimen>
+    <dimen name="logo_entry">@dimen/_200dp</dimen>
+    <!--  END:custom  -->
+
+    <!--  START:text  -->
+    <!--  END:text  -->
+
+    <!--  START:ratio  -->
+    <dimen name="_1gr">0.618</dimen>
+    <dimen name="_2gr">0.382</dimen>
+    <dimen name="_3gr">0.236</dimen>
+    <dimen name="_4gr">0.146</dimen>
+    <dimen name="_5gr">0.090</dimen>
+    <dimen name="_1gr_fb">0.382</dimen> <!-- 1 - 0.618 -->
+    <dimen name="_2gr_fb">0.618</dimen> <!-- 1 - 0.382 -->
+    <dimen name="_3gr_fb">0.764</dimen> <!-- 1 - 0.236 -->
+    <dimen name="_4gr_fb">0.854</dimen> <!-- 1 - 0.146 -->
+    <dimen name="_5gr_fb">0.910</dimen> <!-- 1 - 0.090 -->
+    <!--  END:ratio  -->
+
 </resources>

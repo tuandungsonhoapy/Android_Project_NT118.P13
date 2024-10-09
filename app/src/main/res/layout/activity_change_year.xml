@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:stretchColumns="*"
-    tools:context=".activity.ChangeYearActivity">
+    tools:context=".other_activity.ChangeYearActivity">
 
     <TableRow
         android:layout_width="match_parent"
