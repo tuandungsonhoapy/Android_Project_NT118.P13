@@ -1,11 +1,11 @@
-package com.example.androidproject.adapter;
+package com.example.androidproject.features.brand.data.model;
 
-public class Brand {
+public class BrandModel {
     private int id;
     private String name;
     private int image;
 
-    public Brand(int id, String name, int image) {
+    public BrandModel(int id, String name, int image) {
         this.id = id;
         this.name = name;
         this.image = image;

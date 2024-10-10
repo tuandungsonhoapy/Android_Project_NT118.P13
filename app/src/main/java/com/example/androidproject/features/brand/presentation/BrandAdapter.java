@@ -1,4 +1,4 @@
-package com.example.androidproject.adapter;
+package com.example.androidproject.features.brand.presentation;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,14 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.features.brand.data.model.BrandModel;
 
 import java.util.List;
 
 public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHolder> {
     private Context context;
-    private List<Brand> brandList;
+    private List<BrandModel> brandList;
 
-    public BrandAdapter(Context context, List<Brand> brandList) {
+    public BrandAdapter(Context context, List<BrandModel> brandList) {
         this.context = context;
         this.brandList = brandList;
     }
@@ -31,7 +32,7 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
 
     @Override
     public void onBindViewHolder(@NonNull BrandViewHolder holder, int position) {
-        Brand brand = brandList.get(position);
+        BrandModel brand = brandList.get(position);
         holder.brandName.setText(brand.getName());
         holder.brandImage.setImageResource(brand.getImage());
     }

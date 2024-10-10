@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.androidproject.R;
-import com.example.androidproject.adapter.Brand;
+import com.example.androidproject.features.brand.data.model.BrandModel;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class StoreFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private List<Brand> brandList;
+    private List<BrandModel> brandList;
     
     public StoreFragment() {
         // Required empty public constructor
