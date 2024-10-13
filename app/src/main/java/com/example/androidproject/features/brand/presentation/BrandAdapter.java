@@ -1,6 +1,7 @@
 package com.example.androidproject.features.brand.presentation;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,12 +35,12 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
     public void onBindViewHolder(@NonNull BrandViewHolder holder, int position) {
         BrandModel brand = brandList.get(position);
         holder.brandName.setText(brand.getName());
-        holder.brandImage.setImageResource(brand.getImage());
+        holder.brandImage.setImageResource(brand.getImageResource());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return brandList.size();
     }
 
     public static class BrandViewHolder extends RecyclerView.ViewHolder {
@@ -49,8 +50,8 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
         public BrandViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            brandName = itemView.findViewById(R.id.textViewBrand);
-            brandImage = itemView.findViewById(R.id.imageViewBrand);
+            brandName = itemView.findViewById(R.id.tv_store_brand_name);
+            brandImage = itemView.findViewById(R.id.img_store_brand);
         }
     }
 }

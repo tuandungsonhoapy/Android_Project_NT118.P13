@@ -19,7 +19,7 @@ public class BrandModel {
         return name;
     }
 
-    public int getImage() {
+    public int getImageResource() {
         return image;
     }
 }

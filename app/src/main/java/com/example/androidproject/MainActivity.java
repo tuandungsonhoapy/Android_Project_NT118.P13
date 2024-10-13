@@ -16,7 +16,7 @@ import com.example.androidproject.databinding.ActivityMainBinding;
 
 import com.example.androidproject.features.home.presentation.HomeFragment;
 import com.example.androidproject.fragment.ProfileFragment;
-import com.example.androidproject.fragment.StoreFragment;
+import com.example.androidproject.features.store.presentation.StoreFragment;
 
 public class MainActivity extends AppCompatActivity {
 
