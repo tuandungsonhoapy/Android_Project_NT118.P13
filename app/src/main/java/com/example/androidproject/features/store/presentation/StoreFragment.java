@@ -87,28 +87,31 @@ public class StoreFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tab_categories);
         viewPagerCategoryToBrand = view.findViewById(R.id.view_pager_categories_to_brand);
 
-        brandList = new ArrayList<>();
-        categoryList = new ArrayList<>();
-
-        categoryList.add(new Category("Máy tính", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Điện thoại", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Máy tính bảng", R.drawable.ic_launcher_background));
-
-        brandList.add(new BrandModel(1,"Acer", R.drawable.image_acer_logo));
-        brandList.add(new BrandModel(2,"Asus", R.drawable.image_asus_logo));
-        brandList.add(new BrandModel(3,"Dell", R.drawable.image_dell_logo));
-        brandList.add(new BrandModel(4,"HP", R.drawable.image_hp_logo));
+        initializeLists();
 
         recyclerBrandView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         BrandAdapter brandAdapter = new BrandAdapter(getContext(), brandList);
         recyclerBrandView.setAdapter(brandAdapter);
-        CategoryToBrandAdapter categoryToBrandFragment = new CategoryToBrandAdapter(this, categoryList);
+        CategoryToBrandAdapter categoryToBrandFragment = new CategoryToBrandAdapter(requireActivity(), categoryList);
         viewPagerCategoryToBrand.setAdapter(categoryToBrandFragment);
         new TabLayoutMediator(tabLayout, viewPagerCategoryToBrand, (tab, position) -> {
             tab.setText(categoryList.get(position).getCategoryName());
         }).attach();
 
         return view;
+    }
+
+    private void initializeLists() {
+        categoryList = new ArrayList<>();
+        categoryList.add(new Category("Máy tính", R.drawable.ic_launcher_background));
+        categoryList.add(new Category("Điện thoại", R.drawable.ic_launcher_background));
+        categoryList.add(new Category("Máy tính bảng", R.drawable.ic_launcher_background));
+
+        brandList = new ArrayList<>();
+        brandList.add(new BrandModel(1, "Acer", R.drawable.image_acer_logo, 50));
+        brandList.add(new BrandModel(2, "Asus", R.drawable.image_asus_logo, 60));
+        brandList.add(new BrandModel(3, "Dell", R.drawable.image_dell_logo, 55));
+        brandList.add(new BrandModel(4, "HP", R.drawable.image_hp_logo, 45));
     }
 }
