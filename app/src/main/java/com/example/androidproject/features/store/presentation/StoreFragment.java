@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +14,12 @@ import android.view.ViewGroup;
 import com.example.androidproject.R;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.brand.presentation.BrandAdapter;
-import com.example.androidproject.features.category.data.model.Category;
-import com.example.androidproject.features.category.presentation.CategoryAdapter;
+import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.presentation.CategoryToBrandAdapter;
-import com.example.androidproject.features.category.presentation.CategoryToBrandFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,7 +38,7 @@ public class StoreFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private List<BrandModel> brandList;
-    private List<Category> categoryList;
+    private List<CategoryModel> categoryList;
     private RecyclerView recyclerBrandView;
     private TabLayout tabLayout;
     private ViewPager2 viewPagerCategoryToBrand;
@@ -104,9 +100,9 @@ public class StoreFragment extends Fragment {
 
     private void initializeLists() {
         categoryList = new ArrayList<>();
-        categoryList.add(new Category("Máy tính", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Điện thoại", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Máy tính bảng", R.drawable.ic_launcher_background));
+        categoryList.add(new CategoryModel("Máy tính", R.drawable.ic_launcher_background));
+        categoryList.add(new CategoryModel("Điện thoại", R.drawable.ic_launcher_background));
+        categoryList.add(new CategoryModel("Máy tính bảng", R.drawable.ic_launcher_background));
 
         brandList = new ArrayList<>();
         brandList.add(new BrandModel(1, "Acer", R.drawable.image_acer_logo, 50));

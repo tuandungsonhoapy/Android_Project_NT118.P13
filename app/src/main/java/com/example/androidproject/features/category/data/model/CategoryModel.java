@@ -1,10 +1,10 @@
 package com.example.androidproject.features.category.data.model;
 
-public class Category {
+public class CategoryModel {
     private String name;
     private int image;
 
-    public Category(String name, int image) {
+    public CategoryModel(String name, int image) {
         this.name = name;
         this.image = image;
     }

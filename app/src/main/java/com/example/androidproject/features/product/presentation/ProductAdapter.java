@@ -11,15 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
-import com.example.androidproject.features.product.data.model.Product;
+import com.example.androidproject.features.product.data.model.ProductModel;
 
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
-    private List<Product> products;
+    private List<ProductModel> products;
     private Context context;
 
-    public ProductAdapter(Context context, List<Product> products) {
+    public ProductAdapter(Context context, List<ProductModel> products) {
         this.context = context;
         this.products = products;
     }
@@ -33,9 +33,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        Product product = products.get(position);
+        ProductModel product = products.get(position);
         holder.productImage.setImageResource(product.getImage());
         holder.productName.setText(product.getName());
+        holder.productPrice.setText(String.valueOf(product.getPrice()));
+        holder.productBrand.setText(product.getBrand().getName());
     }
 
     @Override
@@ -46,11 +48,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         ImageView productImage;
         TextView productName;
-
+        TextView productPrice;
+        TextView productBrand;
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.productImage);
             productName = itemView.findViewById(R.id.productName);
+            productPrice = itemView.findViewById(R.id.productPrice);
+            productBrand = itemView.findViewById(R.id.productBrand);
         }
     }
 }

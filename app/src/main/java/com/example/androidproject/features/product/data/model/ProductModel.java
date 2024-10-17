@@ -1,16 +1,20 @@
 package com.example.androidproject.features.product.data.model;
 
-public class Product {
+import com.example.androidproject.features.brand.data.model.BrandModel;
+
+public class ProductModel {
     private String name;
     private int image;
     private double price;
     private int quantity;
+    private BrandModel brand;
 
-    public Product(String name, int image, double price, int quantity) {
+    public ProductModel(String name, int image, double price, int quantity, BrandModel brand) {
         this.name = name;
         this.image = image;
         this.price = price;
         this.quantity = quantity;
+        this.brand = brand;
     }
 
     public String getName() {
@@ -45,4 +49,11 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public BrandModel getBrand() {
+        return brand;
+    }
+
+    public void setBrand(BrandModel brand) {
+        this.brand = brand;
+    }
 }
