@@ -16,6 +16,7 @@ import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.brand.presentation.BrandAdapter;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.presentation.CategoryToBrandAdapter;
+import com.example.androidproject.features.store.usecase.StoreUseCase;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -37,11 +38,11 @@ public class StoreFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private List<BrandModel> brandList;
-    private List<CategoryModel> categoryList;
+
     private RecyclerView recyclerBrandView;
     private TabLayout tabLayout;
     private ViewPager2 viewPagerCategoryToBrand;
+    private StoreUseCase storeUseCase = new StoreUseCase();
     public StoreFragment() {
         // Required empty public constructor
     }
@@ -82,13 +83,14 @@ public class StoreFragment extends Fragment {
         recyclerBrandView = view.findViewById(R.id.recycler_brand_view);
         tabLayout = view.findViewById(R.id.tab_categories);
         viewPagerCategoryToBrand = view.findViewById(R.id.view_pager_categories_to_brand);
-
-        initializeLists();
-
         recyclerBrandView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        BrandAdapter brandAdapter = new BrandAdapter(getContext(), brandList);
+        // Get brand list
+        BrandAdapter brandAdapter = new BrandAdapter(getContext(), storeUseCase.getBrandList());
         recyclerBrandView.setAdapter(brandAdapter);
+
+        // Get category list
+        List<CategoryModel> categoryList = storeUseCase.getCategoryList();
         CategoryToBrandAdapter categoryToBrandFragment = new CategoryToBrandAdapter(requireActivity(), categoryList);
         viewPagerCategoryToBrand.setAdapter(categoryToBrandFragment);
         new TabLayoutMediator(tabLayout, viewPagerCategoryToBrand, (tab, position) -> {
@@ -96,18 +98,5 @@ public class StoreFragment extends Fragment {
         }).attach();
 
         return view;
-    }
-
-    private void initializeLists() {
-        categoryList = new ArrayList<>();
-        categoryList.add(new CategoryModel("Máy tính", R.drawable.ic_launcher_background));
-        categoryList.add(new CategoryModel("Điện thoại", R.drawable.ic_launcher_background));
-        categoryList.add(new CategoryModel("Máy tính bảng", R.drawable.ic_launcher_background));
-
-        brandList = new ArrayList<>();
-        brandList.add(new BrandModel(1, "Acer", R.drawable.image_acer_logo, 50));
-        brandList.add(new BrandModel(2, "Asus", R.drawable.image_asus_logo, 60));
-        brandList.add(new BrandModel(3, "Dell", R.drawable.image_dell_logo, 55));
-        brandList.add(new BrandModel(4, "HP", R.drawable.image_hp_logo, 45));
     }
 }
