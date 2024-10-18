@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new HomeFragment());
             } else if(item.getItemId() == R.id.store) {
                 replaceFragment(new StoreFragment());
-            } else if(item.getItemId() == R.id.profile) {
+            } else if(item.getItemId() == R.id.setting) {
                 replaceFragment(new ProfileFragment());
             }
 
