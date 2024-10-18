@@ -10,9 +10,9 @@ import java.util.List;
 public class StoreUseCase {
     public List<CategoryModel> getCategoryList() {
         List<CategoryModel> categoryList = new ArrayList<>();
-        categoryList.add(new CategoryModel("Máy tính", R.drawable.image_laptop));
-        categoryList.add(new CategoryModel("Điện thoại", R.drawable.image_phone));
-        categoryList.add(new CategoryModel("Máy tính bảng", R.drawable.image_monitor));
+        categoryList.add(new CategoryModel("Laptop", R.drawable.image_laptop));
+        categoryList.add(new CategoryModel("Phone", R.drawable.image_phone));
+        categoryList.add(new CategoryModel("Monitor", R.drawable.image_monitor));
 
         return categoryList;
     }

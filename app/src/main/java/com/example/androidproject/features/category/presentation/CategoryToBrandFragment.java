@@ -52,7 +52,8 @@ public class CategoryToBrandFragment extends Fragment {
         recyclerBrandView = view.findViewById(R.id.recycler_view_list_brands);
 
         brandList = categoryUseCase.getBrandListByCategory(category);
-        ItemBrandToProduct itemBrandToProduct = new ItemBrandToProduct(getContext(), brandList);
+        ItemBrandToProduct itemBrandToProduct = new ItemBrandToProduct(getContext(), brandList, categoryUseCase.getCategoryList());
+        Log.d("itemBrandToProduct", "onCreateView: " + itemBrandToProduct.getItemCount());
         recyclerBrandView.setAdapter(itemBrandToProduct);
         itemBrandToProduct.notifyDataSetChanged();
         recyclerBrandView.scrollToPosition(0);

@@ -49,4 +49,15 @@
             android:textSize="14sp"/>
     </LinearLayout>
 
+    <GridLayout
+        android:id="@+id/grid_images"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:columnCount="3"
+        android:rowCount="2"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/linear_store_brand"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
