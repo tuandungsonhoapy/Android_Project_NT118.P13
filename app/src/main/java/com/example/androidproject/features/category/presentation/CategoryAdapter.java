@@ -11,15 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
-import com.example.androidproject.features.category.data.model.Category;
+import com.example.androidproject.features.category.data.model.CategoryModel;
 
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewholder> {
-    private List<Category> categories;
+    private List<CategoryModel> categories;
     private Context context;
 
-    public CategoryAdapter(Context context, List<Category> categories) {
+    public CategoryAdapter(Context context, List<CategoryModel> categories) {
         this.context = context;
         this.categories = categories;
     }
@@ -33,7 +33,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewholder holder, int position) {
-        Category category = categories.get(position);
+        CategoryModel category = categories.get(position);
         holder.categoryName.setText(category.getCategoryName());
         holder.categoryImage.setImageResource(category.getCategoryImage());
     }

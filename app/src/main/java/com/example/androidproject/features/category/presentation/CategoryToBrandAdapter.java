@@ -5,14 +5,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.androidproject.features.category.data.model.Category;
+import com.example.androidproject.features.category.data.model.CategoryModel;
 
 import java.util.List;
 
 public class CategoryToBrandAdapter extends FragmentStateAdapter {
-    private List<Category> categoryList;
+    private List<CategoryModel> categoryList;
 
-    public CategoryToBrandAdapter(@NonNull FragmentActivity fragment, List<Category> categoryList) {
+    public CategoryToBrandAdapter(@NonNull FragmentActivity fragment, List<CategoryModel> categoryList) {
         super(fragment);
         this.categoryList = categoryList;
     }

@@ -16,6 +16,7 @@ import android.widget.GridLayout;
 import com.example.androidproject.R;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.brand.presentation.BrandAdapter;
+import com.example.androidproject.features.category.usecase.CategoryUseCase;
 import com.example.androidproject.features.store.presentation.ItemBrandToProduct;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class CategoryToBrandFragment extends Fragment {
     private String category;
     private RecyclerView recyclerBrandView;
     private List<BrandModel> brandList;
+    private CategoryUseCase categoryUseCase = new CategoryUseCase();
 
     public static CategoryToBrandFragment newInstance(String category) {
         CategoryToBrandFragment fragment = new CategoryToBrandFragment();
@@ -49,8 +51,9 @@ public class CategoryToBrandFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_category_to_brand, container, false);
         recyclerBrandView = view.findViewById(R.id.recycler_view_list_brands);
 
-        brandList = getBrandListByCategory(category);
-        ItemBrandToProduct itemBrandToProduct = new ItemBrandToProduct(getContext(), brandList);
+        brandList = categoryUseCase.getBrandListByCategory(category);
+        ItemBrandToProduct itemBrandToProduct = new ItemBrandToProduct(getContext(), brandList, categoryUseCase.getCategoryList());
+        Log.d("itemBrandToProduct", "onCreateView: " + itemBrandToProduct.getItemCount());
         recyclerBrandView.setAdapter(itemBrandToProduct);
         itemBrandToProduct.notifyDataSetChanged();
         recyclerBrandView.scrollToPosition(0);
@@ -59,24 +62,4 @@ public class CategoryToBrandFragment extends Fragment {
         return view;
     }
 
-    private List<BrandModel> getBrandListByCategory(String category) {
-        List<BrandModel> brands = new ArrayList<>();
-        if (category.equals("Máy tính")) {
-            brands.add(new BrandModel(1, "Acer", R.drawable.image_acer_logo, 50));
-            brands.add(new BrandModel(2, "Asus", R.drawable.image_asus_logo, 60));
-            brands.add(new BrandModel(3, "Dell", R.drawable.image_dell_logo, 55));
-            brands.add(new BrandModel(4, "HP", R.drawable.image_hp_logo, 45));
-        } else if (category.equals("Điện thoại")) {
-            brands.add(new BrandModel(1, "Acer", R.drawable.image_acer_logo, 50));
-            brands.add(new BrandModel(2, "Asus", R.drawable.image_asus_logo, 60));
-            brands.add(new BrandModel(3, "Dell", R.drawable.image_dell_logo, 55));
-            brands.add(new BrandModel(4, "HP", R.drawable.image_hp_logo, 45));
-        } else if (category.equals("Máy tính bảng")) {
-            brands.add(new BrandModel(1, "Acer", R.drawable.image_acer_logo, 50));
-            brands.add(new BrandModel(2, "Asus", R.drawable.image_asus_logo, 60));
-            brands.add(new BrandModel(3, "Dell", R.drawable.image_dell_logo, 55));
-            brands.add(new BrandModel(4, "HP", R.drawable.image_hp_logo, 45));
-        }
-        return brands;
-    }
 }
