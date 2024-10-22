@@ -16,6 +16,10 @@
         android:theme="@style/Theme.AndroidProject"
         tools:targetApi="31">
         <activity
+            android:name=".features.setting.presentation.AddEditAddressActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AndroidProject" />
+        <activity
             android:name=".features.setting.presentation.CartSettingActivity"
             android:exported="false" />
         <activity
@@ -30,7 +34,7 @@
         <activity
             android:name=".features.setting.presentation.AddressSettingActivity"
             android:exported="false"
-            android:theme="@style/Theme.AndroidProject" /> <!-- Main -->
+            android:theme="@style/Theme.AndroidProject" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
