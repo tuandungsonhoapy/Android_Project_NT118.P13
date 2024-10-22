@@ -2,11 +2,13 @@ package com.example.androidproject.features.setting.presentation;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -38,17 +40,17 @@ public class AddEditAddressActivity extends AppCompatActivity {
         Spinner spinnerTinh = findViewById(R.id.spinner_tinh);
         Spinner spinnerHuyen = findViewById(R.id.spinner_quan);
         Spinner spinnerXa = findViewById(R.id.spinner_phuong);
+        EditText ETStreet = findViewById(R.id.addressEditText);
         Button btnSave = findViewById(R.id.saveAddressButton);
 
         spinnerHuyen.setEnabled(false);
         spinnerXa.setEnabled(false);
 
         AddressUtils addressUtils = new AddressUtils();
-
         spinnerTinh.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event){
-                if(!isProvinceDataFetched) {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (!isProvinceDataFetched) {
                     isProvinceDataFetched = true;
                     addressUtils.fetchProvinces(new AddressUtils.OnProvincesFetchedListener() {
                         @Override
@@ -56,61 +58,54 @@ public class AddEditAddressActivity extends AppCompatActivity {
                             ArrayAdapter<AddressProvinceData> adapter = new ArrayAdapter<>(AddEditAddressActivity.this, android.R.layout.simple_spinner_item, provinces);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             spinnerTinh.setAdapter(adapter);
+                            spinnerHuyen.setEnabled(true);
+                        }
 
-                            spinnerTinh.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    spinnerHuyen.setEnabled(true);
-                                    String provinceId = provinces.get(position).getId();
+                        @Override
+                        public void onError(String errorMessage) {
+                            Toast.makeText(AddEditAddressActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                return false;
+            }
+        });
 
-                                    addressUtils.fetchDistricts(provinceId, new AddressUtils.OnDistrictsFetchedListener() {
-                                        @Override
-                                        public void onDistrictsFetched(List<AddressDistrictData> districts) {
-                                            ArrayAdapter<AddressDistrictData> adapter = new ArrayAdapter<>(AddEditAddressActivity.this, android.R.layout.simple_spinner_item, districts);
-                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                            spinnerHuyen.setAdapter(adapter);
+        spinnerHuyen.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (spinnerTinh.getSelectedItem() != null && spinnerHuyen.isEnabled()) {
+                    String provinceId = ((AddressProvinceData) spinnerTinh.getSelectedItem()).getId();
+                    addressUtils.fetchDistricts(provinceId, new AddressUtils.OnDistrictsFetchedListener() {
+                        @Override
+                        public void onDistrictsFetched(List<AddressDistrictData> districts) {
+                            ArrayAdapter<AddressDistrictData> adapter = new ArrayAdapter<>(AddEditAddressActivity.this, android.R.layout.simple_spinner_item, districts);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerHuyen.setAdapter(adapter);
+                            spinnerXa.setEnabled(true);
+                        }
 
-                                            spinnerXa.setEnabled(false);
+                        @Override
+                        public void onError(String errorMessage) {
+                            Toast.makeText(AddEditAddressActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                return false;
+            }
+        });
 
-                                            spinnerHuyen.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                @Override
-                                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                    spinnerXa.setEnabled(true);
-                                                    String districtId = districts.get(position).getId();
-
-                                                    addressUtils.fetchWards(districtId,new AddressUtils.OnWardsFetchedListener() {
-                                                        @Override
-                                                        public void onWardsFetched(List<AddressWardData> wards) {
-                                                            ArrayAdapter<AddressWardData> adapter = new ArrayAdapter<>(AddEditAddressActivity.this, android.R.layout.simple_spinner_item, wards);
-                                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                                            spinnerXa.setAdapter(adapter);
-                                                        }
-
-                                                        @Override
-                                                        public void onError(String errorMessage) {
-                                                            Toast.makeText(AddEditAddressActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                                }
-
-                                                @Override
-                                                public void onNothingSelected(AdapterView<?> parent) {
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onError(String errorMessage) {
-                                            Toast.makeText(AddEditAddressActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
-
-                                }
-                            });
+        spinnerXa.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (spinnerHuyen.getSelectedItem() != null && spinnerXa.isEnabled()) {
+                    String districtId = ((AddressDistrictData) spinnerHuyen.getSelectedItem()).getId();
+                    addressUtils.fetchWards(districtId, new AddressUtils.OnWardsFetchedListener() {
+                        @Override
+                        public void onWardsFetched(List<AddressWardData> wards) {
+                            ArrayAdapter<AddressWardData> adapter = new ArrayAdapter<>(AddEditAddressActivity.this, android.R.layout.simple_spinner_item, wards);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerXa.setAdapter(adapter);
                         }
 
                         @Override
@@ -126,9 +121,26 @@ public class AddEditAddressActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(AddEditAddressActivity.this, "Address saved", Toast.LENGTH_SHORT).show();
+                String province = spinnerTinh.getSelectedItem().toString();
+                String district = spinnerHuyen.getSelectedItem().toString();
+                String ward = spinnerXa.getSelectedItem().toString();
+                String street = ETStreet.getText().toString();
+
+                String fullAddress = street + ", " + ward + ", " + district + ", " + province;
+                Toast.makeText(AddEditAddressActivity.this, "Address saved: " + fullAddress, Toast.LENGTH_LONG).show();
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
