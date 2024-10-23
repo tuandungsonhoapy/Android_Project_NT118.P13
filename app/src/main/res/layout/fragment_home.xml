@@ -33,15 +33,42 @@
                 android:textSize="20dp"/>
         </LinearLayout>
 
-        <ImageView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/baseline_home_24"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="40dp"
-            />
+            android:layout_marginTop="30dp"
+            >
+
+            <ImageView
+                android:id="@+id/cartIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_cart"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="40dp"
+                app:tint="@color/black" />
+
+            <TextView
+                android:id="@+id/cartItemCount"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/circle_border"
+                android:text="5"
+                android:textColor="@android:color/black"
+                android:gravity="center"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@id/cartIcon"
+                app:layout_constraintTop_toTopOf="@id/cartIcon"
+                app:layout_constraintStart_toEndOf="@+id/cartIcon"
+                android:layout_marginEnd="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="12dp"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_search"
@@ -56,11 +83,12 @@
                 android:id="@+id/img_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_home_24"
+                android:src="@android:drawable/ic_menu_search"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="60dp"
+                app:tint="@color/black"
                 />
             <EditText
                 android:layout_width="wrap_content"

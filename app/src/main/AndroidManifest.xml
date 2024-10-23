@@ -15,7 +15,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidProject"
         tools:targetApi="31">
-        <!-- Main -->
+        <activity
+            android:name=".features.address.presentation.AddEditAddressActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AndroidProject" />
+        <activity
+            android:name=".features.setting.presentation.CartSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.setting.presentation.NotificationSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.setting.presentation.VoucherSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.setting.presentation.OrderSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.setting.presentation.AddressSettingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AndroidProject" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
@@ -27,8 +46,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!-- Others -->
+        </activity> <!-- Others -->
         <activity
             android:name=".other_activity.ChangeYearActivity"
             android:exported="false" />
@@ -40,8 +58,7 @@
             android:exported="false" />
         <activity
             android:name=".other_activity.CalculatorActivity"
-            android:exported="false" />
-        <!-- Auth -->
+            android:exported="false" /> <!-- Auth -->
         <activity
             android:name=".features.auth.presentation.LoginActivity"
             android:exported="false" />
