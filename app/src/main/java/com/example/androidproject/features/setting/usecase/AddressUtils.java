@@ -1,5 +1,7 @@
 package com.example.androidproject.features.setting.usecase;
 
+import android.util.Log;
+
 import com.example.androidproject.features.setting.data.repository.AddressApiClient;
 import com.example.androidproject.features.setting.data.repository.AddressApiServices;
 import com.example.androidproject.features.setting.data.types.AddressDistrictData;
@@ -23,7 +25,7 @@ public class AddressUtils {
 
     public void fetchProvinces(OnProvincesFetchedListener listener) {
         AddressApiServices apiServices = AddressApiClient.getRetrofitInstance().create(AddressApiServices.class);
-        Call<AddressProvinceResponseData> call = apiServices.getProvince(1, 0);
+        Call<AddressProvinceResponseData> call = apiServices.getProvince("1", "0");
 
         call.enqueue(new Callback<AddressProvinceResponseData>() {
             @Override
@@ -51,7 +53,7 @@ public class AddressUtils {
 
     public void fetchDistricts(String provinceId, OnDistrictsFetchedListener listener) {
         AddressApiServices apiServices = AddressApiClient.getRetrofitInstance().create(AddressApiServices.class);
-        Call<AddressDistrictResponseData> call = apiServices.getDistrict(2, Integer.parseInt(provinceId));
+        Call<AddressDistrictResponseData> call = apiServices.getDistrict("2", provinceId);
 
         call.enqueue(new Callback<AddressDistrictResponseData>() {
             @Override
@@ -79,7 +81,7 @@ public class AddressUtils {
 
     public void fetchWards(String districtId ,OnWardsFetchedListener listener) {
         AddressApiServices apiServices = AddressApiClient.getRetrofitInstance().create(AddressApiServices.class);
-        Call<AddressWardResponseData> call = apiServices.getWard(3, Integer.parseInt(districtId));
+        Call<AddressWardResponseData> call = apiServices.getWard("3", districtId );
 
         call.enqueue(new Callback<AddressWardResponseData>() {
             @Override

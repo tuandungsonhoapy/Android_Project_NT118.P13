@@ -10,11 +10,11 @@ import retrofit2.http.Path;
 
 public interface AddressApiServices {
     @GET("api-tinhthanh/{a}/{b}.htm")
-    public Call<AddressProvinceResponseData> getProvince(@Path("a") int a, @Path("b") int b);
+    public Call<AddressProvinceResponseData> getProvince(@Path("a") String a, @Path("b") String b);
 
     @GET("api-tinhthanh/{a}/{b}.htm")
-    public Call<AddressDistrictResponseData> getDistrict(@Path("a") int a, @Path("b") int b);
+    public Call<AddressDistrictResponseData> getDistrict(@Path("a") String a, @Path("b") String b);
 
     @GET("api-tinhthanh/{a}/{b}.htm")
-    public Call<AddressWardResponseData> getWard(@Path("a") int a, @Path("b") int b);
+    public Call<AddressWardResponseData> getWard(@Path("a") String a, @Path("b") String b);
 }

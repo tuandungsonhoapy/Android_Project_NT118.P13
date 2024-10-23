@@ -9,11 +9,22 @@ import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.androidproject.R;
+import com.example.androidproject.features.address.data.model.AddressModel;
+import com.example.androidproject.features.address.presentation.AddEditAddressActivity;
+import com.example.androidproject.features.address.presentation.ListAddressSettingAdapter;
+import com.example.androidproject.features.address.usecase.AddressUsecase;
+
+import java.util.List;
 
 public class AddressSettingActivity extends AppCompatActivity {
+    private static final int ADD_EDIT_ADDRESS_REQUEST_CODE = 1;
+    AddressUsecase addressUsecase = new AddressUsecase();
+    private ListAddressSettingAdapter listAddressSettingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +38,24 @@ public class AddressSettingActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        RecyclerView addressRecyclerView = findViewById(R.id.addressRecyclerView);
+        addressRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         Button btnAddAddress = findViewById(R.id.addAddressButton);
+
+        addressUsecase.fetchAddress();
+        listAddressSettingAdapter = new ListAddressSettingAdapter(this, addressUsecase.fetchAddress());
+        addressRecyclerView.setAdapter(listAddressSettingAdapter);
+
+        listAddressSettingAdapter.setOnItemClickListener(new ListAddressSettingAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(AddressModel address) {
+                Intent intent = new Intent(AddressSettingActivity.this, AddEditAddressActivity.class);
+                intent.putExtra("editMode", true);
+                intent.putExtra("address", address);
+                startActivityForResult(intent, ADD_EDIT_ADDRESS_REQUEST_CODE);
+            }
+        });
+
         btnAddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,6 +64,7 @@ public class AddressSettingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 
     @Override
@@ -47,5 +76,15 @@ public class AddressSettingActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_EDIT_ADDRESS_REQUEST_CODE && resultCode == RESULT_OK) {
+
+            List<AddressModel> updatedAddresses = addressUsecase.fetchAddress();
+            listAddressSettingAdapter.updateAddressList(updatedAddresses);
+        }
     }
 }
