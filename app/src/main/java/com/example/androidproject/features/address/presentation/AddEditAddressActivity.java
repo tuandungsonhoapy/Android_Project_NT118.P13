@@ -147,113 +147,12 @@ public class AddEditAddressActivity extends AppCompatActivity {
         });
     }
 
-//    private void populateAddressData(AddressModel address) {
-//        ETStreet.setText(address.getStreet());
-//
-//        String provinceId = address.getProvinceId();
-//        String districtId = address.getDistrictId();
-//        String wardId = address.getWardId();
-//
-//        Log.d("AddEditAddressActivity", "Province ID: " + provinceId);
-//        Log.d("AddEditAddressActivity", "District ID: " + districtId);
-//        Log.d("AddEditAddressActivity", "Ward ID: " + wardId);
-//
-//        // Gọi API để lấy danh sách các tỉnh
-//        addressUtils.fetchProvinces(new AddressUtils.OnProvincesFetchedListener() {
-//            @Override
-//            public void onProvincesFetched(List<AddressProvinceData> provinces) {
-//                if (provinces != null) {
-//                    ArrayAdapter<AddressProvinceData> adapter = new ArrayAdapter<>(AddEditAddressActivity.this, android.R.layout.simple_spinner_item, provinces);
-//                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                    spinnerTinh.setAdapter(adapter);
-//
-//                    for (int i = 0; i < provinces.size(); i++) {
-//                        if (provinces.get(i).getId().equals(provinceId)) {
-//                            Log.d("AddEditAddressActivity", "Selected Province: " + provinces.get(i).getName());
-//                            spinnerTinh.setSelection(i);
-//                            break;
-//                        }
-//                    }
-//
-//                    // Bật spinner huyện
-//                    spinnerHuyen.setEnabled(true);
-//                    addressUtils.fetchDistricts(provinceId, new AddressUtils.OnDistrictsFetchedListener() {
-//                        @Override
-//                        public void onDistrictsFetched(List<AddressDistrictData> districts) {
-//                            if (districts != null) {
-//                                // Tạo adapter cho Spinner huyện
-//                                ArrayAdapter<AddressDistrictData> districtAdapter = new ArrayAdapter<>(AddEditAddressActivity.this, android.R.layout.simple_spinner_item, districts);
-//                                districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                                spinnerHuyen.setAdapter(districtAdapter);
-//
-//                                // Tìm và chọn huyện theo districtId
-//                                for (int i = 0; i < districts.size(); i++) {
-//                                    if (districts.get(i).getId().equals(districtId)) {
-//                                        Log.d("AddEditAddressActivity", "Selected District: " + districts.get(i).getName());
-//                                        spinnerHuyen.setSelection(i);
-//                                        break;
-//                                    }
-//                                }
-//
-//                                spinnerXa.setEnabled(true);
-//                                addressUtils.fetchWards(districtId, new AddressUtils.OnWardsFetchedListener() {
-//                                    @Override
-//                                    public void onWardsFetched(List<AddressWardData> wards) {
-//                                        if (wards != null) {
-//                                            // Tạo adapter cho Spinner xã
-//                                            ArrayAdapter<AddressWardData> wardAdapter = new ArrayAdapter<>(AddEditAddressActivity.this, android.R.layout.simple_spinner_item, wards);
-//                                            wardAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                                            spinnerXa.setAdapter(wardAdapter);
-//
-//                                            for (int i = 0; i < wards.size(); i++) {
-//                                                if (wards.get(i).getId().equals(wardId)) {
-//                                                    Log.d("AddEditAddressActivity", "Selected Ward: " + wards.get(i).getName());
-//                                                    spinnerXa.setSelection(i);
-//                                                    break;
-//                                                }
-//                                            }
-//                                        } else {
-//                                            Toast.makeText(AddEditAddressActivity.this, "Failed to fetch wards", Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onError(String errorMessage) {
-//                                        Toast.makeText(AddEditAddressActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
-//                                    }
-//                                });
-//                            } else {
-//                                Toast.makeText(AddEditAddressActivity.this, "Failed to fetch districts", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onError(String errorMessage) {
-//                            Toast.makeText(AddEditAddressActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                } else {
-//                    Toast.makeText(AddEditAddressActivity.this, "Failed to fetch provinces", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onError(String errorMessage) {
-//                Toast.makeText(AddEditAddressActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
     private void populateAddressData(AddressModel address) {
         ETStreet.setText(address.getStreet());
 
         String provinceId = address.getProvinceId();
         String districtId = address.getDistrictId();
         String wardId = address.getWardId();
-
-        Log.d("AddEditAddressActivity", "Province ID: " + provinceId);
-        Log.d("AddEditAddressActivity", "District ID: " + districtId);
-        Log.d("AddEditAddressActivity", "Ward ID: " + wardId);
 
         addressUtils.fetchProvinces(new AddressUtils.OnProvincesFetchedListener() {
             @Override
@@ -346,9 +245,6 @@ public class AddEditAddressActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 
     private void saveAddress() {
         String province = spinnerTinh.getSelectedItem().toString();
