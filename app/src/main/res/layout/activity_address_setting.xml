@@ -32,7 +32,7 @@
 
     <Button
         android:id="@+id/addAddressButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/addressRecyclerView"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,14 @@
         android:layout_marginEnd="24dp"
         android:layout_marginTop="24dp"
         android:text="Thêm địa chỉ mới"
-        android:backgroundTint="@color/blue"
-        />
+        android:drawableLeft="@android:drawable/ic_input_add"
+        android:drawablePadding="8dp"
+        android:backgroundTint="@android:color/transparent"
+        android:textColor="@color/grey"
+        android:textAllCaps="false"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
