@@ -53,7 +53,6 @@ public class CategoryToBrandFragment extends Fragment {
 
         brandList = categoryUseCase.getBrandListByCategory(category);
         ItemBrandToProduct itemBrandToProduct = new ItemBrandToProduct(getContext(), brandList, categoryUseCase.getCategoryList());
-        Log.d("itemBrandToProduct", "onCreateView: " + itemBrandToProduct.getItemCount());
         recyclerBrandView.setAdapter(itemBrandToProduct);
         itemBrandToProduct.notifyDataSetChanged();
         recyclerBrandView.scrollToPosition(0);
