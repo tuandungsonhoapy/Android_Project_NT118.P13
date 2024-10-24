@@ -8,13 +8,15 @@ public class ProductModel {
     private double price;
     private int quantity;
     private BrandModel brand;
+    private boolean favorite;
 
-    public ProductModel(String name, int image, double price, int quantity, BrandModel brand) {
+    public ProductModel(String name, int image, double price, int quantity, BrandModel brand, boolean favorite) {
         this.name = name;
         this.image = image;
         this.price = price;
         this.quantity = quantity;
         this.brand = brand;
+        this.favorite = favorite;
     }
 
     public String getName() {
@@ -55,5 +57,13 @@ public class ProductModel {
 
     public void setBrand(BrandModel brand) {
         this.brand = brand;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 }

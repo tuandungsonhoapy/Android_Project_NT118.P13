@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
@@ -38,6 +39,27 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.productName.setText(product.getName());
         holder.productPrice.setText(String.valueOf(product.getPrice()));
         holder.productBrand.setText(product.getBrand().getName());
+        if (product.isFavorite()) {
+            holder.productFavorite.setImageResource(R.drawable.favorite_heart);
+            holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.pink));
+        } else {
+            holder.productFavorite.setImageResource(R.drawable.unfavorite_heart);
+            holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.grey));
+        }
+
+        holder.productFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (product.isFavorite()) {
+                    holder.productFavorite.setImageResource(R.drawable.favorite_heart);
+                    holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.pink));
+                } else {
+                    holder.productFavorite.setImageResource(R.drawable.unfavorite_heart);
+                    holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.grey));
+                }
+                product.setFavorite(!product.isFavorite());
+            }
+        });
     }
 
     @Override
@@ -50,12 +72,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         TextView productName;
         TextView productPrice;
         TextView productBrand;
+        ImageView productFavorite;
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.productImage);
             productName = itemView.findViewById(R.id.productName);
             productPrice = itemView.findViewById(R.id.productPrice);
             productBrand = itemView.findViewById(R.id.productBrand);
+            productFavorite = itemView.findViewById(R.id.heartIcon);
         }
     }
 }
