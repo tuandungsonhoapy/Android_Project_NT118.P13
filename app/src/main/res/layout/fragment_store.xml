@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:text="Cửa hàng"
                 android:textStyle="bold"
-                android:textSize="20dp"/>
+                android:textSize="22dp"/>
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,11 +40,12 @@
                 android:id="@+id/img_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_home_24"
+                android:src="@android:drawable/ic_menu_search"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="60dp"
+                app:tint="@color/black"
                 />
             <EditText
                 android:layout_width="wrap_content"
@@ -74,7 +75,7 @@
                 android:textStyle="bold"
                 android:textSize="18dp"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="10dp"/>
+                android:layout_marginStart="20dp"/>
 
             <TextView
                 android:id="@+id/tv_all"
