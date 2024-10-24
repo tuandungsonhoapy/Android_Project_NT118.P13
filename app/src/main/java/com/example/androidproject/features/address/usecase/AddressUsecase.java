@@ -10,6 +10,7 @@ public class AddressUsecase {
         List<AddressModel> addressModelList = new ArrayList<>();
         addressModelList.add(new AddressModel("1", "123 ABC", "Hanoi", "Ba Dinh", "Truc Bach", true, "1", "01","001","00004"));
         addressModelList.add(new AddressModel("2", "148 XYZ", "Hanoi", "Ba Dinh", "Truc Bach", true, "1", "01","001","00004"));
+        addressModelList.add(new AddressModel("3", "94, Ô 7 Khu B, Thị trấn Hậu Nghĩa, Đức Hòa, Long An", "Hanoi", "Ba Dinh", "Truc Bach", true, "1", "01","001","00004"));
         return addressModelList;
     }
 
@@ -22,6 +23,6 @@ public class AddressUsecase {
     }
 
     public void deleteAddress(String id) {
-        // Delete address from database
+        return;
     }
 }

@@ -103,7 +103,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="60dp"
-                    android:src="@android:drawable/ic_menu_mapmode"
+                    android:src="@drawable/ic_address"
                     />
 
                 <LinearLayout
@@ -143,7 +143,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="60dp"
-                    android:src="@android:drawable/ic_menu_add"
+                    android:src="@drawable/ic_go_to_cart"
                     />
 
                 <LinearLayout
@@ -184,7 +184,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="60dp"
-                    android:src="@android:drawable/ic_menu_agenda"
+                    android:src="@drawable/ic_order"
                     />
 
                 <LinearLayout
@@ -225,7 +225,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="60dp"
-                    android:src="@android:drawable/ic_menu_save"
+                    android:src="@drawable/ic_voucher"
                     />
 
                 <LinearLayout
@@ -266,7 +266,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="60dp"
-                    android:src="@android:drawable/ic_menu_info_details"
+                    android:src="@drawable/ic_notification"
                     />
 
                 <LinearLayout

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.address.data.model.AddressModel;
+import com.example.androidproject.features.address.usecase.AddressUsecase;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
     private List<AddressModel> addresses;
     private Context context;
     private OnItemClickListener onItemClickListener;
+    private AddressUsecase addressUsecase = new AddressUsecase();
 
     public ListAddressSettingAdapter(Context context, List<AddressModel> addresses) {
         this.context = context;
@@ -43,7 +46,6 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
     public void onBindViewHolder(@NonNull ListAddressSettingViewHolder holder, int position) {
         AddressModel address = addresses.get(position);
         holder.userAddress.setText(address.getFullAddress());
-        Log.d("ListAddressSettingAdapter", "onBindViewHolder: "+address.getFullAddress());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +53,13 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
                 if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(address);
                 }
+            }
+        });
+
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteAddress(position);
             }
         });
     }
@@ -67,12 +76,20 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
         notifyDataSetChanged();
     }
 
+    private void deleteAddress(int position) {
+        addresses.remove(position);
+        addressUsecase.deleteAddress(Integer.toString(position));
+        notifyItemRemoved(position);
+    }
+
     public static class ListAddressSettingViewHolder extends RecyclerView.ViewHolder {
           TextView userAddress;
+          Button btnDelete;
 
             public ListAddressSettingViewHolder(@NonNull View itemView) {
                 super(itemView);
                 userAddress = itemView.findViewById(R.id.tv_address);
+                btnDelete = itemView.findViewById(R.id.btn_del_address);
             }
     }
 }
