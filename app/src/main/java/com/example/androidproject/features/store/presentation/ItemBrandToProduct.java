@@ -2,6 +2,7 @@ package com.example.androidproject.features.store.presentation;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,14 +48,37 @@ public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.
 
         for (CategoryModel category : categoryList) {
             ImageView imageView = new ImageView(context);
-            imageView.setImageResource(category.getCategoryImage());
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 100;
-            params.height = 100;
-            params.setMargins(10, 10, 10, 10);
-            imageView.setLayoutParams(params);
+            if(category.getCategoryName() == "Laptop") {
+                imageView.setImageResource(category.getCategoryImage());
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                params.width = 200;
+                params.height = 200;
+                params.setMargins(10, 10, 10, 10);
+                params.setGravity(Gravity.CENTER);
+                imageView.setLayoutParams(params);
 
-            holder.gridLayout.addView(imageView);
+                holder.gridLayout.addView(imageView);
+            } else if (category.getCategoryName() == "Phone") {
+                imageView.setImageResource(category.getCategoryImage());
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                params.width = 200;
+                params.height = 200;
+                params.setMargins(10, 10, 10, 10);
+                params.setGravity(Gravity.CENTER);
+                imageView.setLayoutParams(params);
+
+                holder.gridLayout.addView(imageView);
+            } else if (category.getCategoryName() == "Monitor") {
+                imageView.setImageResource(category.getCategoryImage());
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                params.width = 200;
+                params.height = 200;
+                params.setMargins(10, 10, 10, 10);
+                params.setGravity(Gravity.CENTER);
+                imageView.setLayoutParams(params);
+
+                holder.gridLayout.addView(imageView);
+            }
         }
     }
 
