@@ -46,6 +46,8 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.mediarouter)
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -54,4 +56,6 @@ dependencies {
     //implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.play.services.auth)
+    implementation(libs.retrofit)
+    implementation(libs.gson)
 }
