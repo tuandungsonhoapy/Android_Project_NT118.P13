@@ -284,7 +284,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/constraint_report"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/white_background_home_search"
@@ -301,6 +301,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
+            android:paddingTop="20dp"
             >
 
             <TextView
@@ -331,6 +332,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:scrollbars="vertical"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

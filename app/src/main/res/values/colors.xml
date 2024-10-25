@@ -31,4 +31,7 @@
     <color name="delivery_order">
         #3399FF
     </color>
+    <color name="light_red">
+        #FFF3F3
+    </color>
 </resources>

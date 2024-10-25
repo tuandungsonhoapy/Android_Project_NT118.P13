@@ -1,5 +1,6 @@
 package com.example.androidproject.features.admin_manager.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.androidproject.R;
 
@@ -61,6 +63,21 @@ public class AdminManagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin_manager, container, false);
+        View view = inflater.inflate(R.layout.fragment_admin_manager, container, false);
+
+        LinearLayout itemOrder = view.findViewById(R.id.item_order_manager);
+        itemOrder.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AdminOrderManagerActivity.class);
+            startActivity(intent);
+        });
+
+        LinearLayout itemProduct = view.findViewById(R.id.item_product_manager);
+        LinearLayout itemUser = view.findViewById(R.id.item_user_manager);
+        LinearLayout itemCategory = view.findViewById(R.id.item_category_manager);
+        LinearLayout itemVoucher = view.findViewById(R.id.item_voucher_manager);
+        LinearLayout itemEmployee = view.findViewById(R.id.item_employee_manager);
+
+
+        return view;
     }
 }
