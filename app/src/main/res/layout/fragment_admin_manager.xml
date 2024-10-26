@@ -112,6 +112,7 @@
             android:focusable="true"
             android:layout_margin="8dp"
             android:background="@drawable/item_background_menu_manager"
+            android:layout_rowWeight="1"
             >
 
             <ImageView
@@ -139,6 +140,7 @@
             android:focusable="true"
             android:layout_margin="8dp"
             android:background="@drawable/item_background_menu_manager"
+            android:layout_rowWeight="1"
             >
 
             <ImageView
@@ -155,7 +157,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/item_employee_manager"
+            android:id="@+id/item_admin_manager"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
@@ -166,6 +168,7 @@
             android:focusable="true"
             android:layout_margin="8dp"
             android:background="@drawable/item_background_menu_manager"
+            android:layout_rowWeight="1"
             >
 
             <ImageView
@@ -177,8 +180,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Nhân viên"
-                android:textSize="14sp"/>
+                android:text="Tài khoản Admin"
+                android:textSize="14sp"
+                android:textAlignment="center"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -193,6 +198,7 @@
             android:focusable="true"
             android:layout_margin="8dp"
             android:background="@drawable/item_background_menu_manager"
+            android:layout_rowWeight="1"
             >
 
             <ImageView
@@ -220,6 +226,7 @@
             android:focusable="true"
             android:layout_margin="8dp"
             android:background="@drawable/item_background_menu_manager"
+            android:layout_rowWeight="1"
             >
 
             <ImageView
@@ -246,6 +253,7 @@
             android:focusable="true"
             android:layout_margin="8dp"
             android:background="@drawable/item_background_menu_manager"
+            android:layout_rowWeight="1"
             >
 
             <ImageView

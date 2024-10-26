@@ -72,10 +72,16 @@ public class AdminManagerFragment extends Fragment {
         });
 
         LinearLayout itemProduct = view.findViewById(R.id.item_product_manager);
+
         LinearLayout itemUser = view.findViewById(R.id.item_user_manager);
+        itemUser.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AdminUserManagerActivity.class);
+            startActivity(intent);
+        });
+
         LinearLayout itemCategory = view.findViewById(R.id.item_category_manager);
         LinearLayout itemVoucher = view.findViewById(R.id.item_voucher_manager);
-        LinearLayout itemEmployee = view.findViewById(R.id.item_employee_manager);
+        LinearLayout itemAdmin = view.findViewById(R.id.item_admin_manager);
 
 
         return view;
