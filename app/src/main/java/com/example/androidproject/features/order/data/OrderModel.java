@@ -5,7 +5,7 @@ import com.example.androidproject.features.product.data.model.ProductModel;
 public class OrderModel {
     private String id;
     private String user_id;
-    private ProductModel[] products;
+    private ProductDataForOrderModel[] products;
     private double total_price;
     private String status;
     private String payment_method;
@@ -14,7 +14,7 @@ public class OrderModel {
     private String updated_at;
     private String deleted_at;
 
-    public OrderModel(String id, String user_id, ProductModel[] products, double total_price, String status, String payment_method, String address_id, String created_at) {
+    public OrderModel(String id, String user_id, ProductDataForOrderModel[] products, double total_price, String status, String payment_method, String address_id, String created_at) {
         this.id = id;
         this.user_id = user_id;
         this.products = products;
@@ -41,11 +41,11 @@ public class OrderModel {
         this.user_id = user_id;
     }
 
-    public ProductModel[] getProducts() {
+    public ProductDataForOrderModel[] getProducts() {
         return products;
     }
 
-    public void setProducts(ProductModel[] products) {
+    public void setProducts(ProductDataForOrderModel[] products) {
         this.products = products;
     }
 
