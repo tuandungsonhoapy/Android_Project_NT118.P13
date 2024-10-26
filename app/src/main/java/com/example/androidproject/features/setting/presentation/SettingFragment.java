@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.features.admin.presentation.AdminHomeActivity;
 import com.example.androidproject.features.setting.usecase.SettingUseCase;
 
 import java.net.URL;
@@ -96,6 +97,15 @@ public class SettingFragment extends Fragment {
                 }
             }
         }).start();
+
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireActivity(), AdminHomeActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
 
         // Address Layout
         LinearLayout addressLayout = view.findViewById(R.id.ll_setting_profile_address);
