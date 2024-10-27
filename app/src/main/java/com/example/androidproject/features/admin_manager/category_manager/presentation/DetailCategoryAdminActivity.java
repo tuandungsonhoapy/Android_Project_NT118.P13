@@ -37,11 +37,13 @@ public class DetailCategoryAdminActivity extends AppCompatActivity {
         TextView categoryID = findViewById(R.id.tvCategoryID);
         TextView categoryName = findViewById(R.id.tvCategoryName);
         TextView categoryQuantity = findViewById(R.id.tvCategoryQuantity);
+        TextView categoryDescription = findViewById(R.id.tvCategoryDescription);
         ImageView categoryImage = findViewById(R.id.ivCategoryImage);
 
         categoryID.setText(getIntent().getStringExtra("category_id"));
         categoryName.setText(getIntent().getStringExtra("category_name"));
         categoryQuantity.setText(getIntent().getStringExtra("category_quantity"));
+        categoryDescription.setText("helo world");
 
         Glide.with(this)
                 .load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7U_69OLMV-mASOOC1CdFjJ50-yUmU5hv5UQ&s")
