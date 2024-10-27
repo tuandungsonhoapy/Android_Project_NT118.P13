@@ -16,6 +16,12 @@
         android:theme="@style/Theme.AndroidProject"
         tools:targetApi="31">
         <activity
+            android:name=".features.admin_manager.category_manager.presentation.DetailCategoryAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.AdminCategoryManagerActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.admin_manager.user_manager.presentation.DetailUserAdminActivity"
             android:exported="false" />
         <activity

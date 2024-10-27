@@ -80,6 +80,11 @@ public class AdminManagerFragment extends Fragment {
         });
 
         LinearLayout itemCategory = view.findViewById(R.id.item_category_manager);
+        itemCategory.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AdminCategoryManagerActivity.class);
+            startActivity(intent);
+        });
+
         LinearLayout itemVoucher = view.findViewById(R.id.item_voucher_manager);
         LinearLayout itemAdmin = view.findViewById(R.id.item_admin_manager);
 
