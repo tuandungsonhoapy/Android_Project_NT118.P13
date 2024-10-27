@@ -27,6 +27,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:itemIconTint="@color/custom_color_navigation"
+        app:itemTextColor="@color/custom_color_navigation"
         app:menu="@menu/bottom_nav_menu"
         />
 

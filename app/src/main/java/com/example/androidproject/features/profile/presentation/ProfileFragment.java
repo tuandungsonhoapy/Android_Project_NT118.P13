@@ -1,4 +1,4 @@
-package com.example.androidproject.fragment;
+package com.example.androidproject.features.profile.presentation;
 
 import android.os.Bundle;
 

@@ -1,15 +1,364 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.ProfileFragment">
+    tools:context=".features.profile.presentation.ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="26sp"
-        android:text="Profile Fragment" />
 
-</FrameLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="84dp"
+            android:layout_height="75dp"
+            android:layout_marginLeft="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_launcher_background" />
+
+
+        <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Le Anh Tuan Dung"
+                android:textSize="20dp"
+                android:layout_marginLeft="6dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="@+id/imageView"
+                app:layout_constraintLeft_toRightOf="@+id/imageView"
+                tools:layout_editor_absoluteX="116dp"
+                tools:layout_editor_absoluteY="40dp" />
+        <TextView
+                android:id="@+id/tvDispalyName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Le Anh Tuan Dung"
+                android:layout_marginLeft="6dp"
+                android:textSize="14dp"
+                app:layout_constraintLeft_toRightOf="@+id/imageView"
+                tools:layout_editor_absoluteX="116dp"
+                tools:layout_editor_absoluteY="40dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="34dp"
+            android:layout_height="39dp"
+            app:layout_constraintTop_toTopOf="@+id/imageView"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            android:layout_marginRight="24dp"
+            android:src="@drawable/baseline_edit_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:layout_editor_absoluteY="41dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout_settings"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/frameLayout"
+        app:layout_constraintTop_toBottomOf="@+id/header_layout"
+        >
+
+
+        <TextView
+            android:id="@+id/textView_account_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:text="Account Settings"
+            android:textSize="@dimen/margin_basex4"
+            android:padding="20dp"
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/textView_account_settings"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout_settings_item_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    >
+
+
+                    <ImageView
+                        android:id="@+id/imageView_settings_address"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:src="@drawable/baseline_home_24" />
+
+                    <TextView
+                        android:id="@+id/textView12_settings_address"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_address"
+                        app:layout_constraintTop_toTopOf="@+id/imageView_settings_address"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="Đia chỉ"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView15_settings_address"
+                        android:layout_marginLeft="12dp"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView_settings_address"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_address"
+                        android:text="Cập nhật địa chỉ giỏ hàng" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout_settings_item_cart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    >
+
+
+                    <ImageView
+                        android:id="@+id/imageView_settings_cart"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:src="@drawable/baseline_shopping_cart_24" />
+
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_cart"
+                        app:layout_constraintTop_toTopOf="@+id/imageView_settings_cart"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="Giỏ hàng"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView15"
+                        android:layout_marginLeft="12dp"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView_settings_cart"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_cart"
+                        android:text="Ghé thăm giỏ hàng hiện tại" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout_settings_item_order"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    >
+
+
+                    <ImageView
+                        android:id="@+id/imageView_settings_order"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:src="@drawable/baseline_description_24" />
+
+                    <TextView
+                        android:id="@+id/textView12_settings_order"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_order"
+                        app:layout_constraintTop_toTopOf="@+id/imageView_settings_order"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="Đơn hàng"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView15_settings_order"
+                        android:layout_marginLeft="12dp"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView_settings_order"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_order"
+                        android:text="Thông tin đơn hàng đã thưc hiện" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout_settings_item_banking"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    >
+
+
+                    <ImageView
+                        android:id="@+id/imageView_settings_banking"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:src="@drawable/baseline_credit_card_24" />
+
+                    <TextView
+                        android:id="@+id/textView12_settings_banking"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_banking"
+                        app:layout_constraintTop_toTopOf="@+id/imageView_settings_banking"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="Ngân hàng"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView15_settings_banking"
+                        android:layout_marginLeft="12dp"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView_settings_banking"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_banking"
+                        android:text="Thông tin tài khoản ngân hàng liên kết" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout_settings_item_voucher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    >
+
+
+                    <ImageView
+                        android:id="@+id/imageView_settings_voucher"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:src="@drawable/baseline_discount_24" />
+
+                    <TextView
+                        android:id="@+id/textView12_settings_voucher"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_voucher"
+                        app:layout_constraintTop_toTopOf="@+id/imageView_settings_voucher"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="Phiếu giảm giá"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView15_settings_voucher"
+                        android:layout_marginLeft="12dp"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView_settings_voucher"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_voucher"
+                        android:text="Voucher dành riêng cho bạn" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout_settings_item_notification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    >
+
+
+                    <ImageView
+                        android:id="@+id/imageView_settings_notification"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:src="@drawable/baseline_notifications_24" />
+
+                    <TextView
+                        android:id="@+id/textView12_settings_notification"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_notification"
+                        app:layout_constraintTop_toTopOf="@+id/imageView_settings_notification"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="Thông báo"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView15_settings_notification"
+                        android:layout_marginLeft="12dp"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView_settings_notification"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/imageView_settings_notification"
+                        android:text="Thông báo mới nhất" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <Button
+                    android:id="@+id/button5"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_height="wrap_content"
+                    android:text="Đăng xuất" />
+
+
+            </LinearLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
