@@ -8,8 +8,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
 
 /**
@@ -27,7 +29,7 @@ public class AdminManagerFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private ImageView btnGoToShop;
     public AdminManagerFragment() {
         // Required empty public constructor
     }
@@ -64,6 +66,12 @@ public class AdminManagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin_manager, container, false);
+
+        btnGoToShop = view.findViewById(R.id.ivShop);
+        btnGoToShop.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+        });
 
         LinearLayout itemOrder = view.findViewById(R.id.item_order_manager);
         itemOrder.setOnClickListener(v -> {

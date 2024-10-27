@@ -1,6 +1,7 @@
 package com.example.androidproject.features.admin_dashboard.presentation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.features.admin_manager.order_manager.presentation.DetailOrderAdminActivity;
 import com.example.androidproject.features.order.data.OrderModel;
+import com.example.androidproject.features.order.data.ProductDataForOrderModel;
 
 import java.util.List;
 
@@ -54,6 +57,20 @@ public class AdminDashboardOrderAdapter extends RecyclerView.Adapter<AdminDashbo
             holder.tvOrderStatus.setText("Thất bại");
             holder.tvOrderStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.reject_order_status));
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, DetailOrderAdminActivity.class);
+            intent.putExtra("order_id", order.getId());
+            intent.putExtra("order_date", order.getCreated_at());
+            intent.putExtra("order_total_price", order.getTotal_price());
+            intent.putExtra("order_payment_method", order.getPayment_method());
+            intent.putExtra("order_customer_name", "Triệu Lê");
+            intent.putExtra("order_customer_id", order.getUser_id());
+            intent.putExtra("order_status", order.getStatus());
+            ProductDataForOrderModel[] productDataForOrder = order.getProducts();
+            intent.putExtra("product_data_for_order", productDataForOrder);
+            context.startActivity(intent);
+        });
     }
 
     @Override
