@@ -80,6 +80,7 @@ public class AdminDashboardFragment extends Fragment {
         rvAdminDashboardOrders = view.findViewById(R.id.rvAdminOrder);
         rvAdminDashboardOrders.setAdapter(new AdminDashboardOrderAdapter(orderUseCase.getAllOrders(), getContext()));
         rvAdminDashboardOrders.setLayoutManager(new LinearLayoutManager(getContext()));
+
         return view;
     }
 }

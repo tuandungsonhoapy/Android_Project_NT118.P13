@@ -58,4 +58,6 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.retrofit)
     implementation(libs.gson)
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
 }

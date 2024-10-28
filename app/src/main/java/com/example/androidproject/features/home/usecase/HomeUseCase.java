@@ -12,11 +12,11 @@ import java.util.List;
 public class HomeUseCase {
     public List<CategoryModel> getCategoriesList() {
         List<CategoryModel> categoryList = new ArrayList<>();
-        categoryList.add(new CategoryModel("Laptop", R.drawable.image_laptop));
-        categoryList.add(new CategoryModel("Phone", R.drawable.image_phone));
-        categoryList.add(new CategoryModel("Controller", R.drawable.image_controller));
-        categoryList.add(new CategoryModel("Monitor", R.drawable.image_monitor));
-        categoryList.add(new CategoryModel("Keyboard", R.drawable.image_keyboard));
+        categoryList.add(new CategoryModel("1","Laptop", R.drawable.image_laptop, "Laptop description"));
+        categoryList.add(new CategoryModel("2","Phone", R.drawable.image_phone, "Phone description"));
+        categoryList.add(new CategoryModel("3","Controller", R.drawable.image_controller, "Controller description"));
+        categoryList.add(new CategoryModel("4","Monitor", R.drawable.image_monitor, "Monitor description"));
+        categoryList.add(new CategoryModel("5","Keyboard", R.drawable.image_keyboard, "Keyboard description"));
 
         return categoryList;
     }

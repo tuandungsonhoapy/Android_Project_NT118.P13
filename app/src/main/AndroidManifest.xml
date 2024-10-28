@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -15,6 +16,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidProject"
         tools:targetApi="31">
+        <activity
+            android:name=".features.admin_manager.category_manager.presentation.AddCategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.category_manager.presentation.DetailCategoryAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.AdminCategoryManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.user_manager.presentation.DetailUserAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.AdminUserManagerActivity"
+            android:exported="false" />
         <activity
             android:name=".features.admin_manager.order_manager.presentation.DetailOrderAdminActivity"
             android:exported="false" />

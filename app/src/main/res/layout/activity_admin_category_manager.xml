@@ -5,14 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.admin_manager.presentation.AdminOrderManagerActivity">
+    tools:context=".features.admin_manager.presentation.AdminCategoryManagerActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@drawable/circle_background"
-        app:title="Quản lý đơn hàng"
+        app:title="Quản lý danh mục"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
         app:layout_constraintTop_toTopOf="parent"
         android:paddingTop="12dp"
@@ -20,11 +20,23 @@
         app:navigationIconTint="@color/white"
         />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint_search_order_admin"
+    <Button
+        android:id="@+id/btnAddCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Thêm danh mục"
+        android:layout_marginBottom="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_search_category_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btnAddCategory"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="30dp"
@@ -53,7 +65,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="60dp"
-            android:hint="Tìm kiếm đơn hàng..."
+            android:hint="Tìm kiếm danh mục..."
             android:background="@android:color/transparent"
             android:paddingTop="5dp"
             android:layout_marginStart="20dp"
@@ -61,10 +73,10 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_orders_view"
+        android:id="@+id/recycler_categories_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/constraint_search_order_admin"
+        app:layout_constraintTop_toBottomOf="@+id/constraint_search_category_admin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
@@ -102,5 +114,4 @@
             android:layout_height="wrap_content"
             android:text="Trang Sau"/>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

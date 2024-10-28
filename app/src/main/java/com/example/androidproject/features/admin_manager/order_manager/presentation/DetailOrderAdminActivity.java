@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -90,10 +91,45 @@ public class DetailOrderAdminActivity extends AppCompatActivity {
             Log.d("DetailOrderAdminActivity", "Product data is null");
         }
 
-        // Set up RecyclerView
         ProductForDetailOrderAdminAdapter adapter = new ProductForDetailOrderAdminAdapter(orderProductDataList, this);
         orderDetailRecyclerView.setAdapter(adapter);
         orderDetailRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        orderStatus.setOnClickListener(v -> {
+            String[] statusOptions = {"Đang xử lý", "Đang giao", "Thành công", "Thất bại"};
+            int currentIndex = -1;
+
+            String currentStatus = orderStatus.getText().toString();
+            for(int i = 0; i < statusOptions.length; i++) {
+                if (statusOptions[i].equals(currentStatus)) {
+                    currentIndex = i;
+                    break;
+                }
+            }
+
+            final int[] selectedIndex = {currentIndex};
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Chọn trạng thái đơn hàng")
+                    .setSingleChoiceItems(statusOptions, currentIndex, (dialog, which) -> {
+                        selectedIndex[0] = which;
+                    })
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        String newStatus = statusOptions[selectedIndex[0]];
+                        orderStatus.setText(newStatus);
+                        if (newStatus.equals("Đang xử lý")) {
+                            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.pending_order_status));
+                        } else if (newStatus.equals("Đang giao")) {
+                            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.delivery_order_status));
+                        } else if (newStatus.equals("Thành công")) {
+                            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.succes_order_status));
+                        } else if (newStatus.equals("Thất bại")) {
+                            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.reject_order_status));
+                        }
+                    })
+                    .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
+
+            builder.create().show();
+        });
     }
 
     @Override
