@@ -80,6 +80,10 @@ public class AdminManagerFragment extends Fragment {
         });
 
         LinearLayout itemProduct = view.findViewById(R.id.item_product_manager);
+        itemProduct.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AdminProductManagementActivity.class);
+            startActivity(intent);
+        });
 
         LinearLayout itemUser = view.findViewById(R.id.item_user_manager);
         itemUser.setOnClickListener(v -> {
