@@ -94,7 +94,12 @@ public class AdminManagerFragment extends Fragment {
         });
 
         LinearLayout itemVoucher = view.findViewById(R.id.item_voucher_manager);
+
         LinearLayout itemAdmin = view.findViewById(R.id.item_admin_manager);
+        itemAdmin.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AdminAdminManagerActivity.class);
+            startActivity(intent);
+        });
 
 
         return view;
