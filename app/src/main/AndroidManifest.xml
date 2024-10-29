@@ -26,6 +26,15 @@
             android:name=".features.admin_manager.presentation.AdminAdminManagerActivity"
             android:exported="false" />
         <activity
+            android:name=".features.admin_manager.product_management.presentation.ProductDetailAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.product_management.presentation.AddProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.AdminProductManagementActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.admin_manager.category_manager.presentation.AddCategoryActivity"
             android:exported="false" />
         <activity
@@ -42,13 +51,7 @@
             android:exported="false" />
         <activity
             android:name=".features.product.presentation.ProductDetailActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".features.admin_manager.order_manager.presentation.DetailOrderAdminActivity"
             android:exported="false" />
