@@ -1,13 +1,21 @@
 package com.example.androidproject.features.category.usecase;
 
+import android.util.Log;
+
 import com.example.androidproject.R;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.category.data.model.CategoryModel;
+import com.example.androidproject.features.category.data.repository.CategoryRepository;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CategoryUseCase {
+    private CategoryRepository categoryRepository = new CategoryRepository();
+
     public List<BrandModel> getBrandListByCategory(String category) {
         List<BrandModel> brands = new ArrayList<>();
         if (category.equals("Laptop")) {
@@ -31,9 +39,19 @@ public class CategoryUseCase {
 
     public List<CategoryModel> getCategoryList() {
         List<CategoryModel> categoryList = new ArrayList<>();
-        categoryList.add(new CategoryModel("1","Laptop", R.drawable.image_laptop, "Laptop description"));
-        categoryList.add(new CategoryModel("2","Phone", R.drawable.image_phone, "Phone description"));
-        categoryList.add(new CategoryModel("3","Controller", R.drawable.image_controller, "Controller description"));
+        categoryList.add(new CategoryModel("Laptop", "sdfgs", "Laptop description"));
+        categoryList.add(new CategoryModel("Phone", "fsdf", "Phone description"));
+        categoryList.add(new CategoryModel("Controller", "sdfsdf", "Controller description"));
         return categoryList;
+    }
+
+    public void addCategory(CategoryModel category, long quantity) {
+        CategoryModel categoryModel = new CategoryModel(category.getCategoryName(), category.getCategoryImage(), category.getDescription());
+        categoryRepository.addCategoryRepository(categoryModel, quantity);
+    }
+
+    public List<CategoryModel> getCategory(String page, String limit) {
+        List<CategoryModel> category = categoryRepository.getCategoryRepository(page, limit);
+        return category;
     }
 }

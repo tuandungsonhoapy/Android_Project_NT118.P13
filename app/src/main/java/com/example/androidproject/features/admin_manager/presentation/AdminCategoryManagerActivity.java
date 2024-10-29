@@ -47,7 +47,7 @@ public class AdminCategoryManagerActivity extends AppCompatActivity {
         });
 
         rvCategoryList = findViewById(R.id.recycler_categories_view);
-        rvCategoryList.setAdapter(new ListCategoryItemAdminAdapter(categoryUseCase.getCategoryList(), this));
+        rvCategoryList.setAdapter(new ListCategoryItemAdminAdapter(categoryUseCase.getCategory("1","10"), this));
         rvCategoryList.setLayoutManager(new LinearLayoutManager(this));
 
         btnAddCategory = findViewById(R.id.btnAddCategory);

@@ -1,32 +1,37 @@
 package com.example.androidproject.features.category.data.model;
 
+import com.google.firebase.Timestamp;
+
 public class CategoryModel {
     private String id;
     private String name;
-    private int image;
+    private String imageUrl;
     private String description;
+    private com.google.firebase.Timestamp createdAt;
+    private com.google.firebase.Timestamp updatedAt;
 
-    public CategoryModel(String id, String name, int image, String description) {
+    public CategoryModel(String name, String imageUrl, String description) {
         this.name = name;
-        this.image = image;
-        this.id = id;
+        this.imageUrl = imageUrl;
         this.description = description;
+        this.createdAt = Timestamp.now();
+        this.updatedAt = null;
     }
 
     public String getCategoryName() {
         return name;
     }
 
-    public int getCategoryImage() {
-        return image;
+    public String getCategoryImage() {
+        return imageUrl;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setImage(int image) {
-        this.image = image;
+    public void setImage(String image) {
+        this.imageUrl = imageUrl;
     }
 
     public String getId() {
@@ -43,5 +48,21 @@ public class CategoryModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String prefixCategoryID(long quantity) {
+        return "category" + String.format("%05d", quantity);
     }
 }

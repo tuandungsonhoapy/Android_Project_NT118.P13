@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 
@@ -35,7 +36,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryViewholder holder, int position) {
         CategoryModel category = categories.get(position);
         holder.categoryName.setText(category.getCategoryName());
-        holder.categoryImage.setImageResource(category.getCategoryImage());
+        Glide.with(context).load(category.getCategoryImage()).into(holder.categoryImage);
     }
 
     @Override

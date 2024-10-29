@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 
@@ -34,9 +36,10 @@ public class ListCategoryItemAdminAdapter extends RecyclerView.Adapter<ListCateg
     @Override
     public void onBindViewHolder(@NonNull ListCategoryItemAdminViewHolder holder, int position) {
         CategoryModel category = categoryList.get(position);
-        holder.tvCategoryID.setText("#TECH113");
+        holder.tvCategoryID.setText(category.getId());
         holder.tvCategoryName.setText(category.getCategoryName());
         holder.tvCategoryQuantity.setText("10");
+        Glide.with(context).load(category.getCategoryImage()).into(holder.ivCategoryImage);
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailCategoryAdminActivity.class);
@@ -56,6 +59,7 @@ public class ListCategoryItemAdminAdapter extends RecyclerView.Adapter<ListCateg
         TextView tvCategoryName;
         TextView tvCategoryID;
         TextView tvCategoryQuantity;
+        ImageView ivCategoryImage;
 
         public ListCategoryItemAdminViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +67,7 @@ public class ListCategoryItemAdminAdapter extends RecyclerView.Adapter<ListCateg
             tvCategoryName = itemView.findViewById(R.id.tvCategoryName);
             tvCategoryID = itemView.findViewById(R.id.tvCategoryID);
             tvCategoryQuantity = itemView.findViewById(R.id.tvCategoryQuantity);
+            ivCategoryImage = itemView.findViewById(R.id.ivCategoryImage);
         }
     }
 }
