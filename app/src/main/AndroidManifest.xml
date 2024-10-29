@@ -32,6 +32,15 @@
             android:name=".features.admin_manager.presentation.AdminUserManagerActivity"
             android:exported="false" />
         <activity
+            android:name=".features.product.presentation.ProductDetailActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".features.admin_manager.order_manager.presentation.DetailOrderAdminActivity"
             android:exported="false" />
         <activity
