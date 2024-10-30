@@ -1,4 +1,5 @@
 package com.example.androidproject.features.cart.presentation;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.cart.usecase.CartUseCase;
+import com.example.androidproject.features.checkout.presentation.CheckoutActivity;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -55,6 +57,8 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private void openOrderReviewScreen() {
+        Intent intent = new Intent(this, CheckoutActivity.class);
+        startActivity(intent);
     }
 
     @Override

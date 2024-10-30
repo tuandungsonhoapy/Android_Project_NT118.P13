@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:title="Giỏ hàng"
+        app:title="Xem lại giỏ hàng"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
         android:paddingTop="12dp"
         app:titleTextColor="@color/black"
@@ -28,44 +28,73 @@
             android:gravity="center">
 
             <LinearLayout
-                android:id="@+id/empty_cart_layout"
+                android:id="@+id/ll_payment_success"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
                 <ImageView
                     android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:src="@drawable/empty_cart" />
+                    android:src="@drawable/payment_success" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Giỏ hàng cảm thấy cô đơn!"
+                    android:text="Thanh toán thành công!"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvCartItem"
+                android:id="@+id/rvCheckoutItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                 />
 
         </LinearLayout>
     </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/llTotalPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thành tiền"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/tvTotalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primary"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="15.000.000"
+            />
+
+    </LinearLayout>
+
     <Button
-        android:id="@+id/btn_checkout"
+        android:id="@+id/btnPayment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:text="Thanh toán"
         android:layout_gravity="bottom"
-        android:visibility="gone"
         android:backgroundTint="@color/black"
         />
 
@@ -73,11 +102,11 @@
         android:id="@+id/btn_continue_shopping"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tiếp tục mua sắm"
+        android:text="Quay lại trang chủ"
         android:layout_gravity="bottom"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:textColor="@color/white"
+        android:visibility="gone"
         android:backgroundTint="@color/primary"
         />
 
