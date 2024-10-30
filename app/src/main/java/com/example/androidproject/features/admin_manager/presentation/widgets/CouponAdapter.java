@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.core.utils.JsonUtil;
 import com.example.androidproject.features.admin_manager.data.model.CouponModel;
 import com.example.androidproject.features.admin_manager.presentation.pages.AdminCouponDetail;
 
@@ -47,12 +48,12 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
         CouponModel coupon = couponList.get(position);
         holder.bind(coupon);
 
-        // Set an onClickListener here
-//        holder.itemView.setOnClickListener(v -> {
-//            Intent intent = new Intent(context, AdminCouponDetail.class);
-//            intent.putExtra("coupon", coupon);
-//            context.startActivity(intent);
-//        });
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, AdminCouponDetail.class);
+            String couponJson = JsonUtil.objectToJson(coupon);
+            intent.putExtra("coupon", couponJson);
+            context.startActivity(intent);
+        });
     }
 
     @Override
