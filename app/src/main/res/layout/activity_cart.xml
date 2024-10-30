@@ -64,6 +64,7 @@
         android:text="Thanh toán"
         android:layout_gravity="bottom"
         android:visibility="gone"
+        android:backgroundTint="@color/black"
         />
 
     <Button
@@ -74,6 +75,8 @@
         android:layout_gravity="bottom"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/primary"
         />
 
 </LinearLayout>
