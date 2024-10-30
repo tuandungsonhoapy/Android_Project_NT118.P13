@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.banner.data.model.BannerModel;
@@ -22,6 +23,7 @@ import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.presentation.CategoryAdapter;
 import com.example.androidproject.features.home.usecase.HomeUseCase;
 import com.example.androidproject.features.product.data.model.ProductModel;
+import com.example.androidproject.features.product.presentation.AllProductActivity;
 import com.example.androidproject.features.product.presentation.ProductAdapter;
 
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerProductView;
     private ViewPager2 viewPagerBanner;
     private ImageView cartIcon;
+    private TextView viewAllProduct;
     private HomeUseCase homeUseCase = new HomeUseCase();
     public HomeFragment() {
         // Required empty public constructor
@@ -88,6 +91,7 @@ public class HomeFragment extends Fragment {
         recyclerProductView = view.findViewById(R.id.recycler_products_view);
         viewPagerBanner = view.findViewById(R.id.view_pager);
         cartIcon = view.findViewById(R.id.cartIcon);
+        viewAllProduct = view.findViewById(R.id.viewAllProduct);
 
         //view categories
         CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), homeUseCase.getCategoriesList());
@@ -106,6 +110,11 @@ public class HomeFragment extends Fragment {
 
         cartIcon.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), CartActivity.class);
+            startActivity(intent);
+        });
+
+        viewAllProduct.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AllProductActivity.class);
             startActivity(intent);
         });
 
