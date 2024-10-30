@@ -1,5 +1,6 @@
 package com.example.androidproject.features.home.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,10 +12,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.banner.data.model.BannerModel;
 import com.example.androidproject.features.banner.presentation.BannerAdapter;
+import com.example.androidproject.features.cart.presentation.CartActivity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.presentation.CategoryAdapter;
 import com.example.androidproject.features.home.usecase.HomeUseCase;
@@ -42,6 +45,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerCategoryView;
     private RecyclerView recyclerProductView;
     private ViewPager2 viewPagerBanner;
+    private ImageView cartIcon;
     private HomeUseCase homeUseCase = new HomeUseCase();
     public HomeFragment() {
         // Required empty public constructor
@@ -83,6 +87,7 @@ public class HomeFragment extends Fragment {
         recyclerCategoryView = view.findViewById(R.id.recycler_categories_view);
         recyclerProductView = view.findViewById(R.id.recycler_products_view);
         viewPagerBanner = view.findViewById(R.id.view_pager);
+        cartIcon = view.findViewById(R.id.cartIcon);
 
         //view categories
         CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), homeUseCase.getCategoriesList());
@@ -98,6 +103,11 @@ public class HomeFragment extends Fragment {
         ProductAdapter productAdapter = new ProductAdapter(getContext(), homeUseCase.getProductsList());
         recyclerProductView.setAdapter(productAdapter);
         recyclerProductView.setLayoutManager(new GridLayoutManager(getContext(), homeUseCase.getColumns(2)));
+
+        cartIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), CartActivity.class);
+            startActivity(intent);
+        });
 
         return view;
     }
