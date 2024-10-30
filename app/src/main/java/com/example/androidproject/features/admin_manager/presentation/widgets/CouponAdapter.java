@@ -2,7 +2,6 @@ package com.example.androidproject.features.admin_manager.presentation.widgets;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +26,6 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
     private Context context;
 
     public CouponAdapter(List<CouponModel> coupons, Context context) {
-        Log.d("CouponAdapter", "Initializing with " + coupons.size() + " items.");
-        for (CouponModel coupon : coupons) {
-            Log.d("DummyCouponData", "Coupon details: " + coupon.toString());
-        }
         this.allCoupons = new ArrayList<>(coupons);
         this.couponList = new ArrayList<>(coupons);
         this.context = context;
@@ -103,11 +98,11 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
 
             String typeText;
             if ("percentage".equalsIgnoreCase(coupon.getType())) {
-                typeText = String.format("Giảm %s%%", coupon.getValue());
+                typeText = String.format("-%s%%", coupon.getValue());
             } else if ("fixed".equalsIgnoreCase(coupon.getType())) {
                 String valueFormatted = numberFormat.format(coupon.getValue() * 1000);
                 String minimalTotalFormatted = numberFormat.format(coupon.getMinimalTotal() * 1000);
-                typeText = String.format("Giảm %s đ cho đơn trên %s đ", valueFormatted, minimalTotalFormatted);
+                typeText = String.format("-%sđ đơn hơn %sđ", valueFormatted, minimalTotalFormatted);
             } else {
                 typeText = "Không xác định";
             }

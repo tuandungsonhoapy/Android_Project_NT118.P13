@@ -82,7 +82,7 @@ public class AdminCouponDetail extends AppCompatActivity {
             String valueFormatted = numberFormat.format(coupon.getValue() * 1000);
             String minimalTotalFormatted = numberFormat.format(coupon.getMinimalTotal() * 1000);
             typeText = "Cố định";
-            valueText = String.format("Giảm %s đ cho đơn trên %s đ", valueFormatted, minimalTotalFormatted);
+            valueText = String.format("Giảm %sđ cho đơn trên %sđ", valueFormatted, minimalTotalFormatted);
         } else {
             typeText = valueText = "Không xác định";
         }

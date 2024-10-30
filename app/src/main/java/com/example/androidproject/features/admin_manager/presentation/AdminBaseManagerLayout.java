@@ -1,16 +1,13 @@
 package com.example.androidproject.features.admin_manager.presentation;
 
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -25,8 +22,9 @@ public class AdminBaseManagerLayout extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.admin__base_manager_layout);
 
-        setupWindowInsets(findViewById(R.id.admin_base_manager_main));
-        setupToolbar();
+        setupWindowInsets(findViewById(R.id.admin__base_manager_main));
+        ImageView backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(v -> finish());
     }
 
     private void setupWindowInsets(View view) {
@@ -37,27 +35,10 @@ public class AdminBaseManagerLayout extends AppCompatActivity {
         });
     }
 
-    private void setupToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            setupNavigationIcon(toolbar);
-        }
-    }
-
-    private void setupNavigationIcon(Toolbar toolbar) {
-        Drawable upArrow = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_back_arrow, null);
-        if (upArrow != null) {
-            upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
-            toolbar.setNavigationIcon(upArrow);
-        }
-    }
-
     protected void setTitle(String title) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(title);
+        TextView titleTextView = findViewById(R.id.title_admin_base);
+        if (titleTextView != null) {
+            titleTextView.setText(title);
         }
     }
 

@@ -1,7 +1,6 @@
 package com.example.androidproject.features.admin_manager.presentation.pages;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Toast;
 
@@ -28,7 +27,7 @@ public class AdminCouponManager extends AdminBaseManagerLayout {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Quản lý khuyến mãi");
+        setTitle("Khuyến mãi");
 
         LayoutInflater inflater = LayoutInflater.from(this);
         inflater.inflate(R.layout.admin__coupon_manager, findViewById(R.id.content_container), true);
@@ -43,7 +42,6 @@ public class AdminCouponManager extends AdminBaseManagerLayout {
         rvBtnAdminFilter.setAdapter(adminFilterAdapter);
 
         couponList = DummyCouponData.generateDummyCoupons();
-        Log.d("AdminCouponManager", "List of coupons: " + couponList);
 
         rvCouponList = findViewById(R.id.rv_coupon_list);
         rvCouponList.setLayoutManager(new LinearLayoutManager(this));
@@ -54,7 +52,7 @@ public class AdminCouponManager extends AdminBaseManagerLayout {
     private void handleFilterButtonClick(String name) {
         switch (name) {
             case "Tất cả":
-//                Toast.makeText(this, "Bạn đã chọn: " + name, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Bạn đã chọn: " + name, Toast.LENGTH_SHORT).show();
                 break;
             case "Đang diễn ra":
                 Toast.makeText(this, "Bạn đã chọn: " + name, Toast.LENGTH_SHORT).show();
