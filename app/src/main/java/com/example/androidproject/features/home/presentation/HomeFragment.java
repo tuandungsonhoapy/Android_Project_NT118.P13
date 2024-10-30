@@ -1,5 +1,6 @@
 package com.example.androidproject.features.home.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,13 +12,18 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.banner.data.model.BannerModel;
 import com.example.androidproject.features.banner.presentation.BannerAdapter;
-import com.example.androidproject.features.category.data.model.Category;
+import com.example.androidproject.features.cart.presentation.CartActivity;
+import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.presentation.CategoryAdapter;
-import com.example.androidproject.features.product.data.model.Product;
+import com.example.androidproject.features.home.usecase.HomeUseCase;
+import com.example.androidproject.features.product.data.model.ProductModel;
+import com.example.androidproject.features.product.presentation.AllProductActivity;
 import com.example.androidproject.features.product.presentation.ProductAdapter;
 
 import java.util.ArrayList;
@@ -41,12 +47,9 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerCategoryView;
     private RecyclerView recyclerProductView;
     private ViewPager2 viewPagerBanner;
-    private CategoryAdapter categoryAdapter;
-    private List<Category> categoryList;
-    private BannerAdapter bannerAdapter;
-    private List<BannerModel> bannerList;
-    private ProductAdapter productAdapter;
-    private List<Product> productList;
+    private ImageView cartIcon;
+    private TextView viewAllProduct;
+    private HomeUseCase homeUseCase = new HomeUseCase();
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -87,40 +90,34 @@ public class HomeFragment extends Fragment {
         recyclerCategoryView = view.findViewById(R.id.recycler_categories_view);
         recyclerProductView = view.findViewById(R.id.recycler_products_view);
         viewPagerBanner = view.findViewById(R.id.view_pager);
-        categoryList = new ArrayList<>();
-        categoryList.add(new Category("Category 1", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Category 2", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Category 3", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Category 4", R.drawable.ic_launcher_background));
-        categoryList.add(new Category("Category 5", R.drawable.ic_launcher_background));
+        cartIcon = view.findViewById(R.id.cartIcon);
+        viewAllProduct = view.findViewById(R.id.viewAllProduct);
 
-        categoryAdapter = new CategoryAdapter(getContext(), categoryList);
+        //view categories
+        CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), homeUseCase.getCategoriesList());
         recyclerCategoryView.setAdapter(categoryAdapter);
-
-        bannerList = new ArrayList<>();
-        bannerList.add(new BannerModel(R.drawable.ic_launcher_background));
-        bannerList.add(new BannerModel(R.drawable.ic_launcher_background));
-        bannerList.add(new BannerModel(R.drawable.ic_launcher_background));
-
-        productList = new ArrayList<>();
-        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
-        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
-        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
-        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
-        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
-        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
-        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
-        productList.add(new Product("cc", R.drawable.ic_launcher_background, 12, 12));
-
-        ProductAdapter productAdapter = new ProductAdapter(getContext(), productList);
-        recyclerProductView.setAdapter(productAdapter);
-        int columns = 2;
-        recyclerProductView.setLayoutManager(new GridLayoutManager(getContext(), columns));
-        BannerAdapter bannerAdapter = new BannerAdapter(getContext(),bannerList);
-        viewPagerBanner.setAdapter(bannerAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerCategoryView.setLayoutManager(layoutManager);
+
+        //view banners
+        BannerAdapter bannerAdapter = new BannerAdapter(getContext(), homeUseCase.getBannersList());
+        viewPagerBanner.setAdapter(bannerAdapter);
+
+        //view products
+        ProductAdapter productAdapter = new ProductAdapter(getContext(), homeUseCase.getProductsList());
+        recyclerProductView.setAdapter(productAdapter);
+        recyclerProductView.setLayoutManager(new GridLayoutManager(getContext(), homeUseCase.getColumns(2)));
+
+        cartIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), CartActivity.class);
+            startActivity(intent);
+        });
+
+        viewAllProduct.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AllProductActivity.class);
+            startActivity(intent);
+        });
+
         return view;
     }
-
 }

@@ -1,0 +1,75 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:background="@drawable/item_with_grey_rounded_border"
+    android:padding="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="10dp"
+    >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher_background"
+        android:background="@drawable/circle_border"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="20dp"
+        >
+
+        <TextView
+            android:id="@+id/tvCategoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Laptop"
+            android:textSize="22sp"
+            />
+
+        <TextView
+            android:id="@+id/tvCategoryID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#TECH034"
+            android:textSize="16sp"
+            />
+
+        <View
+            android:layout_width="180dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/grey"
+            android:layout_marginEnd="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số sản phẩm: "
+                android:textStyle="bold"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:id="@+id/tvCategoryQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

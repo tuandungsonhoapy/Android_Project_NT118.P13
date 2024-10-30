@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base background color -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#8B0000" /> <!-- Dark red background -->
+        </shape>
+    </item>
+
+    <!-- First circular gradient -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="200dp"
+                android:startColor="#33FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:centerX="0.8"
+                android:centerY="0.2" />
+        </shape>
+    </item>
+
+    <!-- Second circular gradient -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="180dp"
+                android:startColor="#33FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:centerX="0.65"
+                android:centerY="0.35" />
+        </shape>
+    </item>
+</layer-list>

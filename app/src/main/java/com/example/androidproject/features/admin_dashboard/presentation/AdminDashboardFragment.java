@@ -1,32 +1,40 @@
-package com.example.androidproject.fragment;
+package com.example.androidproject.features.admin_dashboard.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
+import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.features.order.usecase.OrderUseCase;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link StoreFragment#newInstance} factory method to
+ * Use the {@link AdminDashboardFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StoreFragment extends Fragment {
+public class AdminDashboardFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    public StoreFragment() {
+    private ImageView btnGoToShop;
+    private RecyclerView rvAdminDashboardOrders;
+    private OrderUseCase orderUseCase = new OrderUseCase();
+    public AdminDashboardFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +44,11 @@ public class StoreFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment StoreFragment.
+     * @return A new instance of fragment AdminDashboardFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static StoreFragment newInstance(String param1, String param2) {
-        StoreFragment fragment = new StoreFragment();
+    public static AdminDashboardFragment newInstance(String param1, String param2) {
+        AdminDashboardFragment fragment = new AdminDashboardFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +69,18 @@ public class StoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_store, container, false);
+        View view = inflater.inflate(R.layout.fragment_admin_dashboard, container, false);
+        btnGoToShop = view.findViewById(R.id.ivShop);
+
+        btnGoToShop.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+        });
+
+        rvAdminDashboardOrders = view.findViewById(R.id.rvAdminOrder);
+        rvAdminDashboardOrders.setAdapter(new AdminDashboardOrderAdapter(orderUseCase.getAllOrders(), getContext()));
+        rvAdminDashboardOrders.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        return view;
     }
 }
