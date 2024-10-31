@@ -13,7 +13,12 @@ import android.widget.LinearLayout;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
-import com.example.androidproject.features.admin_manager.presentation.pages.AdminCouponManager;
+import com.example.androidproject.features.admin_manager.presentation.admin.AdminAdminManagerActivity;
+import com.example.androidproject.features.admin_manager.presentation.category.AdminCategoryManagerActivity;
+import com.example.androidproject.features.admin_manager.presentation.coupon.AdminCouponManager;
+import com.example.androidproject.features.admin_manager.presentation.product.AdminProductManagementActivity;
+import com.example.androidproject.features.admin_manager.presentation.user.AdminUserManagerActivity;
+import com.example.androidproject.features.admin_manager.presentation.order.AdminOrderManagerActivity;
 
 public class AdminManagerFragment extends Fragment {
 

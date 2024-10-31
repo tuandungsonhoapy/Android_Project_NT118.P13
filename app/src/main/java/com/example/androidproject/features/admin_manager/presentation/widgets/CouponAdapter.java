@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidproject.R;
 import com.example.androidproject.core.utils.JsonUtil;
 import com.example.androidproject.features.admin_manager.data.model.CouponModel;
-import com.example.androidproject.features.admin_manager.presentation.pages.AdminCouponDetail;
+import com.example.androidproject.features.admin_manager.presentation.coupon.AdminCouponDetail;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
