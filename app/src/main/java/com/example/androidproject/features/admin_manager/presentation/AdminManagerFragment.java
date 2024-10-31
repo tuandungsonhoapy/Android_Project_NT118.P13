@@ -15,11 +15,6 @@ import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
 import com.example.androidproject.features.admin_manager.presentation.pages.AdminCouponManager;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AdminManagerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AdminManagerFragment extends Fragment {
 
     private ImageView btnGoToShop;
@@ -50,37 +45,12 @@ public class AdminManagerFragment extends Fragment {
             getActivity().finish();
         });
 
-        LinearLayout itemOrder = view.findViewById(R.id.item_order_manager);
-        itemOrder.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AdminOrderManagerActivity.class);
-            startActivity(intent);
-        });
-
-        LinearLayout itemProduct = view.findViewById(R.id.item_product_manager);
-        itemProduct.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AdminProductManagementActivity.class);
-            startActivity(intent);
-        });
-
-        LinearLayout itemUser = view.findViewById(R.id.item_user_manager);
-        itemUser.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AdminUserManagerActivity.class);
-            startActivity(intent);
-        });
-
-        LinearLayout itemCategory = view.findViewById(R.id.item_category_manager);
-        itemCategory.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AdminCategoryManagerActivity.class);
-            startActivity(intent);
-        });
+        startActivityOnClick(view, R.id.item_order_manager, AdminOrderManagerActivity.class);
+        startActivityOnClick(view, R.id.item_user_manager, AdminUserManagerActivity.class);
+        startActivityOnClick(view, R.id.item_admin_manager, AdminAdminManagerActivity.class);
+        startActivityOnClick(view, R.id.item_product_manager, AdminProductManagementActivity.class);
+        startActivityOnClick(view, R.id.item_category_manager, AdminCategoryManagerActivity.class);
         startActivityOnClick(view, R.id.item_voucher_manager, AdminCouponManager.class);
-
-        LinearLayout itemAdmin = view.findViewById(R.id.item_admin_manager);
-        itemAdmin.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AdminAdminManagerActivity.class);
-            startActivity(intent);
-        });
-
 
         return view;
     }
