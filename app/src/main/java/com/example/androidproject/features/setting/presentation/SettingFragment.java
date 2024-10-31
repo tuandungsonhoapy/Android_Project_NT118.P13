@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.admin.presentation.AdminHomeActivity;
+import com.example.androidproject.features.cart.presentation.CartActivity;
 import com.example.androidproject.features.setting.usecase.SettingUseCase;
 
 import java.net.URL;
@@ -122,7 +123,7 @@ public class SettingFragment extends Fragment {
         cartLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 Intent intent = new Intent(getActivity(), CartSettingActivity.class);
+                 Intent intent = new Intent(getActivity(), CartActivity.class);
                  startActivity(intent);
             }
         });
