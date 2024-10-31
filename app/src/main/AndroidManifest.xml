@@ -53,6 +53,12 @@
             android:name=".features.admin_manager.presentation.AdminCategoryManagerActivity"
             android:exported="false" />
         <activity
+            android:name=".features.admin_manager.presentation.pages.AdminCouponDetail"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.pages.AdminCouponManager"
+            android:exported="false" />
+        <activity
             android:name=".features.admin_manager.user_manager.presentation.DetailUserAdminActivity"
             android:exported="false" />
         <activity
