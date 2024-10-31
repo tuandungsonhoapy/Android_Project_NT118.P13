@@ -18,8 +18,10 @@ import android.widget.TextView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.admin.presentation.AdminHomeActivity;
+import com.example.androidproject.features.auth.presentation.LoginActivity;
 import com.example.androidproject.features.cart.presentation.CartActivity;
 import com.example.androidproject.features.setting.usecase.SettingUseCase;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.net.URL;
 
@@ -163,7 +165,11 @@ public class SettingFragment extends Fragment {
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
 
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                getActivity().finish();
             }
         });
         return view;

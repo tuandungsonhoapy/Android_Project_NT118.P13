@@ -11,12 +11,16 @@
 
     <!--  auth  -->
     <string name="txt_login">Đăng nhập</string>
+    <string name="txt_register">Đăng ký</string>
     <string name="txt_account">Tài khoản</string>
     <string name="txt_password">Mật khẩu</string>
+    <string name="txt_verified_password">Nhập lại mật khẩu</string>
     <string name="txt_save_account">Lưu tài khoản</string>
     <string name="txt_forget_password">Quên mật khẩu?</string>
     <string name="btn_login">@string/txt_login</string>
     <string name="txt_or_continue_with">hoặc tiếp tục với</string>
+    <string name="txt_phone">Số điện thoại</string>
+    <string name="txt_email">Email</string>
     <string name="des_logo_techno">Techno\'s Logo</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>

@@ -15,6 +15,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.androidproject.features.auth.presentation.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -58,7 +60,9 @@ public class MainEntryPoint extends AppCompatActivity {
     }
 
     private void fetchCredential() {
-        boolean isLogin = true;
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        boolean isLogin = currentUser != null;
         if (isLogin) {
             navigateToMainScreen();
         } else {

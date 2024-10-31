@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".features.auth.presentation.LoginActivity">
+    tools:context=".features.auth.presentation.RegisterActivity">
 
     <!-- Guidelines -->
     <androidx.constraintlayout.widget.Guideline
@@ -37,22 +37,21 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="@dimen/_5gr_fb" />
 
-    <!--  App views  -->
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
         android:contentDescription="@string/des_logo_techno"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline1"
-        app:srcCompat="@drawable/logo_techno_textbelow" />
+        app:srcCompat="@drawable/logo_techo_without_text" />
 
     <LinearLayout
         android:id="@+id/ll_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="@string/txt_login"
+            android:text="@string/txt_register"
             android:textColor="@color/primary"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -81,21 +80,83 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_12dp"
+        android:layout_marginVertical="@dimen/et_vertical"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_title">
 
-        <EditText
-            android:id="@+id/etEmail"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/et_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="@dimen/auth_input_gap"
+                android:layout_weight="1"
+                android:autofillHints="emailAddress"
+                android:background="@drawable/rounded_12dp_input_text"
+                android:ems="10"
+                android:hint="@string/txt_email"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="@dimen/et_auth_horizontal"
+                android:paddingVertical="@dimen/et_vertical" />
+
+            <EditText
+                android:id="@+id/etSurname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="@dimen/auth_input_gap"
+                android:layout_weight="1"
+                android:autofillHints="emailAddress"
+                android:background="@drawable/rounded_12dp_input_text"
+                android:ems="10"
+                android:hint="@string/txt_phone"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="@dimen/et_auth_horizontal"
+                android:paddingVertical="@dimen/et_vertical" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/etAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/auth_input_gap"
             android:autofillHints="emailAddress"
             android:background="@drawable/rounded_12dp_input_text"
             android:ems="10"
             android:hint="@string/txt_account"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="@dimen/et_auth_horizontal"
+            android:paddingVertical="@dimen/et_vertical" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/auth_input_gap"
+            android:autofillHints="emailAddress"
+            android:background="@drawable/rounded_12dp_input_text"
+            android:ems="10"
+            android:hint="@string/txt_email"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="@dimen/et_auth_horizontal"
+            android:paddingVertical="@dimen/et_vertical" />
+
+        <EditText
+            android:id="@+id/etPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/auth_input_gap"
+            android:autofillHints="emailAddress"
+            android:background="@drawable/rounded_12dp_input_text"
+            android:ems="10"
+            android:hint="@string/txt_phone"
             android:inputType="textEmailAddress"
             android:paddingHorizontal="@dimen/et_auth_horizontal"
             android:paddingVertical="@dimen/et_vertical" />
@@ -112,7 +173,21 @@
             android:inputType="textPassword"
             android:paddingHorizontal="@dimen/et_auth_horizontal"
             android:paddingVertical="@dimen/et_vertical" />
+
+        <EditText
+            android:id="@+id/etVerifiedPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/auth_input_gap"
+            android:autofillHints="password"
+            android:background="@drawable/rounded_12dp_input_text"
+            android:ems="10"
+            android:hint="@string/txt_verified_password"
+            android:inputType="textPassword"
+            android:paddingHorizontal="@dimen/et_auth_horizontal"
+            android:paddingVertical="@dimen/et_vertical" />
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/ll_save_n_forgot"
@@ -126,68 +201,46 @@
         app:layout_constraintTop_toBottomOf="@+id/ll_input_list">
 
         <TextView
-            android:id="@+id/linkSaveAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/txt_save_account" />
+            android:text="Tôi đông ý " />
 
         <TextView
-            android:id="@+id/linkForgetPassword"
+            android:id="@+id/tv_privacy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/txt_forget_password"
-            android:textAlignment="textEnd"
-            android:textColor="@color/primary" />
+            android:text="chính sách bảo mật"
+            android:textColor="@color/primary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" và " />
+
+        <TextView
+            android:id="@+id/tv_requirement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="điều khoản"
+            android:textColor="@color/primary"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
     <Button
-        android:id="@+id/btnLogin"
+        android:id="@+id/btnRegister"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_12dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="24dp"
         android:backgroundTint="@color/primary"
         android:paddingVertical="16dp"
-        android:text="@string/btn_login"
+        android:text="@string/txt_register"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_12dp"
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="@android:color/darker_gray" />
-
-        <TextView
-            android:id="@+id/txtContinueWith"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="8dp"
-            android:text="@string/txt_or_continue_with" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="@android:color/darker_gray" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -197,36 +250,26 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline4">
+        app:layout_constraintTop_toBottomOf="@id/btnRegister">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
-            android:text="Chưa có tài khoản?"
+            android:text="Đã có tài khoản?"
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/btn_to_register"
+            android:id="@+id/btn_to_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
             android:paddingVertical="12dp"
-            android:text="Đăng ký ngay"
+            android:text="Đăng nhập"
             android:textColor="@color/primary"
             android:textSize="14sp"
             android:textStyle="bold" />
 
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/loadingIndicator"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

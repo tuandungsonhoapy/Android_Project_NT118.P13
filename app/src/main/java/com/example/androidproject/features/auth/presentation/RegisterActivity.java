@@ -1,6 +1,9 @@
 package com.example.androidproject.features.auth.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -20,27 +23,25 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.auth__register_page);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if(backPressTime + 2000 > System.currentTimeMillis()){
-                    backToast.cancel();
-                    finish();
-                } else {
-                    backToast = Toast.makeText(RegisterActivity.this, "Nhấn lại lần nữa để thoát", Toast.LENGTH_SHORT);
-                    backToast.show();
-                }
-                backPressTime = System.currentTimeMillis();
-            }
-        };
 
-        getOnBackPressedDispatcher().addCallback(this, callback);
+        TextView btnToLogin = findViewById(R.id.btn_to_login);
+        Button btnRegister = findViewById(R.id.btnRegister);
+
+        btnToLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        btnRegister.setOnClickListener(v -> {
+            Toast.makeText(RegisterActivity.this, "Clicked Register", Toast.LENGTH_SHORT).show();
+        });
     }
 }

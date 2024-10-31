@@ -123,6 +123,9 @@
         <activity
             android:name=".features.auth.presentation.LoginActivity"
             android:exported="false" />
+        <activity
+            android:name=".features.auth.presentation.RegisterActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

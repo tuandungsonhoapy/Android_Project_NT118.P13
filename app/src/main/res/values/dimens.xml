@@ -39,6 +39,8 @@
     <dimen name="_5gr_fb">0.910</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="manager_detail_gap">12dp</dimen>
+    <dimen name="auth_input_gap">8dp</dimen>
+    <dimen name="et_auth_horizontal">8dp</dimen>
     <!--  END:ratio  -->
 
 </resources>
