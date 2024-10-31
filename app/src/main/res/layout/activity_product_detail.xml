@@ -373,10 +373,79 @@
         android:id="@+id/navigation_product_detail"
         android:layout_width="match_parent"
         android:layout_height="64dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:background="@color/light_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         >
+
+        <LinearLayout
+            android:id="@+id/linearLayout_decrease_increase"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="center"
+            android:background="@drawable/circle_main_background"
+            >
+
+
+            <TextView
+                android:id="@+id/textView_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:text="-" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout_decrease_increase"
+            app:layout_constraintLeft_toRightOf="@+id/linearLayout_decrease_increase"
+            android:text="10" />
+
+        <LinearLayout
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/circle_main_background"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout_decrease_increase"
+            app:layout_constraintLeft_toRightOf="@+id/textView_number"
+            >
+
+
+            <TextView
+                android:id="@+id/textView_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:text="+" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_add_to_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@drawable/item_background_black_selector"
+            android:textColor="@color/white"
+            app:backgroundTint="@null"
+            android:text="Thêm vào giỏ hàng"
+            />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
