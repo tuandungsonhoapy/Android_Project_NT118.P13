@@ -60,4 +60,5 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="btn_back_to_admin_mng_menu">Trở lại menu quản lý</string>
 </resources>
