@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.admin_manager.product_management.presentation.AddProductActivity">
+    tools:context=".features.admin_manager.presentation.product.AddProductActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

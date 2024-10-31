@@ -1,4 +1,4 @@
-package com.example.androidproject.features.admin_dashboard.presentation;
+package com.example.androidproject.features.admin_manager.presentation.widgets;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,34 +18,35 @@ import com.example.androidproject.features.order.data.ProductDataForOrderModel;
 
 import java.util.List;
 
-public class AdminDashboardOrderAdapter extends RecyclerView.Adapter<AdminDashboardOrderAdapter.AdminDashboardOrderViewHolder> {
+public class ListOrderItemAdminAdapter extends RecyclerView.Adapter<ListOrderItemAdminAdapter.ListOrderItemAdminViewHolder> {
     private List<OrderModel> orderList;
     private Context context;
 
-    public AdminDashboardOrderAdapter(List<OrderModel> orderList, Context context) {
+    public ListOrderItemAdminAdapter(List<OrderModel> orderList, Context context) {
         this.orderList = orderList;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public AdminDashboardOrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_admin_dashboard_order, parent, false);
-        return new AdminDashboardOrderViewHolder(view);
+    public ListOrderItemAdminViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_order_admin, parent, false);
+        return new ListOrderItemAdminViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdminDashboardOrderViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ListOrderItemAdminViewHolder holder, int position) {
         OrderModel order = orderList.get(position);
-        holder.tvOrderID.setText(order.getId());
+        holder.tvOrderId.setText(order.getId());
         holder.tvOrderDate.setText(order.getCreated_at());
-        holder.tvOrderProductCount.setText(String.valueOf(order.getProductsCount()));
         holder.tvOrderTotalPrice.setText(toString().valueOf(order.getTotal_price()));
-        holder.tvPaymentMethod.setText(order.getPayment_method());
+        holder.tvOrderPaymentMethod.setText(order.getPayment_method());
+        holder.tvOrderCustomerName.setText("Triệu Lê");
+        holder.tvOrderCustomerID.setText(order.getUser_id());
 
         String orderStatus = order.getStatus();
         if (orderStatus.equals("pending")) {
-            holder.tvOrderStatus.setText("Đang xử lỹ");
+            holder.tvOrderStatus.setText("Đang xử lý");
             holder.tvOrderStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.pending_order_status));
         } else if (orderStatus.equals("on_delivery")) {
             holder.tvOrderStatus.setText("Đang giao");
@@ -78,22 +79,25 @@ public class AdminDashboardOrderAdapter extends RecyclerView.Adapter<AdminDashbo
         return orderList.size();
     }
 
-    public static class AdminDashboardOrderViewHolder extends RecyclerView.ViewHolder {
-        TextView tvOrderID;
+    public static class ListOrderItemAdminViewHolder extends RecyclerView.ViewHolder {
+        TextView tvOrderId;
         TextView tvOrderDate;
-        TextView tvOrderProductCount;
-        TextView tvOrderTotalPrice;
-        TextView tvPaymentMethod;
         TextView tvOrderStatus;
+        TextView tvOrderTotalPrice;
+        TextView tvOrderPaymentMethod;
+        TextView tvOrderCustomerName;
+        TextView tvOrderCustomerID;
 
-        public AdminDashboardOrderViewHolder(@NonNull View itemView) {
+        public ListOrderItemAdminViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvOrderID = itemView.findViewById(R.id.tvOrderID);
+
+            tvOrderId = itemView.findViewById(R.id.tvOrderID);
             tvOrderDate = itemView.findViewById(R.id.tvOrderDate);
-            tvOrderProductCount = itemView.findViewById(R.id.tvOrderProductCount);
-            tvOrderTotalPrice = itemView.findViewById(R.id.tvOrderTotalPrice);
-            tvPaymentMethod = itemView.findViewById(R.id.tvPaymentMethod);
             tvOrderStatus = itemView.findViewById(R.id.tvOrderStatus);
+            tvOrderTotalPrice = itemView.findViewById(R.id.tvOrderTotalPrice);
+            tvOrderPaymentMethod = itemView.findViewById(R.id.tvOrderPaymentMethod);
+            tvOrderCustomerName = itemView.findViewById(R.id.tvOrderCustomerName);
+            tvOrderCustomerID = itemView.findViewById(R.id.tvOrderCustomerID);
         }
     }
 }

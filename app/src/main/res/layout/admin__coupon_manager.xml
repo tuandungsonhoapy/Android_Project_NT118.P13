@@ -5,7 +5,7 @@
     android:id="@+id/admin_coupon_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.admin_manager.presentation.pages.AdminCouponManager">
+    tools:context=".features.admin_manager.presentation.coupon.AdminCouponManager">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"

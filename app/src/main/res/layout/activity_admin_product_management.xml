@@ -5,32 +5,21 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.admin_manager.presentation.AdminProductManagementActivity">
+    tools:context=".features.admin_manager.presentation.product.AdminProductManagementActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_product_management"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/circle_background"
-        app:title="Quản lý sản phẩm"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-        app:layout_constraintTop_toTopOf="parent"
-        android:paddingTop="12dp"
-        app:titleTextColor="@color/white"
-        app:navigationIconTint="@color/white"
-        />
 
     <Button
         android:id="@+id/btnAddProduct"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_product_management"
+        app:layout_constraintTop_toTopOf="parent"
         android:padding="10dp"
         android:layout_marginTop="10dp"
         android:text="Thêm sản phẩm"
         android:layout_marginBottom="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
+        android:backgroundTint="@color/primary"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_search_product_admin"
