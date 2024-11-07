@@ -53,8 +53,8 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.Wishli
         private TextView tvBrand;     // Thương hiệu sản phẩm
         private TextView tvPrice;     // Giá sản phẩm
         private TextView tvSaleTag;   // Nhãn giảm giá
-        private ImageButton ibAddToCart; // Nút "Thêm vào giỏ hàng"
-        private ImageButton ibWishlistAdd; // Nút "Thêm vào danh sách yêu thích"
+        private ImageView ibAddToCart; // Nút "Thêm vào giỏ hàng"
+        private ImageView ibWishlistAdd; // Nút "Thêm vào danh sách yêu thích"
 
         public WishlistViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,8 +64,8 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.Wishli
             tvBrand = itemView.findViewById(R.id.tv_Brand);
             tvPrice = itemView.findViewById(R.id.tv_Price);
             tvSaleTag = itemView.findViewById(R.id.tv_SaleTag);
-            ibAddToCart = itemView.findViewById(R.id.ibt_Add);
-            ibWishlistAdd = itemView.findViewById(R.id.ib_WishlistAdd);
+            ibAddToCart = itemView.findViewById(R.id.iv_AddToCart);
+            ibWishlistAdd = itemView.findViewById(R.id.iv_WishlistAdd);
         }
 
         public void bind(Wishlist item) {

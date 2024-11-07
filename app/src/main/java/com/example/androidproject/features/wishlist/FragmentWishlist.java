@@ -30,6 +30,7 @@ public class FragmentWishlist extends Fragment {
 
         // Sử dụng GridLayoutManager với 2 cột
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        recyclerView.setAdapter(wishlistAdapter);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         // Tạo danh sách sản phẩm yêu thích

@@ -16,6 +16,7 @@ import com.example.androidproject.databinding.ActivityMainBinding;
 
 import com.example.androidproject.features.home.presentation.HomeFragment;
 import com.example.androidproject.features.setting.presentation.SettingFragment;
+import com.example.androidproject.features.wishlist.FragmentWishlist;
 import com.example.androidproject.fragment.ProfileFragment;
 import com.example.androidproject.features.store.presentation.StoreFragment;
 
@@ -37,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new HomeFragment());
             } else if(item.getItemId() == R.id.store) {
                 replaceFragment(new StoreFragment());
-            } else if(item.getItemId() == R.id.setting) {
+            } else if(item.getItemId() == R.id.wishlist) {
+                replaceFragment(new FragmentWishlist());
+            }else if(item.getItemId() == R.id.setting) {
                 replaceFragment(new SettingFragment());
             }
 
