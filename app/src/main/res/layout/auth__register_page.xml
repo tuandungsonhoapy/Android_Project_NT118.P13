@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".features.auth.presentation.RegisterActivity">
+
+    <!-- Guidelines -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/_5gr" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/_2gr" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/_3gr_fb" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/_5gr_fb" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:contentDescription="@string/des_logo_techno"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline1"
+        app:srcCompat="@drawable/logo_techo_without_text" />
+
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo">
+
+        <TextView
+            android:id="@+id/titleLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="@string/txt_register"
+            android:textColor="@color/primary"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="48dp"
+            android:layout_height="2dp"
+            android:layout_weight="1"
+            android:background="@color/primary" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_input_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12dp"
+        android:layout_marginVertical="@dimen/et_vertical"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_title">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="@dimen/auth_input_gap"
+                android:layout_weight="1"
+                android:autofillHints="emailAddress"
+                android:background="@drawable/rounded_12dp_input_text"
+                android:ems="10"
+                android:hint="@string/txt_email"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="@dimen/et_auth_horizontal"
+                android:paddingVertical="@dimen/et_vertical" />
+
+            <EditText
+                android:id="@+id/etSurname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="@dimen/auth_input_gap"
+                android:layout_weight="1"
+                android:autofillHints="emailAddress"
+                android:background="@drawable/rounded_12dp_input_text"
+                android:ems="10"
+                android:hint="@string/txt_phone"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="@dimen/et_auth_horizontal"
+                android:paddingVertical="@dimen/et_vertical" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/etAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/auth_input_gap"
+            android:autofillHints="emailAddress"
+            android:background="@drawable/rounded_12dp_input_text"
+            android:ems="10"
+            android:hint="@string/txt_account"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="@dimen/et_auth_horizontal"
+            android:paddingVertical="@dimen/et_vertical" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/auth_input_gap"
+            android:autofillHints="emailAddress"
+            android:background="@drawable/rounded_12dp_input_text"
+            android:ems="10"
+            android:hint="@string/txt_email"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="@dimen/et_auth_horizontal"
+            android:paddingVertical="@dimen/et_vertical" />
+
+        <EditText
+            android:id="@+id/etPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/auth_input_gap"
+            android:autofillHints="emailAddress"
+            android:background="@drawable/rounded_12dp_input_text"
+            android:ems="10"
+            android:hint="@string/txt_phone"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="@dimen/et_auth_horizontal"
+            android:paddingVertical="@dimen/et_vertical" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/auth_input_gap"
+            android:autofillHints="password"
+            android:background="@drawable/rounded_12dp_input_text"
+            android:ems="10"
+            android:hint="@string/txt_password"
+            android:inputType="textPassword"
+            android:paddingHorizontal="@dimen/et_auth_horizontal"
+            android:paddingVertical="@dimen/et_vertical" />
+
+        <EditText
+            android:id="@+id/etVerifiedPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/auth_input_gap"
+            android:autofillHints="password"
+            android:background="@drawable/rounded_12dp_input_text"
+            android:ems="10"
+            android:hint="@string/txt_verified_password"
+            android:inputType="textPassword"
+            android:paddingHorizontal="@dimen/et_auth_horizontal"
+            android:paddingVertical="@dimen/et_vertical" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_save_n_forgot"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_input_list">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tôi đông ý " />
+
+        <TextView
+            android:id="@+id/tv_privacy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="chính sách bảo mật"
+            android:textColor="@color/primary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" và " />
+
+        <TextView
+            android:id="@+id/tv_requirement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="điều khoản"
+            android:textColor="@color/primary"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12dp"
+        android:backgroundTint="@color/primary"
+        android:paddingVertical="16dp"
+        android:text="@string/txt_register"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:text="Đã có tài khoản?"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/btn_to_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:paddingVertical="12dp"
+            android:text="Đăng nhập"
+            android:textColor="@color/primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

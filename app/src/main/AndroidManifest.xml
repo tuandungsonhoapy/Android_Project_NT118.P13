@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AndroidProject"
+        tools:targetApi="31">
+        <activity
+            android:name=".features.checkout.presentation.CheckoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.product.presentation.AllProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.cart.presentation.CartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.admin.AddAdminAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.admin.DetailAdminAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.admin.AdminAdminManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.product.ProductDetailAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.product.AddProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.product.AdminProductManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.category.AddCategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.category.DetailCategoryAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.category.AdminCategoryManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.coupon.AdminCouponDetail"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.coupon.AdminCouponManager"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.user.DetailUserAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.user.AdminUserManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.product.presentation.ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.order.DetailOrderAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.order.AdminOrderManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin.presentation.AdminHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.address.presentation.AddEditAddressActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AndroidProject" />
+        <activity
+            android:name=".features.setting.presentation.CartSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.setting.presentation.NotificationSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.setting.presentation.VoucherSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.setting.presentation.OrderSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.setting.presentation.AddressSettingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AndroidProject" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainEntryPoint"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> <!-- Others -->
+        <activity
+            android:name=".other_activity.ChangeYearActivity"
+            android:exported="false" />
+        <activity
+            android:name=".other_activity.TemperatureConversionAppActivity"
+            android:exported="false" />
+        <activity
+            android:name=".other_activity.DateTimeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".other_activity.CalculatorActivity"
+            android:exported="false" /> <!-- Auth -->
+        <activity
+            android:name=".features.auth.presentation.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.auth.presentation.RegisterActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

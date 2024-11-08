@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Dashboard"
+        android:icon="@drawable/ic_dashboard"
+        android:id="@+id/dashboard"
+        />
+    <item android:title="Quản lý"
+        android:icon="@drawable/ic_manager"
+        android:id="@+id/manager"
+        />
+</menu>
