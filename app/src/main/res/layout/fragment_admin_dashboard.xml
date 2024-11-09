@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".features.admin.presentation.AdminHomeActivity"
-    android:background="@drawable/circle_background"
+    android:background="@drawable/main_red_background"
     >
 
     <LinearLayout
