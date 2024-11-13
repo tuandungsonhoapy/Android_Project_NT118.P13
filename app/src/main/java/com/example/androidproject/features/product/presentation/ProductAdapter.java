@@ -1,6 +1,7 @@
 package com.example.androidproject.features.product.presentation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 }
                 product.setFavorite(!product.isFavorite());
             }
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProductDetailActivity.class);
+            context.startActivity(intent);
         });
     }
 

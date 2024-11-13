@@ -32,4 +32,9 @@ public class FileHandler {
             e.printStackTrace();
         }
     }
+
+    public void saveImage(Uri imageUri) {
+        // Save image to storage
+
+    }
 }

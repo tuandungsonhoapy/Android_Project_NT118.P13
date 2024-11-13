@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -32,20 +33,16 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar loadingIndicator;
     private Button btnLogin;
     private EditText etEmail, etPassword;
+    private TextView btnToRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "Boom");
-
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.auth__login_page);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            int horizontalPadding = getResources().getDimensionPixelSize(R.dimen.screen_horizontal);
-            int verticalPadding = getResources().getDimensionPixelSize(R.dimen.screen_vertical);
-
-            v.setPadding(systemBars.left + horizontalPadding, systemBars.top + verticalPadding, systemBars.right + horizontalPadding, systemBars.bottom + verticalPadding);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
@@ -57,9 +54,15 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
+        btnToRegister = findViewById(R.id.btn_to_register);
 
         // Setup click events
         btnLogin.setOnClickListener(v -> handleLogin());
+        btnToRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
     }
 

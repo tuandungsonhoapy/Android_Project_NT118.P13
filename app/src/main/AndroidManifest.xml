@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -17,25 +17,61 @@
         android:theme="@style/Theme.AndroidProject"
         tools:targetApi="31">
         <activity
-            android:name=".features.admin_manager.category_manager.presentation.AddCategoryActivity"
+            android:name=".features.checkout.presentation.CheckoutActivity"
             android:exported="false" />
         <activity
-            android:name=".features.admin_manager.category_manager.presentation.DetailCategoryAdminActivity"
+            android:name=".features.product.presentation.AllProductActivity"
             android:exported="false" />
         <activity
-            android:name=".features.admin_manager.presentation.AdminCategoryManagerActivity"
+            android:name=".features.cart.presentation.CartActivity"
             android:exported="false" />
         <activity
-            android:name=".features.admin_manager.user_manager.presentation.DetailUserAdminActivity"
+            android:name=".features.admin_manager.presentation.admin.AddAdminAdminActivity"
             android:exported="false" />
         <activity
-            android:name=".features.admin_manager.presentation.AdminUserManagerActivity"
+            android:name=".features.admin_manager.presentation.admin.DetailAdminAdminActivity"
             android:exported="false" />
         <activity
-            android:name=".features.admin_manager.order_manager.presentation.DetailOrderAdminActivity"
+            android:name=".features.admin_manager.presentation.admin.AdminAdminManagerActivity"
             android:exported="false" />
         <activity
-            android:name=".features.admin_manager.presentation.AdminOrderManagerActivity"
+            android:name=".features.admin_manager.presentation.product.ProductDetailAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.product.AddProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.product.AdminProductManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.category.AddCategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.category.DetailCategoryAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.category.AdminCategoryManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.coupon.AdminCouponDetail"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.coupon.AdminCouponManager"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.user.DetailUserAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.user.AdminUserManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.product.presentation.ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.order.DetailOrderAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.order.AdminOrderManagerActivity"
             android:exported="false" />
         <activity
             android:name=".features.admin.presentation.AdminHomeActivity"
@@ -86,6 +122,9 @@
             android:exported="false" /> <!-- Auth -->
         <activity
             android:name=".features.auth.presentation.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.auth.presentation.RegisterActivity"
             android:exported="false" />
     </application>
 

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="12dp"
-    android:background="@drawable/circle_background"
+    android:background="@drawable/main_red_background"
     >
 
     <LinearLayout
@@ -306,6 +306,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
+                android:backgroundTint="@color/primary"
                 />
 
         </LinearLayout>

@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
-import com.example.androidproject.features.admin_manager.order_manager.presentation.DetailOrderAdminActivity;
+import com.example.androidproject.features.admin_manager.presentation.order.DetailOrderAdminActivity;
 import com.example.androidproject.features.order.data.OrderModel;
 import com.example.androidproject.features.order.data.ProductDataForOrderModel;
 

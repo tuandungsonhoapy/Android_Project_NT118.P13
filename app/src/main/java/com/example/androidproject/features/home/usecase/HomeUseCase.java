@@ -44,6 +44,48 @@ public class HomeUseCase {
         return productList;
     }
 
+    public List<String> getProductDetailImgList() {
+        List<String> productDetailImgList = new ArrayList<>();
+        productDetailImgList.add("https://laptopaz.vn/media/lib/2413_laptopaz-lenovo-ideapad-3-15ITL05-3.jpg");
+        productDetailImgList.add("https://laptopaz.vn/media/lib/2413_laptopaz-lenovo-ideapad-3-15ITL05-3.jpg");
+        productDetailImgList.add("https://laptopaz.vn/media/lib/2413_laptopaz-lenovo-ideapad-3-15ITL05-3.jpg");
+        productDetailImgList.add("https://laptopaz.vn/media/lib/2413_laptopaz-lenovo-ideapad-3-15ITL05-3.jpg");
+        productDetailImgList.add("https://laptopaz.vn/media/lib/2413_laptopaz-lenovo-ideapad-3-15ITL05-3.jpg");
+        productDetailImgList.add("https://laptopaz.vn/media/lib/2413_laptopaz-lenovo-ideapad-3-15ITL05-3.jpg");
+        productDetailImgList.add("https://laptopaz.vn/media/lib/2413_laptopaz-lenovo-ideapad-3-15ITL05-3.jpg");
+        productDetailImgList.add("https://laptopaz.vn/media/lib/2413_laptopaz-lenovo-ideapad-3-15ITL05-3.jpg");
+
+        return productDetailImgList;
+    }
+
+    public List<String> getColorList() {
+        List<String> colorsList = new ArrayList<>();
+        colorsList.add("#FF0000");
+        colorsList.add("#00FF00");
+        colorsList.add("#0000FF");
+        colorsList.add("#FFFF00");
+        colorsList.add("#FF00FF");
+        colorsList.add("#00FFFF");
+        colorsList.add("#000000");
+        colorsList.add("#FFFFFF");
+
+        return colorsList;
+    }
+
+    public List<String> getOptionsList() {
+        List<String> optionsList = new ArrayList<>();
+        optionsList.add("16GB");
+        optionsList.add("32GB");
+        optionsList.add("64GB");
+        optionsList.add("128GB");
+
+        return optionsList;
+    }
+
+    public String getImgProductDetail() {
+        return "https://laptopaz.vn/media/lib/2413_laptopaz-lenovo-ideapad-3-15ITL05-3.jpg";
+    }
+
     public int getColumns(int col) {
         return col;
     }
