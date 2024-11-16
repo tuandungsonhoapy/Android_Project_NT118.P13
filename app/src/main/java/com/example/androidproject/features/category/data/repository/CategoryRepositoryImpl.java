@@ -31,6 +31,8 @@ public class CategoryRepositoryImpl implements CategoryRepository{
         categoryData.put("description", category.getDescription());
         categoryData.put("createdAt", category.getCreatedAt());
         categoryData.put("updatedAt", category.getUpdatedAt());
+        categoryData.put("productCount", 0);
+        categoryData.put("hidden", category.isHidden());
 
         db.collection("categories").document(category.prefixCategoryID(quantity)).set(categoryData)
                 .addOnSuccessListener(aVoid -> Log.d("Firestore", "Thêm category thành công: " + category.getCategoryName()))

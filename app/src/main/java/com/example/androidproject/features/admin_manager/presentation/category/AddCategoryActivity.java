@@ -120,12 +120,13 @@ public class AddCategoryActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(String url) {
                     uploadUrl = url;
-                    Log.d("Firestore", uploadUrl);
                     CategoryModel category = new CategoryModel(categoryName, uploadUrl, categoryDescription);
                     categoryUseCase.addCategory(category, categoryQuantity);
                     counterModel.updateQuantity("category", 1);
-                    Log.d("Firestore", "Số lượng category sau khi thêm: " + categoryQuantity);
                     Toast.makeText(AddCategoryActivity.this, "Thêm category thành công", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.putExtra("added_category", true);
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
 

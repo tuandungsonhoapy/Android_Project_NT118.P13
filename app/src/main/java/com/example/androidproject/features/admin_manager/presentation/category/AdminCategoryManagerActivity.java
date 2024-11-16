@@ -27,6 +27,7 @@ public class AdminCategoryManagerActivity extends AdminBaseManagerLayout {
     private RecyclerView rvCategoryList;
     private Button btnAddCategory;
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
+    ListCategoryItemAdminAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,20 +45,20 @@ public class AdminCategoryManagerActivity extends AdminBaseManagerLayout {
 
         List<CategoryEntity> initialCategoryList = new ArrayList<>();
         rvCategoryList = findViewById(R.id.recycler_categories_view);
-        ListCategoryItemAdminAdapter adapter = new ListCategoryItemAdminAdapter(initialCategoryList, this);
+        adapter = new ListCategoryItemAdminAdapter(initialCategoryList, this);
         rvCategoryList.setAdapter(adapter);
         rvCategoryList.setLayoutManager(new LinearLayoutManager(this));
 
-        getCategoryList(adapter);
+        getCategoryList();
 
         btnAddCategory = findViewById(R.id.btnAddCategory);
         btnAddCategory.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddCategoryActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         });
     }
 
-    private void getCategoryList(ListCategoryItemAdminAdapter adapter) {
+    private void getCategoryList() {
         categoryUseCase.getCategory("1","10").thenAccept(r -> {
             if (r.isRight()) {
                 List<CategoryEntity> categoryList = r.getRight();
@@ -66,6 +67,17 @@ public class AdminCategoryManagerActivity extends AdminBaseManagerLayout {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            boolean categoryAdded = data.getBooleanExtra("added_category", false);
+            if (categoryAdded) {
+                getCategoryList();
+            }
+        }
     }
 
     @Override
