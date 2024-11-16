@@ -3,6 +3,7 @@ package com.example.androidproject.features.admin_manager.presentation.category;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.androidproject.R;
+import com.example.androidproject.core.utils.CloudinaryConfig;
 import com.example.androidproject.core.utils.FileHandler;
 import com.example.androidproject.core.utils.counter.CounterModel;
 import com.example.androidproject.features.category.data.model.CategoryModel;
@@ -27,11 +29,13 @@ import com.example.androidproject.features.category.usecase.CategoryUseCase;
 
 public class AddCategoryActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> openImageLauncher;
+    private CloudinaryConfig cloudinaryConfig = new CloudinaryConfig();
     private FileHandler fileHandler = new FileHandler(this);
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
     private CounterModel counterModel;
     private long categoryQuantity;
     private String imageUrl;
+    private String uploadUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +60,6 @@ public class AddCategoryActivity extends AppCompatActivity {
             public void onQuantityReceived(Long quantity) {
                 if (quantity != null) {
                     categoryQuantity = quantity;
-                    Log.d("Firestore", "Số lượng category hiện tại: " + quantity);
-                } else {
-                    Log.d("Firestore", "Không thể lấy số lượng category");
                 }
             }
 
@@ -105,12 +106,35 @@ public class AddCategoryActivity extends AppCompatActivity {
                 return;
             }
 
-            CategoryModel category = new CategoryModel(categoryName, imageUrl, categoryDescription);
-            categoryUseCase.addCategory(category, categoryQuantity);
-            counterModel.updateQuantity("category", 1);
-            Log.d("Firestore", "Số lượng category sau khi thêm: " + categoryQuantity);
-            Toast.makeText(this, "Thêm category thành công", Toast.LENGTH_SHORT).show();
-            finish();
+            cloudinaryConfig.uploadImage(imageUrl, this, new CloudinaryConfig.UploadImageInterface() {
+                @Override
+                public void onStart() {
+
+                }
+
+                @Override
+                public void onProgress(long bytes, long totalBytes) {
+
+                }
+
+                @Override
+                public void onSuccess(String url) {
+                    uploadUrl = url;
+                    Log.d("Firestore", uploadUrl);
+                    CategoryModel category = new CategoryModel(categoryName, uploadUrl, categoryDescription);
+                    categoryUseCase.addCategory(category, categoryQuantity);
+                    counterModel.updateQuantity("category", 1);
+                    Log.d("Firestore", "Số lượng category sau khi thêm: " + categoryQuantity);
+                    Toast.makeText(AddCategoryActivity.this, "Thêm category thành công", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+
+                }
+            });
+
         });
     }
 

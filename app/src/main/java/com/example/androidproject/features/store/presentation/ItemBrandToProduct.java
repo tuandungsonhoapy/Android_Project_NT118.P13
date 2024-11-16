@@ -50,7 +50,7 @@ public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.
         for (CategoryModel category : categoryList) {
             ImageView imageView = new ImageView(context);
             if(category.getCategoryName() == "Laptop") {
-                Glide.with(context).load(category.getCategoryImage()).into(imageView);
+                Glide.with(context).load(category.getImageUrl()).into(imageView);
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.width = 200;
                 params.height = 200;
@@ -60,7 +60,7 @@ public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.
 
                 holder.gridLayout.addView(imageView);
             } else if (category.getCategoryName() == "Phone") {
-                Glide.with(context).load(category.getCategoryImage()).into(imageView);
+                Glide.with(context).load(category.getImageUrl()).into(imageView);
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.width = 200;
                 params.height = 200;
@@ -70,7 +70,7 @@ public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.
 
                 holder.gridLayout.addView(imageView);
             } else if (category.getCategoryName() == "Monitor") {
-                Glide.with(context).load(category.getCategoryImage()).into(imageView);
+                Glide.with(context).load(category.getImageUrl()).into(imageView);
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.width = 200;
                 params.height = 200;

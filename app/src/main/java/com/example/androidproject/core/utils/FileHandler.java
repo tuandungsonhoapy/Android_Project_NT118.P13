@@ -8,6 +8,8 @@ import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.io.IOException;
 
 public class FileHandler {
@@ -33,8 +35,4 @@ public class FileHandler {
         }
     }
 
-    public void saveImage(Uri imageUri) {
-        // Save image to storage
-
-    }
 }

@@ -2,6 +2,9 @@ package com.example.androidproject.features.category.data.repository;
 
 import android.util.Log;
 
+import com.example.androidproject.core.errors.Failure;
+import com.example.androidproject.core.utils.Either;
+import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -9,37 +12,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
-public class CategoryRepository {
-    public void addCategoryRepository(CategoryModel category, long quantity) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> categoryData = new HashMap<>();
+public interface CategoryRepository {
+    void addCategoryRepository(CategoryModel category, long quantity);
 
-        categoryData.put("id", category.prefixCategoryID(quantity));
-        categoryData.put("name", category.getCategoryName());
-        categoryData.put("imageUrl", category.getCategoryImage());
-        categoryData.put("description", category.getDescription());
-        categoryData.put("createdAt", category.getCreatedAt());
-        categoryData.put("updatedAt", category.getUpdatedAt());
+    CompletableFuture<Either<Failure, List<CategoryModel>>> getCategoryRepository(String page, String limit);
 
-        db.collection("categories").document(category.prefixCategoryID(quantity)).set(categoryData)
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Thêm category thành công: " + category.getCategoryName()))
-                .addOnFailureListener(e -> Log.e("Firestore", "Lỗi khi thêm category: ", e));
-    }
+    void updateCategoryRepository(CategoryModel category);
 
-    public List<CategoryModel> getCategoryRepository(String page, String limit) {
-        List<CategoryModel> categoryList = new ArrayList<>();
+    void deleteCategoryRepository(String id);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("categories").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
-                        CategoryModel category = queryDocumentSnapshots.getDocuments().get(i).toObject(CategoryModel.class);
-                        categoryList.add(category);
-                    }
-                })
-                .addOnFailureListener(e -> Log.e("Firestore", "Lỗi khi lấy category: ", e));
-        Log.d("Firestore", "Lấy category thành công");
-        return categoryList;
-    }
+    void updateCategoryProductCount(String categoryId, int index);
 }

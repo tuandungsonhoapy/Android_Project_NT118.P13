@@ -1,65 +1,47 @@
 package com.example.androidproject.features.category.data.model;
 
-import com.google.firebase.Timestamp;
 
-public class CategoryModel {
-    private String id;
-    private String name;
-    private String imageUrl;
-    private String description;
-    private com.google.firebase.Timestamp createdAt;
-    private com.google.firebase.Timestamp updatedAt;
+import com.example.androidproject.features.category.data.entity.CategoryEntity;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class CategoryModel extends CategoryEntity {
+    public CategoryModel() {
+    }
 
     public CategoryModel(String name, String imageUrl, String description) {
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.description = description;
-        this.createdAt = Timestamp.now();
-        this.updatedAt = null;
+        super(name, imageUrl, description);
     }
 
-    public String getCategoryName() {
-        return name;
+    public String getName() {
+        return super.getCategoryName();
     }
 
-    public String getCategoryImage() {
-        return imageUrl;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setImage(String image) {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getId() {
-        return id;
+    public String getImageUrl() {
+        return super.getImageUrl();
     }
 
     public String getDescription() {
-        return description;
+        return super.getDescription();
+    }
+
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    public void setImageUrl(String imageUrl) {
+        super.setImageUrl(imageUrl);
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        super.setDescription(description);
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
+    public List<CategoryEntity> toCategoryEntityList(List<CategoryModel> items) {
+        return items.stream()
+                .map(item -> new CategoryEntity(item.getCategoryName(), item.getImageUrl(), item.getDescription()))
+                .collect(Collectors.toList());
     }
 
     public String prefixCategoryID(long quantity) {
