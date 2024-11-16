@@ -2,6 +2,7 @@ package com.example.androidproject.features.admin_manager.presentation.widgets;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,9 +39,10 @@ public class ListCategoryItemAdminAdapter extends RecyclerView.Adapter<ListCateg
     @Override
     public void onBindViewHolder(@NonNull ListCategoryItemAdminViewHolder holder, int position) {
         CategoryEntity category = categoryList.get(position);
+
         holder.tvCategoryID.setText(category.getId());
         holder.tvCategoryName.setText(category.getCategoryName());
-        holder.tvCategoryQuantity.setText("10");
+        holder.tvCategoryQuantity.setText(String.valueOf(category.getProductCount()));
         Glide.with(context)
                 .load(category.getImageUrl())
                 .override(300, 300)
@@ -49,9 +51,7 @@ public class ListCategoryItemAdminAdapter extends RecyclerView.Adapter<ListCateg
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailCategoryAdminActivity.class);
-            intent.putExtra("category_id", "#TECH113");
-            intent.putExtra("category_name", category.getCategoryName());
-            intent.putExtra("category_quantity", "10");
+            intent.putExtra("category_id", category.getId());
             context.startActivity(intent);
         });
     }

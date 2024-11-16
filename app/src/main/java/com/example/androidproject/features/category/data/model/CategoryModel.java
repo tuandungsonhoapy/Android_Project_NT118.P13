@@ -14,6 +14,10 @@ public class CategoryModel extends CategoryEntity {
         super(name, imageUrl, description);
     }
 
+    public String getId() {
+        return super.getId();
+    }
+
     public String getName() {
         return super.getCategoryName();
     }
@@ -40,7 +44,14 @@ public class CategoryModel extends CategoryEntity {
 
     public List<CategoryEntity> toCategoryEntityList(List<CategoryModel> items) {
         return items.stream()
-                .map(item -> new CategoryEntity(item.getCategoryName(), item.getImageUrl(), item.getDescription()))
+                .map(item -> {
+                    CategoryEntity categoryEntity = new CategoryEntity();
+                    categoryEntity.setId(item.getId());
+                    categoryEntity.setName(item.getName());
+                    categoryEntity.setImageUrl(item.getImageUrl());
+                    categoryEntity.setDescription(item.getDescription());
+                    return categoryEntity;
+                })
                 .collect(Collectors.toList());
     }
 

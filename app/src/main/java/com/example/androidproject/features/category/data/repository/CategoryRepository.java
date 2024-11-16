@@ -24,4 +24,6 @@ public interface CategoryRepository {
     void deleteCategoryRepository(String id);
 
     void updateCategoryProductCount(String categoryId, int index);
+
+    CompletableFuture<Either<Failure, CategoryModel>> getCategoryByID(String id);
 }

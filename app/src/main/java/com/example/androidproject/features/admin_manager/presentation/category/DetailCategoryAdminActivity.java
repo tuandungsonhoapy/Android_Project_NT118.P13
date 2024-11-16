@@ -1,6 +1,7 @@
 package com.example.androidproject.features.admin_manager.presentation.category;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -17,10 +18,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
+import com.example.androidproject.features.category.data.model.CategoryModel;
+import com.example.androidproject.features.category.usecase.CategoryUseCase;
 
 public class DetailCategoryAdminActivity extends AppCompatActivity {
     private ImageButton btnBack;
     private Button btnEdit;
+    private String categoryID;
+    private CategoryUseCase categoryUseCase = new CategoryUseCase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,21 +39,41 @@ public class DetailCategoryAdminActivity extends AppCompatActivity {
             return insets;
         });
 
+        getCategoryIntent();
+        setupButtons();
+        getCategoryDetail();
+    }
+
+    private void getCategoryIntent() {
+        categoryID = getIntent().getStringExtra("category_id");
+    }
+
+    private void getCategoryDetail() {
+        categoryUseCase.getCategoryByID(categoryID).thenAccept(r -> {
+           if (r.isRight()) {
+                CategoryModel category = r.getRight();
+                updateUI(category);
+           } else {
+               Log.d("categopry", "k lay duoc catergory");
+           }
+        });
+    }
+
+    private void updateUI(CategoryModel category) {
         TextView categoryID = findViewById(R.id.tvCategoryID);
         TextView categoryName = findViewById(R.id.tvCategoryName);
         TextView categoryQuantity = findViewById(R.id.tvCategoryQuantity);
         TextView categoryDescription = findViewById(R.id.tvCategoryDescription);
         ImageView categoryImage = findViewById(R.id.ivCategoryImage);
 
-        setupButtons();
-
-        categoryID.setText(getIntent().getStringExtra("category_id"));
-        categoryName.setText(getIntent().getStringExtra("category_name"));
-        categoryQuantity.setText(getIntent().getStringExtra("category_quantity"));
-        categoryDescription.setText("helo world");
-
+        categoryID.setText(category.getId());
+        categoryName.setText(category.getCategoryName());
+        categoryQuantity.setText(String.valueOf(category.getProductCount()));
+        categoryDescription.setText(category.getDescription());
         Glide.with(this)
-                .load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7U_69OLMV-mASOOC1CdFjJ50-yUmU5hv5UQ&s")
+                .load(category.getImageUrl())
+                .override(300, 300)
+                .centerCrop()
                 .into(categoryImage);
     }
 

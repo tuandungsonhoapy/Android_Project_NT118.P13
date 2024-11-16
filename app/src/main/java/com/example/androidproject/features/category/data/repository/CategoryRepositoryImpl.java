@@ -86,4 +86,16 @@ public class CategoryRepositoryImpl implements CategoryRepository{
                 .addOnSuccessListener(aVoid -> Log.d("Firestore", "Cập nhật số lượng sản phẩm của category thành công"))
                 .addOnFailureListener(e -> Log.e("Firestore", "Lỗi khi cập nhật số lượng sản phẩm của category: ", e));
     }
+
+    @Override
+    public CompletableFuture<Either<Failure,CategoryModel>> getCategoryByID(String id) {
+        CompletableFuture<Either<Failure, CategoryModel>> future = new CompletableFuture<>();
+        db.collection("categories").document(id).get()
+                .addOnSuccessListener(r -> {
+                    CategoryModel category = r.toObject(CategoryModel.class);
+                    future.complete(Either.right(category));
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
+    }
 }

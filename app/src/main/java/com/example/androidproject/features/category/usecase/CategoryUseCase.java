@@ -70,4 +70,8 @@ public class CategoryUseCase {
     public void updateCategoryProductCount(String categoryId, int index) {
         categoryRepository.updateCategoryProductCount(categoryId, index);
     }
+
+    public CompletableFuture<Either<Failure, CategoryModel>> getCategoryByID(String id) {
+        return categoryRepository.getCategoryByID(id);
+    }
 }
