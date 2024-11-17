@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class CloudinaryConfig {
     public static void khoi_tao_cloudinary(Context ctx) {
@@ -47,8 +48,8 @@ public class CloudinaryConfig {
         }
     }
 
-    public static String uploadImage(String imagePath, Context ctx, UploadImageInterface uploadImageInterface) {
-        String url = "";
+    public static CompletableFuture<String> uploadImage(String imagePath, Context ctx) {
+        CompletableFuture<String> future = new CompletableFuture<>();
         try {
             File file;
             if (imagePath.contains("content://")) {
@@ -62,19 +63,18 @@ public class CloudinaryConfig {
                     .callback(new UploadCallback() {
                         @Override
                         public void onStart(String requestId) {
-                            uploadImageInterface.onStart();
+
                         }
 
                         @Override
                         public void onProgress(String requestId, long bytes, long totalBytes) {
-                            uploadImageInterface.onProgress(bytes, totalBytes);
+
                         }
 
                         @Override
                         public void onSuccess(String requestId, Map resultData) {
-                            Log.d("CLOUDINARY", "uploadImage-success: " + resultData.get("url"));
-                            String uploadedUrl = (String) resultData.get("secure_url");
-                            uploadImageInterface.onSuccess(uploadedUrl);
+                            String uploadUrl = (String) resultData.get("secure_url");
+                            future.complete(uploadUrl);
                         }
 
                         @Override
@@ -86,14 +86,14 @@ public class CloudinaryConfig {
                         public void onReschedule(String requestId, ErrorInfo error) {
 
                         }
-                    })
-                    .dispatch();
-            return url;
+                    }).dispatch();
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("CLOUDINARY", "uploadImage-err: " + e.getMessage());
             return null;
         }
+
+        return future;
     }
 
     public static File createImageFileFromUri(Uri uri, Context ctx) {
@@ -126,13 +126,4 @@ public class CloudinaryConfig {
         return tmp_file;
     }
 
-    public interface UploadImageInterface {
-        void onStart();
-
-        void onProgress(long bytes, long totalBytes);
-
-        void onSuccess(String url);
-
-        void onError(String errorMessage);
-    }
 }

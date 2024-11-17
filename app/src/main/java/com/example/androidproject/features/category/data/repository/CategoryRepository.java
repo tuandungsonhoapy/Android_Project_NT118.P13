@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 public interface CategoryRepository {
     void addCategoryRepository(CategoryModel category, long quantity);
 
-    CompletableFuture<Either<Failure, List<CategoryModel>>> getCategoryRepository(String page, String limit);
+    CompletableFuture<Either<Failure, List<CategoryModel>>> getCategoryRepository(String page, String limit, String search);
 
     void updateCategoryRepository(CategoryModel category);
 

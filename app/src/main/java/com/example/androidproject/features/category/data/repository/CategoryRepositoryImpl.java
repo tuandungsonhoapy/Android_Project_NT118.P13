@@ -7,12 +7,14 @@ import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class CategoryRepositoryImpl implements CategoryRepository{
     private final FirebaseFirestore db;
@@ -40,16 +42,31 @@ public class CategoryRepositoryImpl implements CategoryRepository{
     }
 
     @Override
-    public CompletableFuture<Either<Failure, List<CategoryModel>>> getCategoryRepository(String page, String limit) {
+    public CompletableFuture<Either<Failure, List<CategoryModel>>> getCategoryRepository(String page, String limit, String search) {
         CompletableFuture<Either<Failure, List<CategoryModel>>> future = new CompletableFuture<>();
         List<CategoryModel> categoryList = new ArrayList<>();
-        db.collection("categories").get()
+
+        int pageInt = Integer.parseInt(page);
+        int limitInt = Integer.parseInt(limit);
+
+        Query query = db.collection("categories")
+                .limit(limitInt);
+
+        query.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                         CategoryModel category = queryDocumentSnapshots.getDocuments().get(i).toObject(CategoryModel.class);
                         categoryList.add(category);
                     }
-                    future.complete(Either.right(categoryList));
+
+                    List<CategoryModel> filterCategoryList = categoryList;
+                    if (search != null && !search.isEmpty()) {
+                        filterCategoryList = categoryList.stream()
+                                .filter(category -> category.getCategoryName().toLowerCase().contains(search.toLowerCase()))
+                                .collect(Collectors.toList());
+                    }
+
+                    future.complete(Either.right(filterCategoryList));
                 })
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         Log.d("Firestore", "Lấy category thành công");

@@ -40,17 +40,18 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btn_admin_category_edit"
+            android:id="@+id/btnHide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
-            android:text="Sửa"
+            android:text="Ẩn"
             android:textColor="@color/primary"
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/sv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/guidelineTop"
@@ -236,8 +237,8 @@
 
                     <ImageView
                         android:id="@+id/ivCategoryImage"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp"
                         android:src="@drawable/ic_launcher_background"
                         android:layout_marginTop="10dp"
                         />
@@ -248,4 +249,26 @@
 
     </ScrollView>
 
+    <Button
+        android:id="@+id/btnEdit"
+        app:layout_constraintBottom_toTopOf="@+id/btnDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chỉnh sửa danh mục"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="@color/primary"
+        android:visibility="gone"
+        />
+
+    <Button
+        android:id="@+id/btnDelete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="Xóa danh mục"
+        android:backgroundTint="@color/black"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

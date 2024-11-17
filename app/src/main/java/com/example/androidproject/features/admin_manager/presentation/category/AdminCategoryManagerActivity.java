@@ -6,8 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -26,9 +30,17 @@ import java.util.List;
 
 public class AdminCategoryManagerActivity extends AdminBaseManagerLayout {
     private RecyclerView rvCategoryList;
-    private Button btnAddCategory;
+    private Button btnAddCategory, btnNext, btnPrevious;
+    private EditText editSearch;
+    private ImageView iconSearch;
+    private TextView tvPageNumber;
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
-    ListCategoryItemAdminAdapter adapter;
+    private ListCategoryItemAdminAdapter adapter;
+    private String search;
+    private int page = 1;
+    private int limit = 10;
+    private int pageNumber = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,15 +69,42 @@ public class AdminCategoryManagerActivity extends AdminBaseManagerLayout {
             Intent intent = new Intent(this, AddCategoryActivity.class);
             startActivityForResult(intent, 1);
         });
+
+        tvPageNumber = findViewById(R.id.tvPageNumber);
+        editSearch = findViewById(R.id.edt_search_order_admin);
+        btnNext = findViewById(R.id.btnNext);
+        btnNext.setOnClickListener(v -> {
+            page++;
+            getCategoryList();
+        });
+
+        btnPrevious = findViewById(R.id.btnPrevious);
+        btnPrevious.setOnClickListener(v -> {
+            if (page > 1) {
+                page--;
+                getCategoryList();
+            }
+        });
+
+        iconSearch = findViewById(R.id.img_search);
+        iconSearch.setOnClickListener(v -> {
+            search = editSearch.getText().toString();
+            page = 1;
+            getCategoryList();
+        });
     }
 
     private void getCategoryList() {
-        categoryUseCase.getCategory("1","10").thenAccept(r -> {
+        categoryUseCase.getCategory("1","10", search).thenAccept(r -> {
             if (r.isRight()) {
                 List<CategoryEntity> categoryList = r.getRight();
                 adapter.updateCategoryList(categoryList);
-            } else {
 
+                pageNumber = page;
+                tvPageNumber.setText(String.format("Trang %d", pageNumber));
+
+                btnPrevious.setEnabled(page > 1);
+                btnNext.setEnabled(categoryList.size() == limit);
             }
         });
     }
@@ -80,6 +119,7 @@ public class AdminCategoryManagerActivity extends AdminBaseManagerLayout {
             }
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){

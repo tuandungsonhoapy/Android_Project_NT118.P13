@@ -35,7 +35,6 @@ public class AddCategoryActivity extends AppCompatActivity {
     private CounterModel counterModel;
     private long categoryQuantity;
     private String imageUrl;
-    private String uploadUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,40 +101,19 @@ public class AddCategoryActivity extends AppCompatActivity {
             String categoryName = etCategoryName.getText().toString();
             String categoryDescription = etCategoryDescription.getText().toString();
             if (categoryName.isEmpty() || categoryDescription.isEmpty()) {
-                Log.d("Firestore", "Vui lòng nhập đầy đủ thông tin");
                 return;
             }
 
-            cloudinaryConfig.uploadImage(imageUrl, this, new CloudinaryConfig.UploadImageInterface() {
-                @Override
-                public void onStart() {
-
-                }
-
-                @Override
-                public void onProgress(long bytes, long totalBytes) {
-
-                }
-
-                @Override
-                public void onSuccess(String url) {
-                    uploadUrl = url;
-                    CategoryModel category = new CategoryModel(categoryName, uploadUrl, categoryDescription);
-                    categoryUseCase.addCategory(category, categoryQuantity);
-                    counterModel.updateQuantity("category", 1);
-                    Toast.makeText(AddCategoryActivity.this, "Thêm category thành công", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent();
-                    intent.putExtra("added_category", true);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-
-                @Override
-                public void onError(String errorMessage) {
-
-                }
+            cloudinaryConfig.uploadImage(imageUrl, this).thenAccept(r -> {
+                CategoryModel category = new CategoryModel(categoryName, r, categoryDescription);
+                categoryUseCase.addCategory(category, categoryQuantity);
+                counterModel.updateQuantity("category", 1);
+                Toast.makeText(AddCategoryActivity.this, "Thêm category thành công", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.putExtra("added_category", true);
+                setResult(RESULT_OK, intent);
+                finish();
             });
-
         });
     }
 

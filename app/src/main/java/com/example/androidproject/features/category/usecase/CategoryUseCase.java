@@ -55,8 +55,8 @@ public class CategoryUseCase {
         categoryRepository.addCategoryRepository(categoryModel, quantity);
     }
 
-    public CompletableFuture<Either<Failure,List<CategoryEntity>>> getCategory(String page, String limit) {
-        return categoryRepository.getCategoryRepository(page, limit).thenApply(r -> {
+    public CompletableFuture<Either<Failure,List<CategoryEntity>>> getCategory(String page, String limit, String search) {
+        return categoryRepository.getCategoryRepository(page, limit, search).thenApply(r -> {
            if (r.isRight()) {
                 List<CategoryModel> categoryModels = r.getRight();
                 List<CategoryEntity> categoryEntities = new CategoryModel().toCategoryEntityList(categoryModels);
