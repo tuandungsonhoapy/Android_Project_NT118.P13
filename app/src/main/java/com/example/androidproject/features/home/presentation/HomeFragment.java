@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,10 @@ import com.example.androidproject.R;
 import com.example.androidproject.features.banner.data.model.BannerModel;
 import com.example.androidproject.features.banner.presentation.BannerAdapter;
 import com.example.androidproject.features.cart.presentation.CartActivity;
+import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.presentation.CategoryAdapter;
+import com.example.androidproject.features.category.usecase.CategoryUseCase;
 import com.example.androidproject.features.home.usecase.HomeUseCase;
 import com.example.androidproject.features.product.data.model.ProductModel;
 import com.example.androidproject.features.product.presentation.AllProductActivity;
@@ -50,6 +53,8 @@ public class HomeFragment extends Fragment {
     private ImageView cartIcon;
     private TextView viewAllProduct;
     private HomeUseCase homeUseCase = new HomeUseCase();
+    private CategoryUseCase categoryUseCase = new CategoryUseCase();
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -94,10 +99,16 @@ public class HomeFragment extends Fragment {
         viewAllProduct = view.findViewById(R.id.viewAllProduct);
 
         //view categories
-        CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), homeUseCase.getCategoriesList());
-        recyclerCategoryView.setAdapter(categoryAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerCategoryView.setLayoutManager(layoutManager);
+        List<CategoryEntity> categoryList = new ArrayList<>();
+        categoryUseCase.getCategoryList().thenAccept(r -> {
+            if (r.isRight()){
+                categoryList.addAll(r.getRight());
+                CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), categoryList);
+                recyclerCategoryView.setAdapter(categoryAdapter);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                recyclerCategoryView.setLayoutManager(layoutManager);
+            }
+        });
 
         //view banners
         BannerAdapter bannerAdapter = new BannerAdapter(getContext(), homeUseCase.getBannersList());

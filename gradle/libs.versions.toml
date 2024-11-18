@@ -10,9 +10,10 @@ constraintlayout = "2.1.4"
 mediarouter = "1.7.0"
 rxandroid = "3.0.2"
 glide = "4.15.1"
+cloudinary = "3.0.2"
 
 #Firebase
-#firebaseBom = "33.3.0"
+firebaseBom = "33.3.0"
 firebaseAuth = "23.0.0"
 playServicesAuth = "21.2.0"
 googleGmsGoogleServices = "4.4.2"
@@ -35,13 +36,17 @@ mediarouter = { group = "androidx.mediarouter", name = "mediarouter", version.re
 rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+cloudinary-android = { group = "com.cloudinary", name = "cloudinary-android", version.ref = "cloudinary" }
+cloudinary-android-download = { group = "com.cloudinary", name = "cloudinary-android-download", version.ref = "cloudinary" }
+cloudinary-android-preprocess = { group = "com.cloudinary", name = "cloudinary-android-preprocess", version.ref = "cloudinary" }
 
 #Firebase
-#firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 
 #Retrofit để fetch api
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }

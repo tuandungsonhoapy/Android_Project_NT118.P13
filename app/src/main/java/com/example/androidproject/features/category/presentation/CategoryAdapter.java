@@ -1,6 +1,7 @@
 package com.example.androidproject.features.category.presentation;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +11,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
+import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewholder> {
-    private List<CategoryModel> categories;
+    private List<CategoryEntity> categories;
     private Context context;
 
-    public CategoryAdapter(Context context, List<CategoryModel> categories) {
+    public CategoryAdapter(Context context, List<CategoryEntity> categories) {
         this.context = context;
         this.categories = categories;
     }
@@ -33,9 +36,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewholder holder, int position) {
-        CategoryModel category = categories.get(position);
+        CategoryEntity category = categories.get(position);
         holder.categoryName.setText(category.getCategoryName());
-        holder.categoryImage.setImageResource(category.getCategoryImage());
+        Glide.with(context).load(category.getImageUrl()).into(holder.categoryImage);
     }
 
     @Override

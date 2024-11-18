@@ -16,6 +16,7 @@ import android.widget.GridLayout;
 import com.example.androidproject.R;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.brand.presentation.BrandAdapter;
+import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.usecase.CategoryUseCase;
 import com.example.androidproject.features.store.presentation.ItemBrandToProduct;
 
@@ -52,7 +53,14 @@ public class CategoryToBrandFragment extends Fragment {
         recyclerBrandView = view.findViewById(R.id.recycler_view_list_brands);
 
         brandList = categoryUseCase.getBrandListByCategory(category);
-        ItemBrandToProduct itemBrandToProduct = new ItemBrandToProduct(getContext(), brandList, categoryUseCase.getCategoryList());
+        List<CategoryEntity> categoryList = new ArrayList<>();
+        categoryUseCase.getCategoryList().thenAccept(r -> {
+            if (r.isRight()){
+                categoryList.addAll(r.getRight());
+            }
+        });
+
+        ItemBrandToProduct itemBrandToProduct = new ItemBrandToProduct(getContext(), brandList, categoryList);
         recyclerBrandView.setAdapter(itemBrandToProduct);
         itemBrandToProduct.notifyDataSetChanged();
         recyclerBrandView.scrollToPosition(0);

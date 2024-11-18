@@ -1,7 +1,13 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
 }
+
+val apiKey= gradleLocalProperties(rootDir, providers).getProperty("api-key")
+val apiSecret= gradleLocalProperties(rootDir, providers).getProperty("api-secret")
+val cloudName= gradleLocalProperties(rootDir, providers).getProperty("cloud-name")
 
 android {
     namespace = "com.example.androidproject"
@@ -16,7 +22,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-
+        resValue("string", "api_key", apiKey)
+        resValue("string", "api_secret", apiSecret)
+        resValue("string", "cloud_name", cloudName)
     }
 
     buildTypes {
@@ -55,13 +63,17 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(kotlin("script-runtime"))
     implementation(libs.rxandroid)
-    //implementation(platform(libs.firebase.bom))
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
     implementation(libs.play.services.auth)
     implementation(libs.retrofit)
     implementation(libs.gson)
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
+    implementation(libs.cloudinary.android)
+    implementation(libs.cloudinary.android.download)
+    implementation(libs.cloudinary.android.preprocess)
     //wishlist
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     // For control over item selection of both touch and mouse driven selection
