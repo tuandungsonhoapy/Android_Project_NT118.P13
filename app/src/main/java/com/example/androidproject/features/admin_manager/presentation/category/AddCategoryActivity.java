@@ -76,7 +76,7 @@ public class AddCategoryActivity extends AppCompatActivity {
             cloudinaryConfig.uploadImage(imageUrl, this).thenAccept(r -> {
                 CategoryModel category = new CategoryModel(categoryName, r, categoryDescription);
                 categoryUseCase.addCategory(category, categoryQuantity);
-                counterModel.updateQuantity("category", 1)
+                counterModel.updateQuantity("category")
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(AddCategoryActivity.this, "Thêm category thành công", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent();

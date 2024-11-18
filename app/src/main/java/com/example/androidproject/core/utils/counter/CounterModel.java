@@ -23,8 +23,8 @@ public class CounterModel {
                 });
     }
 
-    public Task<Void> updateQuantity(String documentName, int delta) {
+    public Task<Void> updateQuantity(String documentName) {
         DocumentReference docRef = db.collection("counter").document(documentName);
-        return docRef.update("quantity", FieldValue.increment(delta));
+        return docRef.update("quantity", FieldValue.increment(1));
     }
 }

@@ -153,14 +153,11 @@ public class DetailCategoryAdminActivity extends AppCompatActivity {
 
             builder.setPositiveButton("OK", (dialog, which) -> {
                 categoryUseCase.deleteCategory(id);
-                counterModel.updateQuantity("category", -1)
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(this, "Xóa thành công", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent();
-                            intent.putExtra("deleted_category", true);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        });
+                Toast.makeText(this, "Xóa thành công", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.putExtra("deleted_category", true);
+                setResult(RESULT_OK, intent);
+                finish();
             });
 
             builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
