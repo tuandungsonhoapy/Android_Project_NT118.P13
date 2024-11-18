@@ -90,7 +90,7 @@ public class CloudinaryConfig {
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("CLOUDINARY", "uploadImage-err: " + e.getMessage());
-            return null;
+            future.completeExceptionally(e);
         }
 
         return future;

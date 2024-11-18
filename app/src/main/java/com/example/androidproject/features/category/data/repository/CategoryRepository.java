@@ -26,4 +26,8 @@ public interface CategoryRepository {
     void updateCategoryProductCount(String categoryId, int index);
 
     CompletableFuture<Either<Failure, CategoryModel>> getCategoryByID(String id);
+
+    void updateCategoryHidden(String id, boolean hidden);
+
+    CompletableFuture<Either<Failure, List<CategoryModel>>> getCategoryListForHomeScreen();
 }

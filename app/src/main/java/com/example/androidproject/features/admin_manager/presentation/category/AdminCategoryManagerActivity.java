@@ -38,7 +38,7 @@ public class AdminCategoryManagerActivity extends AdminBaseManagerLayout {
     private ListCategoryItemAdminAdapter adapter;
     private String search;
     private int page = 1;
-    private int limit = 10;
+    private int limit = 2;
     private int pageNumber = 1;
 
     @Override
@@ -58,7 +58,7 @@ public class AdminCategoryManagerActivity extends AdminBaseManagerLayout {
 
         List<CategoryEntity> initialCategoryList = new ArrayList<>();
         rvCategoryList = findViewById(R.id.recycler_categories_view);
-        adapter = new ListCategoryItemAdminAdapter(initialCategoryList, this);
+        adapter = new ListCategoryItemAdminAdapter(initialCategoryList, this, this);
         rvCategoryList.setAdapter(adapter);
         rvCategoryList.setLayoutManager(new LinearLayoutManager(this));
 
@@ -95,7 +95,7 @@ public class AdminCategoryManagerActivity extends AdminBaseManagerLayout {
     }
 
     private void getCategoryList() {
-        categoryUseCase.getCategory("1","10", search).thenAccept(r -> {
+        categoryUseCase.getCategory(String.valueOf(page),String.valueOf(limit), search).thenAccept(r -> {
             if (r.isRight()) {
                 List<CategoryEntity> categoryList = r.getRight();
                 adapter.updateCategoryList(categoryList);
@@ -104,7 +104,11 @@ public class AdminCategoryManagerActivity extends AdminBaseManagerLayout {
                 tvPageNumber.setText(String.format("Trang %d", pageNumber));
 
                 btnPrevious.setEnabled(page > 1);
-                btnNext.setEnabled(categoryList.size() == limit);
+                if (categoryList.size() >= limit) {
+                    btnNext.setEnabled(true);
+                } else {
+                    btnNext.setEnabled(false);
+                }
             }
         });
     }
@@ -114,7 +118,8 @@ public class AdminCategoryManagerActivity extends AdminBaseManagerLayout {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             boolean categoryAdded = data.getBooleanExtra("added_category", false);
-            if (categoryAdded) {
+            boolean categoryDeleted = data.getBooleanExtra("deleted_category", false);
+            if (categoryAdded || categoryDeleted) {
                 getCategoryList();
             }
         }

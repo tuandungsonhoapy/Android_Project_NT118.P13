@@ -5,7 +5,9 @@ import android.util.Log;
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.category.data.model.CategoryModel;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -18,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class CategoryRepositoryImpl implements CategoryRepository{
     private final FirebaseFirestore db;
-
+    private DocumentSnapshot lastDocument = null;
     public CategoryRepositoryImpl(FirebaseFirestore db) {
         this.db = db;
     }
@@ -36,9 +38,7 @@ public class CategoryRepositoryImpl implements CategoryRepository{
         categoryData.put("productCount", 0);
         categoryData.put("hidden", category.isHidden());
 
-        db.collection("categories").document(category.prefixCategoryID(quantity)).set(categoryData)
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Thêm category thành công: " + category.getCategoryName()))
-                .addOnFailureListener(e -> Log.e("Firestore", "Lỗi khi thêm category: ", e));
+        db.collection("categories").document(category.prefixCategoryID(quantity)).set(categoryData);
     }
 
     @Override
@@ -48,18 +48,28 @@ public class CategoryRepositoryImpl implements CategoryRepository{
 
         int pageInt = Integer.parseInt(page);
         int limitInt = Integer.parseInt(limit);
+        boolean trang_dau = pageInt == 1;
 
         Query query = db.collection("categories")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .limit(limitInt);
+
+        if (!trang_dau && lastDocument != null) {
+            query = query.startAfter(lastDocument);
+        }
 
         query.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
-                        CategoryModel category = queryDocumentSnapshots.getDocuments().get(i).toObject(CategoryModel.class);
+                    lastDocument = queryDocumentSnapshots.getDocuments()
+                            .get(queryDocumentSnapshots.size() - 1);
+
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        CategoryModel category = document.toObject(CategoryModel.class);
                         categoryList.add(category);
                     }
 
                     List<CategoryModel> filterCategoryList = categoryList;
+
                     if (search != null && !search.isEmpty()) {
                         filterCategoryList = categoryList.stream()
                                 .filter(category -> category.getCategoryName().toLowerCase().contains(search.toLowerCase()))
@@ -69,7 +79,6 @@ public class CategoryRepositoryImpl implements CategoryRepository{
                     future.complete(Either.right(filterCategoryList));
                 })
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
-        Log.d("Firestore", "Lấy category thành công");
         return future;
     }
 
@@ -82,16 +91,12 @@ public class CategoryRepositoryImpl implements CategoryRepository{
         categoryData.put("description", category.getDescription());
         categoryData.put("updatedAt", category.getUpdatedAt());
 
-        db.collection("categories").document(category.getId()).update(categoryData)
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Cập nhật category thành công: " + category.getCategoryName()))
-                .addOnFailureListener(e -> Log.e("Firestore", "Lỗi khi cập nhật category: ", e));
+        db.collection("categories").document(category.getId()).update(categoryData);
     }
 
     @Override
     public void deleteCategoryRepository(String id) {
-        db.collection("categories").document(id).delete()
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Xóa category thành công"))
-                .addOnFailureListener(e -> Log.e("Firestore", "Lỗi khi xóa category: ", e));
+        db.collection("categories").document(id).delete();
     }
 
     @Override
@@ -99,9 +104,7 @@ public class CategoryRepositoryImpl implements CategoryRepository{
         Map<String, Object> categoryData = new HashMap<>();
         categoryData.put("productCount", FieldValue.increment(index));
 
-        db.collection("categories").document(categoryId).update(categoryData)
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Cập nhật số lượng sản phẩm của category thành công"))
-                .addOnFailureListener(e -> Log.e("Firestore", "Lỗi khi cập nhật số lượng sản phẩm của category: ", e));
+        db.collection("categories").document(categoryId).update(categoryData);
     }
 
     @Override
@@ -111,6 +114,33 @@ public class CategoryRepositoryImpl implements CategoryRepository{
                 .addOnSuccessListener(r -> {
                     CategoryModel category = r.toObject(CategoryModel.class);
                     future.complete(Either.right(category));
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
+    }
+
+    @Override
+    public void updateCategoryHidden(String id, boolean hidden) {
+        Map<String, Object> categoryData = new HashMap<>();
+        categoryData.put("hidden", hidden);
+
+        db.collection("categories").document(id).update(categoryData);
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, List<CategoryModel>>> getCategoryListForHomeScreen() {
+        CompletableFuture<Either<Failure, List<CategoryModel>>> future = new CompletableFuture<>();
+        List<CategoryModel> categoryList = new ArrayList<>();
+
+        db.collection("categories")
+                .where(Filter.equalTo("hidden", false))
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        CategoryModel category = document.toObject(CategoryModel.class);
+                        categoryList.add(category);
+                    }
+                    future.complete(Either.right(categoryList));
                 })
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         return future;

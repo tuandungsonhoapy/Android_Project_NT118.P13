@@ -21,7 +21,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.androidproject.R;
-import com.example.androidproject.core.utils.FileHandler;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.home.usecase.HomeUseCase;
 
@@ -30,7 +29,7 @@ import java.util.stream.Collectors;
 
 public class AddProductActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> openImageLauncher;
-    private FileHandler fileHandler = new FileHandler(this);
+//    private FileHandler fileHandler = new FileHandler(this);
     private EditText etProductName, etProductPrice, etProductDescription, etProductStock;
     private Spinner spCategory;
     ImageView ivProductImagePreview;
@@ -69,22 +68,22 @@ public class AddProductActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCategory.setAdapter(adapter);
 
-        openImageLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        ivProductImagePreview.setVisibility(View.VISIBLE);
-                        if (imageUri != null) {
-                            fileHandler.displayImageFromUri(imageUri, ivProductImagePreview);
-                        }
-                    }
-                }
-        );
+//        openImageLauncher = registerForActivityResult(
+//                new ActivityResultContracts.StartActivityForResult(),
+//                result -> {
+//                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+//                        Uri imageUri = result.getData().getData();
+//                        ivProductImagePreview.setVisibility(View.VISIBLE);
+//                        if (imageUri != null) {
+//                            fileHandler.displayImageFromUri(imageUri, ivProductImagePreview);
+//                        }
+//                    }
+//                }
+//        );
 
-        btnChooseImage.setOnClickListener(v -> {
-            fileHandler.openFileChooser(openImageLauncher);
-        });
+//        btnChooseImage.setOnClickListener(v -> {
+//            fileHandler.openFileChooser(openImageLauncher);
+//        });
     }
 
     @Override

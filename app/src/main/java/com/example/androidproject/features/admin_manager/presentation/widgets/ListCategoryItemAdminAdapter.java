@@ -1,5 +1,6 @@
 package com.example.androidproject.features.admin_manager.presentation.widgets;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -23,10 +24,12 @@ import java.util.List;
 public class ListCategoryItemAdminAdapter extends RecyclerView.Adapter<ListCategoryItemAdminAdapter.ListCategoryItemAdminViewHolder> {
     private List<CategoryEntity> categoryList;
     private Context context;
-    private CategoryUseCase categoryUseCase = new CategoryUseCase();
-    public ListCategoryItemAdminAdapter(List<CategoryEntity> categoryList, Context context) {
+    private Activity activity;
+
+    public ListCategoryItemAdminAdapter(List<CategoryEntity> categoryList, Context context, Activity activity) {
         this.categoryList = categoryList;
         this.context = context;
+        this.activity = activity;
     }
 
     @NonNull
@@ -52,7 +55,7 @@ public class ListCategoryItemAdminAdapter extends RecyclerView.Adapter<ListCateg
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailCategoryAdminActivity.class);
             intent.putExtra("category_id", category.getId());
-            context.startActivity(intent);
+            activity.startActivityForResult(intent, 1);
         });
     }
 

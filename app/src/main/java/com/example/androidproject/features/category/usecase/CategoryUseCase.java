@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.androidproject.R;
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
+import com.example.androidproject.core.utils.counter.CounterModel;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
@@ -42,12 +43,16 @@ public class CategoryUseCase {
         return brands;
     }
 
-    public List<CategoryModel> getCategoryList() {
-        List<CategoryModel> categoryList = new ArrayList<>();
-        categoryList.add(new CategoryModel("Laptop", "sdfgs", "Laptop description"));
-        categoryList.add(new CategoryModel("Phone", "fsdf", "Phone description"));
-        categoryList.add(new CategoryModel("Controller", "sdfsdf", "Controller description"));
-        return categoryList;
+    public CompletableFuture<Either<Failure,List<CategoryEntity>>> getCategoryList() {
+        return categoryRepository.getCategoryListForHomeScreen().thenApply(r -> {
+            if (r.isRight()) {
+                List<CategoryModel> categoryModels = r.getRight();
+                List<CategoryEntity> categoryEntities = new CategoryModel().toCategoryEntityList(categoryModels);
+                return Either.right(categoryEntities);
+            } else {
+                return Either.left(r.getLeft());
+            }
+        });
     }
 
     public void addCategory(CategoryModel category, long quantity) {
@@ -73,5 +78,17 @@ public class CategoryUseCase {
 
     public CompletableFuture<Either<Failure, CategoryModel>> getCategoryByID(String id) {
         return categoryRepository.getCategoryByID(id);
+    }
+
+    public void updateCategoryHidden(String id, boolean hidden) {
+        categoryRepository.updateCategoryHidden(id, hidden);
+    }
+
+    public void updateCategory(CategoryModel category) {
+        categoryRepository.updateCategoryRepository(category);
+    }
+
+    public void deleteCategory(String id) {
+        categoryRepository.deleteCategoryRepository(id);
     }
 }

@@ -1,7 +1,6 @@
 package com.example.androidproject.features.admin_manager.presentation.category;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -12,27 +11,24 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
 import com.example.androidproject.core.utils.CloudinaryConfig;
-import com.example.androidproject.core.utils.FileHandler;
 import com.example.androidproject.core.utils.counter.CounterModel;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.usecase.CategoryUseCase;
 
 public class AddCategoryActivity extends AppCompatActivity {
-    private ActivityResultLauncher<Intent> openImageLauncher;
+    private static final int PICK_IMAGE_REQUEST = 1;
     private CloudinaryConfig cloudinaryConfig = new CloudinaryConfig();
-    private FileHandler fileHandler = new FileHandler(this);
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
-    private CounterModel counterModel;
+    private CounterModel counterModel = new CounterModel();
     private long categoryQuantity;
     private String imageUrl;
 
@@ -53,48 +49,21 @@ public class AddCategoryActivity extends AppCompatActivity {
             return insets;
         });
 
-        counterModel = new CounterModel();
-        counterModel.getQuantity("category", new CounterModel.QuantityCallback() {
-            @Override
-            public void onQuantityReceived(Long quantity) {
-                if (quantity != null) {
-                    categoryQuantity = quantity;
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.e("Firestore", "Lỗi khi lấy số lượng category", e);
-            }
+        counterModel.getQuantity("category").addOnSuccessListener(quantity -> {
+            categoryQuantity = quantity;
         });
 
         EditText etCategoryName;
         EditText etCategoryDescription;
         Button btnChooseImage;
-        ImageView ivCategoryImagePreview;
         Button btnAddCategory;
         etCategoryName = findViewById(R.id.etCategoryName);
         etCategoryDescription = findViewById(R.id.etCategoryDescription);
         btnChooseImage = findViewById(R.id.btnChooseImage);
-        ivCategoryImagePreview = findViewById(R.id.ivCategoryImagePreview);
         btnAddCategory = findViewById(R.id.btnAddCategory);
 
-        openImageLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        ivCategoryImagePreview.setVisibility(View.VISIBLE);
-                        if (imageUri != null) {
-                            fileHandler.displayImageFromUri(imageUri, ivCategoryImagePreview);
-                            imageUrl = Uri.parse(imageUri.toString()).toString();
-                        }
-                    }
-                }
-        );
-
         btnChooseImage.setOnClickListener(v -> {
-             fileHandler.openFileChooser(openImageLauncher);
+            openImageChooser();
         });
 
         btnAddCategory.setOnClickListener(v -> {
@@ -107,14 +76,33 @@ public class AddCategoryActivity extends AppCompatActivity {
             cloudinaryConfig.uploadImage(imageUrl, this).thenAccept(r -> {
                 CategoryModel category = new CategoryModel(categoryName, r, categoryDescription);
                 categoryUseCase.addCategory(category, categoryQuantity);
-                counterModel.updateQuantity("category", 1);
-                Toast.makeText(AddCategoryActivity.this, "Thêm category thành công", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent();
-                intent.putExtra("added_category", true);
-                setResult(RESULT_OK, intent);
-                finish();
+                counterModel.updateQuantity("category", 1)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(AddCategoryActivity.this, "Thêm category thành công", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent();
+                            intent.putExtra("added_category", true);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        });
             });
         });
+    }
+
+    private void openImageChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+                ImageView ivCategoryImagePreview = findViewById(R.id.ivCategoryImagePreview);
+                ivCategoryImagePreview.setVisibility(View.VISIBLE);
+                Glide.with(this).load(data.getData()).into(ivCategoryImagePreview);
+                imageUrl = data.getData().toString();
+        }
     }
 
     @Override
