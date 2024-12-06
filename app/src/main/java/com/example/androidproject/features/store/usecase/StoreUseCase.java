@@ -18,13 +18,14 @@ public class StoreUseCase {
     }
 
     public List<BrandModel> getBrandList() {
-        List<BrandModel> brandList = new ArrayList<>();
-        brandList.add(new BrandModel(1, "Acer", R.drawable.image_acer_logo, 50));
-        brandList.add(new BrandModel(2, "Asus", R.drawable.image_asus_logo, 60));
-        brandList.add(new BrandModel(3, "Dell", R.drawable.image_dell_logo, 55));
-        brandList.add(new BrandModel(4, "HP", R.drawable.image_hp_logo, 45));
-
-        return brandList;
+//        List<BrandModel> brandList = new ArrayList<>();
+//        brandList.add(new BrandModel(1, "Acer", R.drawable.image_acer_logo, 50));
+//        brandList.add(new BrandModel(2, "Asus", R.drawable.image_asus_logo, 60));
+//        brandList.add(new BrandModel(3, "Dell", R.drawable.image_dell_logo, 55));
+//        brandList.add(new BrandModel(4, "HP", R.drawable.image_hp_logo, 45));
+//
+//        return brandList;
+        return null;
     }
 
     public int getColumns(int col) {

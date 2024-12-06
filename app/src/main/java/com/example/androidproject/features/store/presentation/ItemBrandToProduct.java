@@ -44,8 +44,7 @@ public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BrandModel brand = brandList.get(position);
         holder.brandName.setText(brand.getName());
-        holder.brandQuantity.setText(brand.getQuantity() + " products");
-        holder.brandImage.setImageResource(brand.getImageResource());
+        Glide.with(context).load(brand.getImageUrl()).into(holder.brandImage);
         holder.gridLayout.removeAllViews();
 
         for (CategoryEntity category : categoryList) {

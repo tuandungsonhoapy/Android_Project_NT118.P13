@@ -29,23 +29,23 @@ public class OrderUseCase {
     public List<OrderModel> getAllOrders() {
         List<OrderModel> orderList = new ArrayList<>();
         orderList.add(new OrderModel("1", "1", new ProductDataForOrderModel[]{
-                new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1),
-                new ProductDataForOrderModel("2", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1)
+                new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel( "Lenovo", "",""), true), "1", 1),
+                new ProductDataForOrderModel("2", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel( "Lenovo", "",""), true), "1", 1)
         }, 100.0, "pending", "COD", "1", "2021-10-01"));
 
         orderList.add(new OrderModel("1", "1", new ProductDataForOrderModel[]{
-                new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1),
-                new ProductDataForOrderModel("2", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1)
+                new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel( "Lenovo", "",""), true), "1", 1),
+                new ProductDataForOrderModel("2", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel( "Lenovo", "",""), true), "1", 1)
         }, 100.0, "pending", "COD", "1", "2021-10-01"));
 
         orderList.add(new OrderModel("1", "1", new ProductDataForOrderModel[]{
-                new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1),
-                new ProductDataForOrderModel("2", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1)
+                new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel( "Lenovo", "",""), true), "1", 1),
+                new ProductDataForOrderModel("2", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel( "Lenovo", "",""), true), "1", 1)
         }, 100.0, "pending", "COD", "1", "2021-10-01"));
 
         orderList.add(new OrderModel("1", "1", new ProductDataForOrderModel[]{
-                new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1),
-                new ProductDataForOrderModel("2", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1)
+                new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel( "Lenovo", "",""), true), "1", 1),
+                new ProductDataForOrderModel("2", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel( "Lenovo", "",""), true), "1", 1)
         }, 100.0, "pending", "COD", "1", "2021-10-01"));
         return orderList;
     }
