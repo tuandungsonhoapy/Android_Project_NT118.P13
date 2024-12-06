@@ -12,6 +12,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,23 +62,27 @@ public class CategoryRepositoryImpl implements CategoryRepository{
 
         query.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    lastDocument = queryDocumentSnapshots.getDocuments()
-                            .get(queryDocumentSnapshots.size() - 1);
+                    if(queryDocumentSnapshots.isEmpty()) {
+                        future.complete(Either.right(Collections.emptyList()));
+                    } else {
+                        lastDocument = queryDocumentSnapshots.getDocuments()
+                                .get(queryDocumentSnapshots.size() - 1);
 
-                    for (DocumentSnapshot document : queryDocumentSnapshots) {
-                        CategoryModel category = document.toObject(CategoryModel.class);
-                        categoryList.add(category);
+                        for (DocumentSnapshot document : queryDocumentSnapshots) {
+                            CategoryModel category = document.toObject(CategoryModel.class);
+                            categoryList.add(category);
+                        }
+
+                        List<CategoryModel> filterCategoryList = categoryList;
+
+                        if (search != null && !search.isEmpty()) {
+                            filterCategoryList = categoryList.stream()
+                                    .filter(category -> category.getCategoryName().toLowerCase().contains(search.toLowerCase()))
+                                    .collect(Collectors.toList());
+                        }
+
+                        future.complete(Either.right(filterCategoryList));
                     }
-
-                    List<CategoryModel> filterCategoryList = categoryList;
-
-                    if (search != null && !search.isEmpty()) {
-                        filterCategoryList = categoryList.stream()
-                                .filter(category -> category.getCategoryName().toLowerCase().contains(search.toLowerCase()))
-                                .collect(Collectors.toList());
-                    }
-
-                    future.complete(Either.right(filterCategoryList));
                 })
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         return future;

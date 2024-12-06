@@ -1,4 +1,4 @@
-package com.example.androidproject.features.admin_manager.presentation.category;
+package com.example.androidproject.features.admin_manager.presentation.brand;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,16 +22,18 @@ import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
 import com.example.androidproject.core.utils.CloudinaryConfig;
 import com.example.androidproject.core.utils.counter.CounterModel;
+import com.example.androidproject.features.brand.data.model.BrandModel;
+import com.example.androidproject.features.brand.usecase.BrandUseCase;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.usecase.CategoryUseCase;
 
-public class DetailCategoryAdminActivity extends AppCompatActivity {
+public class DetailBrandAdminActivity extends AppCompatActivity {
     private ImageButton btnBack;
     private Button btnHide, btnEdit, btnDelete;
     private String id;
     private static final int PICK_IMAGE_REQUEST = 1;
     private CloudinaryConfig cloudinaryConfig = new CloudinaryConfig();
-    private CategoryUseCase categoryUseCase = new CategoryUseCase();
+    private BrandUseCase brandUseCase = new BrandUseCase();
     private String newImageUrl;
     private String defaultImageUrl;
 
@@ -39,51 +41,53 @@ public class DetailCategoryAdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_detail_category_admin);
-
+        setContentView(R.layout.activity_detail_brand_admin);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        getCategoryIntent();
-        getCategoryDetail();
+        getBrandIntent();
+        getBrandDetail();
         setupButtons();
     }
 
-    private void getCategoryIntent() {
-        id = getIntent().getStringExtra("category_id");
+    private void getBrandIntent() {
+        id = getIntent().getStringExtra("brand_id");
     }
 
-    private void getCategoryDetail() {
-        categoryUseCase.getCategoryByID(id).thenAccept(r -> {
-           if (r.isRight()) {
-                CategoryModel category = r.getRight();
-                updateUI(category);
-           } else {
-               Log.d("categopry", "k lay duoc catergory");
-           }
+    private void getBrandDetail() {
+        brandUseCase.getBrandById(id).thenAccept(r -> {
+            if (r.isRight()) {
+                BrandModel brandModel = r.getRight();
+                updateUI(brandModel);
+            }
         });
     }
 
-    private void updateUI(CategoryModel category) {
-        TextView categoryID = findViewById(R.id.tvCategoryID);
-        TextView categoryName = findViewById(R.id.tvCategoryName);
-        TextView categoryQuantity = findViewById(R.id.tvCategoryQuantity);
-        TextView categoryDescription = findViewById(R.id.tvCategoryDescription);
-        ImageView categoryImage = findViewById(R.id.ivCategoryImage);
+    private void updateUI(BrandModel brandModel) {
+        TextView brandID = findViewById(R.id.tvBrandID);
+        TextView brandName = findViewById(R.id.tvBrandName);
+        TextView brandDescription = findViewById(R.id.tvBrandDescription);
+        ImageView brandImage = findViewById(R.id.ivBrandImage);
         Button btnChooseImage = findViewById(R.id.btnChooseImage);
 
+        brandID.setText(brandModel.getId());
+        brandName.setText(brandModel.getName());
+        brandDescription.setText(brandModel.getDescription());
+        Glide.with(this).load(brandModel.getImageUrl()).into(brandImage);
+        defaultImageUrl = brandModel.getImageUrl();
+
         btnHide = findViewById(R.id.btnHide);
-        btnHide.setText(category.isHidden() ? "Hiện" : "Ẩn");
+        btnHide.setText(brandModel.getHidden() ? "Hiện" : "Ẩn");
         btnHide.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Xác nhận");
-            builder.setMessage(category.isHidden() ? "Bạn có muốn hiện danh mục này không?" : "Bạn có muốn ẩn danh mục này không?");
+            builder.setMessage(brandModel.getHidden() ? "Bạn có muốn hiện thương hiệu này không?" : "Bạn có muốn ẩn thương hiệu này không?");
 
             builder.setPositiveButton("OK", (dialog, which) -> {
-                categoryUseCase.updateCategoryHidden(id, !category.isHidden());
+                brandUseCase.updateBrandHidden(id, !brandModel.getHidden());
                 finish();
             });
 
@@ -93,29 +97,17 @@ public class DetailCategoryAdminActivity extends AppCompatActivity {
             dialog.show();
         });
 
-        categoryID.setText(category.getId());
-        categoryName.setText(category.getCategoryName());
-        categoryQuantity.setText(String.valueOf(category.getProductCount()));
-        categoryDescription.setText(category.getDescription());
-        Glide.with(this)
-                .load(category.getImageUrl())
-                .override(300, 300)
-                .centerCrop()
-                .into(categoryImage);
-
-        defaultImageUrl = category.getImageUrl();
-        categoryName.setOnClickListener(v -> {
-            editDialog("Tên danh mục", category.getCategoryName(), categoryName);
+        brandName.setOnClickListener(v -> {
+            editDialog("Tên thương hiệu", brandModel.getName(), brandName);
         });
 
-        categoryDescription.setOnClickListener(v -> {
-            editDialog("Mô tả", category.getDescription(), categoryDescription);
+        brandDescription.setOnClickListener(v -> {
+            editDialog("Mô tả", brandModel.getDescription(), brandDescription);
         });
 
         btnChooseImage.setOnClickListener(v -> {
             openImageChooser();
         });
-
     }
 
     private void setupButtons() {
@@ -124,27 +116,27 @@ public class DetailCategoryAdminActivity extends AppCompatActivity {
 
         btnEdit = findViewById(R.id.btnEdit);
         btnEdit.setOnClickListener(v -> {
-            String newName = ((TextView) findViewById(R.id.tvCategoryName)).getText().toString();
-            String newDescription = ((TextView) findViewById(R.id.tvCategoryDescription)).getText().toString();
+            String newName = ((TextView) findViewById(R.id.tvBrandName)).getText().toString();
+            String newDescription = ((TextView) findViewById(R.id.tvBrandDescription)).getText().toString();
 
             if (newImageUrl != null) {
-                cloudinaryConfig.uploadImage(newImageUrl,this).thenAccept(r -> {
-                    CategoryModel categoryModel = new CategoryModel(newName, r, newDescription);
-                    categoryModel.setId(id);
-                    categoryUseCase.updateCategory(categoryModel);
+                cloudinaryConfig.uploadImage(newImageUrl, this).thenAccept(r -> {
+                    BrandModel brandModel = new BrandModel(newName, r, newDescription);
+                    brandModel.setId(id);
+                    brandUseCase.updateBrand(brandModel);
                     Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
-                    intent.putExtra("updated_category", true);
+                    intent.putExtra("updated_brand", true);
                     setResult(RESULT_OK, intent);
                     finish();
                 });
             } else {
-                CategoryModel categoryModel = new CategoryModel(newName, defaultImageUrl, newDescription);
-                categoryModel.setId(id);
-                categoryUseCase.updateCategory(categoryModel);
+                BrandModel brandModel = new BrandModel(newName, defaultImageUrl, newDescription);
+                brandModel.setId(id);
+                brandUseCase.updateBrand(brandModel);
                 Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
-                intent.putExtra("updated_category", true);
+                intent.putExtra("updated_brand", true);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -154,13 +146,13 @@ public class DetailCategoryAdminActivity extends AppCompatActivity {
         btnDelete.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Xác nhận");
-            builder.setMessage("Bạn có muốn xóa danh mục này không?");
+            builder.setMessage("Bạn có muốn xóa thương hiệu này không?");
 
             builder.setPositiveButton("OK", (dialog, which) -> {
-                categoryUseCase.deleteCategory(id);
+                brandUseCase.deleteBrand(id);
                 Toast.makeText(this, "Xóa thành công", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
-                intent.putExtra("deleted_category", true);
+                intent.putExtra("deleted_brand", true);
                 setResult(RESULT_OK, intent);
                 finish();
             });
@@ -208,9 +200,9 @@ public class DetailCategoryAdminActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            ImageView ivCategoryImage = findViewById(R.id.ivCategoryImage);
-            ivCategoryImage.setVisibility(View.VISIBLE);
-            Glide.with(this).load(data.getData()).into(ivCategoryImage);
+            ImageView ivBrandImage = findViewById(R.id.ivBrandImage);
+            ivBrandImage.setVisibility(View.VISIBLE);
+            Glide.with(this).load(data.getData()).into(ivBrandImage);
             newImageUrl = data.getData().toString();
             btnEdit.setVisibility(Button.VISIBLE);
         }

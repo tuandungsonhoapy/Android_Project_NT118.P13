@@ -53,7 +53,7 @@ public class ProductModel implements Parcelable {
         dest.writeInt(image);
         dest.writeDouble(price);
         dest.writeInt(quantity);
-        dest.writeParcelable(brand, flags);
+//        dest.writeParcelable(brand, flags);
         dest.writeByte((byte) (favorite ? 1 : 0));
     }
 

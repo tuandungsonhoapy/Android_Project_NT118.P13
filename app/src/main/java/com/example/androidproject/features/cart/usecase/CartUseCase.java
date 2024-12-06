@@ -10,11 +10,12 @@ import java.util.List;
 
 public class CartUseCase {
     public List<ProductDataForOrderModel>  getCart() {
-        List<ProductDataForOrderModel> cartItem = new ArrayList<>();
-        cartItem.add(new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1));
-        cartItem.add(new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1));
-        cartItem.add(new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1));
-
-        return cartItem;
+//        List<ProductDataForOrderModel> cartItem = new ArrayList<>();
+//        cartItem.add(new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1));
+//        cartItem.add(new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1));
+//        cartItem.add(new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1));
+//
+//        return cartItem;
+        return null;
     }
 }

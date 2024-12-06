@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 
@@ -35,7 +36,7 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
     public void onBindViewHolder(@NonNull BrandViewHolder holder, int position) {
         BrandModel brand = brandList.get(position);
         holder.brandName.setText(brand.getName());
-        holder.brandImage.setImageResource(brand.getImageResource());
+        Glide.with(context).load(brand.getImageUrl()).into(holder.brandImage);
     }
 
     @Override

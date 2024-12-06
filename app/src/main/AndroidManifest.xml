@@ -18,6 +18,15 @@
         android:theme="@style/Theme.AndroidProject"
         tools:targetApi="31">
         <activity
+            android:name=".features.admin_manager.presentation.brand.DetailBrandAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.brand.AddBrandActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.brand.AdminBrandManagerActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.checkout.presentation.CheckoutActivity"
             android:exported="false" />
         <activity
