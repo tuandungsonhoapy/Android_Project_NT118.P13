@@ -56,6 +56,18 @@ public class CategoryUseCase {
         });
     }
 
+    public CompletableFuture<Either<Failure, List<CategoryEntity>>> getCategoryListForStoreScreen() {
+        return categoryRepository.getCategoryListForHomeScreen().thenApply(r -> {
+            if (r.isRight()) {
+                List<CategoryModel> categoryModels = r.getRight();
+                List<CategoryEntity> categoryEntities = new CategoryModel().toCategoryEntityList(categoryModels);
+                return Either.right(categoryEntities);
+            } else {
+                return Either.left(r.getLeft());
+            }
+        });
+    }
+
     public void addCategory(CategoryModel category, long quantity) {
         CategoryModel categoryModel = new CategoryModel(category.getCategoryName(), category.getImageUrl(), category.getDescription());
         categoryRepository.addCategoryRepository(categoryModel, quantity);

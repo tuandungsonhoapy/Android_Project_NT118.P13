@@ -6,6 +6,7 @@ import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -117,5 +118,23 @@ public class BrandRepositoryImpl implements BrandRepository{
         brandData.put("hidden", hidden);
 
         db.collection("brands").document(id).update(brandData);
+    }
+
+    public CompletableFuture<Either<Failure, List<BrandModel>>> getBrandListForStoreScreen() {
+        CompletableFuture<Either<Failure, List<BrandModel>>> future = new CompletableFuture<>();
+        List<BrandModel> brandList = new ArrayList<>();
+
+        db.collection("brands")
+                .where(Filter.equalTo("hidden", false))
+                .get()
+                .addOnSuccessListener(q -> {
+                    for (DocumentSnapshot document : q) {
+                        BrandModel brand = document.toObject(BrandModel.class);
+                        brandList.add(brand);
+                    }
+                    future.complete(Either.right(brandList));
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
     }
 }

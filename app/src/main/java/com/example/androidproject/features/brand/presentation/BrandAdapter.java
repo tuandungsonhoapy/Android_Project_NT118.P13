@@ -13,15 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
+import com.example.androidproject.features.brand.data.entity.BrandEntity;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 
 import java.util.List;
 
 public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHolder> {
     private Context context;
-    private List<BrandModel> brandList;
+    private List<BrandEntity> brandList;
 
-    public BrandAdapter(Context context, List<BrandModel> brandList) {
+    public BrandAdapter(Context context, List<BrandEntity> brandList) {
         this.context = context;
         this.brandList = brandList;
     }
@@ -34,7 +35,7 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
 
     @Override
     public void onBindViewHolder(@NonNull BrandViewHolder holder, int position) {
-        BrandModel brand = brandList.get(position);
+        BrandEntity brand = brandList.get(position);
         holder.brandName.setText(brand.getName());
         Glide.with(context).load(brand.getImageUrl()).into(holder.brandImage);
     }
