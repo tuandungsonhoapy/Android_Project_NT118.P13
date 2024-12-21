@@ -23,6 +23,7 @@ import com.example.androidproject.features.product.data.model.ProductModelFB;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ProductOptionManagementActivity extends AppCompatActivity {
     private RecyclerView recyclerView_option;
@@ -45,7 +46,7 @@ public class ProductOptionManagementActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        List<ProductOption> productOptions = getIntent().getExtras().getParcelableArrayList("product_options");
+        List<ProductOption> productOptions = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("product_options");
         String productId = getIntent().getStringExtra("product_id");
 
         int totalQuantity = 0;
