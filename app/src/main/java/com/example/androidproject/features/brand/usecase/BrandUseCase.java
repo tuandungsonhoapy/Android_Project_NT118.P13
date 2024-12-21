@@ -77,16 +77,13 @@ public class BrandUseCase {
     }
 
     public CompletableFuture<Either<Failure, List<BrandEntity>>> getBrandListByCategory(String category) {
-        Log.d("BrandUseCase", "category: " + category);
         return categoryRepository.getCategoryByName(category).thenCompose(r -> {
             if(r.isRight()) {
                 CategoryModel categoryModel = r.getRight();
-                Log.d("BrandUseCase", "categoryid: " + categoryModel.getId());
                 return productRepository.getBrandListByCategoryFromProduct(categoryModel.getId())
                         .thenCompose(r1 -> {
                             if (r1.isRight()) {
                                 List<String> brandIds = r1.getRight();
-                                Log.d("BrandUseCase", "brandids: " + brandIds);
                                 List<CompletableFuture<Either<Failure, BrandModel>>> futures = brandIds.stream()
                                         .map(brandId -> brandRepository.getBrandById(brandId))
                                         .collect(Collectors.toList());
@@ -95,7 +92,6 @@ public class BrandUseCase {
                                             List<BrandModel> brandModels = new ArrayList<>();
                                             for (CompletableFuture<Either<Failure, BrandModel>> future : futures) {
                                                 Either<Failure, BrandModel> result = future.join();
-                                                Log.d("BrandUseCase", "brand models: " + result.getRight().toString());
                                                 if (result.isRight()) {
                                                     brandModels.add(result.getRight());
                                                 }
