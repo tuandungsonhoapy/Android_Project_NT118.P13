@@ -1,5 +1,6 @@
 package com.example.androidproject.features.category.data.entity;
 
+import com.example.androidproject.features.product.data.entity.ProductOptions;
 import com.google.firebase.Timestamp;
 
 public class CategoryEntity {

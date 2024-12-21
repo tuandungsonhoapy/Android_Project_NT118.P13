@@ -53,6 +53,8 @@ public class AddCategoryActivity extends AppCompatActivity {
             categoryQuantity = quantity;
         });
 
+        Toast.makeText(this, "Add category id " + categoryQuantity, Toast.LENGTH_SHORT).show();
+
         EditText etCategoryName;
         EditText etCategoryDescription;
         Button btnChooseImage;
