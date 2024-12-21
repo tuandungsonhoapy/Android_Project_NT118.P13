@@ -20,20 +20,10 @@
         <activity
             android:name=".features.admin_manager.presentation.product.ProductOptionManagementActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".features.admin_manager.presentation.product.AddProductOptionActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".features.admin_manager.presentation.brand.DetailBrandAdminActivity"
