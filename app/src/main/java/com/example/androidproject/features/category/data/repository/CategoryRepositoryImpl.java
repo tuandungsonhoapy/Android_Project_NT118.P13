@@ -151,4 +151,23 @@ public class CategoryRepositoryImpl implements CategoryRepository{
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         return future;
     }
+
+    @Override
+    public CompletableFuture<Either<Failure, CategoryModel>> getCategoryByName(String name) {
+        CompletableFuture<Either<Failure, CategoryModel>> future = new CompletableFuture<>();
+        db.collection("categories")
+                .where(Filter.equalTo("name", name))
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if(queryDocumentSnapshots.isEmpty()) {
+                        future.complete(Either.right(null));
+                    } else {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        CategoryModel category = document.toObject(CategoryModel.class);
+                        future.complete(Either.right(category));
+                    }
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
+    }
 }

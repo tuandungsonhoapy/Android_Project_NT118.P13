@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
+import com.example.androidproject.features.brand.data.entity.BrandEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.product.data.model.ProductModel;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
@@ -103,5 +104,26 @@ public class ProductRepository implements IProductRepository{
     @Override
     public void deleteProductRepository(String id) {
 
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, List<String>>> getBrandListByCategoryFromProduct(String category) {
+        CompletableFuture<Either<Failure, List<String>>> future = new CompletableFuture<>();
+        List<String> brandIdList = new ArrayList<>();
+
+        db.collection("products")
+                .whereEqualTo("categoryId", category)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        ProductModelFB product = document.toObject(ProductModelFB.class);
+                        if (!brandIdList.contains(product.getBrandId())) {
+                            brandIdList.add(product.getBrandId());
+                        }
+                    }
+                    future.complete(Either.right(brandIdList));
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
     }
 }

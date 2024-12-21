@@ -30,4 +30,6 @@ public interface CategoryRepository {
     void updateCategoryHidden(String id, boolean hidden);
 
     CompletableFuture<Either<Failure, List<CategoryModel>>> getCategoryListForHomeScreen();
+
+    CompletableFuture<Either<Failure, CategoryModel>> getCategoryByName(String name);
 }

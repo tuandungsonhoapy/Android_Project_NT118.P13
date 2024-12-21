@@ -2,6 +2,7 @@ package com.example.androidproject.features.product.data.repository;
 
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
+import com.example.androidproject.features.brand.data.entity.BrandEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
 
@@ -16,4 +17,6 @@ public interface IProductRepository {
     void updateProductRepository(CategoryModel category);
 
     void deleteProductRepository(String id);
+
+    CompletableFuture<Either<Failure, List<String>>> getBrandListByCategoryFromProduct(String category);
 }
