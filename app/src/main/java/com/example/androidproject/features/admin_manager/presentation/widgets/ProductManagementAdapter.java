@@ -3,26 +3,31 @@ package com.example.androidproject.features.admin_manager.presentation.widgets;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
 import com.example.androidproject.features.admin_manager.presentation.product.ProductDetailAdminActivity;
+import com.example.androidproject.features.product.data.entity.ProductEntity;
 import com.example.androidproject.features.product.data.model.ProductModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductManagementAdapter extends RecyclerView.Adapter<ProductManagementAdapter.ProductManagementViewHolder> {
-    private List<ProductModel> productList;
+    private List<ProductEntity> productList;
     Context context;
 
-    public ProductManagementAdapter(Context context, List<ProductModel> productList) {
+    public ProductManagementAdapter(Context context, List<ProductEntity> productList) {
         this.context = context;
         this.productList = productList;
     }
@@ -37,22 +42,29 @@ public class ProductManagementAdapter extends RecyclerView.Adapter<ProductManage
 
     @Override
     public void onBindViewHolder(@NonNull ProductManagementViewHolder holder, int position) {
-        ProductModel product = productList.get(position);
+        ProductEntity product = productList.get(position);
 
         holder.productName.setText(product.getName());
-        holder.productID.setText("PRODUCT004");
+        holder.productID.setText(product.getId());
         holder.productPrice.setText(product.getPrice() + " đ");
-        holder.productInventory.setText(product.getQuantity() + " máy");
+        holder.productInventory.setText(product.getStockQuantity() + " máy");
+        Glide.with(context)
+                .load(product.getImages().get(0))
+                .override(300, 300)
+                .centerCrop()
+                .into(holder.productImage);
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailAdminActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("product_id", "PRODUCT004");
+            bundle.putString("product_id", product.getId());
             bundle.putString("product_name", product.getName());
             bundle.putString("product_price", product.getPrice() + " đ");
-            bundle.putString("product_inventory", product.getQuantity() + " máy");
-            bundle.putString("brand_name", product.getBrand().getName());
+            bundle.putString("product_inventory", product.getStockQuantity() + " máy");
+            bundle.putString("brand_name", product.getBrandId());
             bundle.putString("product_status", "Hiển thị");
+            bundle.putStringArrayList("product_images", new ArrayList<>(product.getImages()));
+            bundle.putParcelableArrayList("product_options", new ArrayList<>(product.getOptions()));
 
             intent.putExtras(bundle);
             context.startActivity(intent);
@@ -63,6 +75,11 @@ public class ProductManagementAdapter extends RecyclerView.Adapter<ProductManage
     public int getItemCount() {
         if(productList == null) return 0;
         return productList.size();
+    }
+
+    public void setProductList(List<ProductEntity> productList) {
+        this.productList = productList;
+        notifyDataSetChanged();
     }
 
     public class ProductManagementViewHolder extends RecyclerView.ViewHolder {
