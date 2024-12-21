@@ -63,4 +63,14 @@ public class BrandModel extends BrandEntity {
     public String prefixBrandID(long quantity) {
         return "brand" + String.format("%05d", quantity);
     }
+
+    @Override
+    public String toString() {
+        return "BrandModel{" +
+                "id='" + getId() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", imageUrl='" + getImageUrl() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                '}';
+    }
 }

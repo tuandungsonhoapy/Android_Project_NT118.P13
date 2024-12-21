@@ -22,27 +22,6 @@ import java.util.concurrent.CompletableFuture;
 public class CategoryUseCase {
     private CategoryRepository categoryRepository = new CategoryRepositoryImpl(FirebaseFirestore.getInstance());
 
-    public List<BrandModel> getBrandListByCategory(String category) {
-        List<BrandModel> brands = new ArrayList<>();
-        if (category.equals("Laptop")) {
-            brands.add(new BrandModel("Acer", "", "50"));
-            brands.add(new BrandModel("Asus", "", "50"));
-            brands.add(new BrandModel("Dell", "", "50"));
-            brands.add(new BrandModel("HP", "", "50"));
-        } else if (category.equals("Phone")) {
-            brands.add(new BrandModel("Acer", "", "50"));
-            brands.add(new BrandModel("Asus", "", "50"));
-            brands.add(new BrandModel("Dell", "", "50"));
-            brands.add(new BrandModel("HP", "", "50"));
-        } else if (category.equals("Controller")) {
-            brands.add(new BrandModel("Acer", "", "50"));
-            brands.add(new BrandModel("Asus", "", "50"));
-            brands.add(new BrandModel("Dell", "", "50"));
-            brands.add(new BrandModel("HP", "", "50"));
-        }
-        return brands;
-    }
-
     public CompletableFuture<Either<Failure,List<CategoryEntity>>> getCategoryList() {
         return categoryRepository.getCategoryListForHomeScreen().thenApply(r -> {
             if (r.isRight()) {

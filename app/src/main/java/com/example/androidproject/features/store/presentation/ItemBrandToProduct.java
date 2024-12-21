@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
+import com.example.androidproject.features.brand.data.entity.BrandEntity;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
@@ -23,14 +24,12 @@ import com.example.androidproject.features.category.data.model.CategoryModel;
 import java.util.List;
 
 public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.ViewHolder> {
-    private List<CategoryEntity> categoryList;
-    private List<BrandModel> brandList;
+    private List<BrandEntity> brandList;
     private Context context;
 
-    public ItemBrandToProduct(Context context, List<BrandModel> brandList, List<CategoryEntity> categoryList) {
+    public ItemBrandToProduct(Context context, List<BrandEntity> brandList) {
         this.context = context;
         this.brandList = brandList;
-        this.categoryList = categoryList;
     }
 
     @NonNull
@@ -42,45 +41,11 @@ public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        BrandModel brand = brandList.get(position);
+        BrandEntity brand = brandList.get(position);
         holder.brandName.setText(brand.getName());
         Glide.with(context).load(brand.getImageUrl()).into(holder.brandImage);
         holder.gridLayout.removeAllViews();
 
-        for (CategoryEntity category : categoryList) {
-            ImageView imageView = new ImageView(context);
-            if(category.getCategoryName() == "Laptop") {
-                Glide.with(context).load(category.getImageUrl()).into(imageView);
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.width = 200;
-                params.height = 200;
-                params.setMargins(10, 10, 10, 10);
-                params.setGravity(Gravity.CENTER);
-                imageView.setLayoutParams(params);
-
-                holder.gridLayout.addView(imageView);
-            } else if (category.getCategoryName() == "Phone") {
-                Glide.with(context).load(category.getImageUrl()).into(imageView);
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.width = 200;
-                params.height = 200;
-                params.setMargins(10, 10, 10, 10);
-                params.setGravity(Gravity.CENTER);
-                imageView.setLayoutParams(params);
-
-                holder.gridLayout.addView(imageView);
-            } else if (category.getCategoryName() == "Monitor") {
-                Glide.with(context).load(category.getImageUrl()).into(imageView);
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.width = 200;
-                params.height = 200;
-                params.setMargins(10, 10, 10, 10);
-                params.setGravity(Gravity.CENTER);
-                imageView.setLayoutParams(params);
-
-                holder.gridLayout.addView(imageView);
-            }
-        }
     }
 
     @Override

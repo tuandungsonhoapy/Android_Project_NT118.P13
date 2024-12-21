@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 
 import com.example.androidproject.R;
+import com.example.androidproject.features.brand.data.entity.BrandEntity;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.brand.presentation.BrandAdapter;
+import com.example.androidproject.features.brand.usecase.BrandUseCase;
 import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.usecase.CategoryUseCase;
 import com.example.androidproject.features.store.presentation.ItemBrandToProduct;
@@ -28,8 +30,7 @@ public class CategoryToBrandFragment extends Fragment {
     private static final String ARG_CATEGORY = "category";
     private String category;
     private RecyclerView recyclerBrandView;
-    private List<BrandModel> brandList;
-    private CategoryUseCase categoryUseCase = new CategoryUseCase();
+    private BrandUseCase brandUseCase = new BrandUseCase();
 
     public static CategoryToBrandFragment newInstance(String category) {
         CategoryToBrandFragment fragment = new CategoryToBrandFragment();
@@ -52,19 +53,18 @@ public class CategoryToBrandFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_category_to_brand, container, false);
         recyclerBrandView = view.findViewById(R.id.recycler_view_list_brands);
 
-        brandList = categoryUseCase.getBrandListByCategory(category);
-        List<CategoryEntity> categoryList = new ArrayList<>();
-        categoryUseCase.getCategoryList().thenAccept(r -> {
-            if (r.isRight()){
-                categoryList.addAll(r.getRight());
+        List<BrandEntity> brandList = new ArrayList<>();
+        brandUseCase.getBrandListByCategory(category).thenAccept(r -> {
+            if (r.isRight()) {
+                brandList.addAll(r.getRight());
+
+                ItemBrandToProduct itemBrandToProduct = new ItemBrandToProduct(getContext(), brandList);
+                recyclerBrandView.setAdapter(itemBrandToProduct);
+                itemBrandToProduct.notifyDataSetChanged();
+                recyclerBrandView.scrollToPosition(0);
+                recyclerBrandView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
         });
-
-        ItemBrandToProduct itemBrandToProduct = new ItemBrandToProduct(getContext(), brandList, categoryList);
-        recyclerBrandView.setAdapter(itemBrandToProduct);
-        itemBrandToProduct.notifyDataSetChanged();
-        recyclerBrandView.scrollToPosition(0);
-        recyclerBrandView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return view;
     }
