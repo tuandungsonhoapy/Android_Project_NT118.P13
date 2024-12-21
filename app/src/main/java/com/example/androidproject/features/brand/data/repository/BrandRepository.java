@@ -19,4 +19,6 @@ public interface BrandRepository {
     CompletableFuture<Either<Failure, BrandModel>> getBrandById(String brandId);
 
     void updateBrandHidden(String brandId, boolean hidden);
+
+    CompletableFuture<Either<Failure, List<BrandModel>>> getBrandListForStoreScreen();
 }

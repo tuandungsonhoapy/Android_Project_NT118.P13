@@ -52,4 +52,16 @@ public class BrandUseCase {
     public void updateBrandHidden(String id, boolean hidden) {
         brandRepository.updateBrandHidden(id, hidden);
     }
+
+    public CompletableFuture<Either<Failure, List<BrandEntity>>> getBrandListForStoreScreen() {
+        return brandRepository.getBrandListForStoreScreen().thenApply(r -> {
+            if (r.isRight()) {
+                List<BrandModel> brandModels = r.getRight();
+                List<BrandEntity> brandEntities = new BrandModel().toBrandEntityList(brandModels);
+                return Either.right(brandEntities);
+            } else {
+                return Either.left(r.getLeft());
+            }
+        });
+    }
 }

@@ -23,28 +23,39 @@ public class CategoryUseCase {
     private CategoryRepository categoryRepository = new CategoryRepositoryImpl(FirebaseFirestore.getInstance());
 
     public List<BrandModel> getBrandListByCategory(String category) {
-//        List<BrandModel> brands = new ArrayList<>();
-//        if (category.equals("Laptop")) {
-//            brands.add(new BrandModel(1, "Acer", R.drawable.image_acer_logo, 50));
-//            brands.add(new BrandModel(2, "Asus", R.drawable.image_asus_logo, 60));
-//            brands.add(new BrandModel(3, "Dell", R.drawable.image_dell_logo, 55));
-//            brands.add(new BrandModel(4, "HP", R.drawable.image_hp_logo, 45));
-//        } else if (category.equals("Phone")) {
-//            brands.add(new BrandModel(1, "Acer", R.drawable.image_acer_logo, 50));
-//            brands.add(new BrandModel(2, "Asus", R.drawable.image_asus_logo, 60));
-//            brands.add(new BrandModel(3, "Dell", R.drawable.image_dell_logo, 55));
-//            brands.add(new BrandModel(4, "HP", R.drawable.image_hp_logo, 45));
-//        } else if (category.equals("Controller")) {
-//            brands.add(new BrandModel(1, "Acer", R.drawable.image_acer_logo, 50));
-//            brands.add(new BrandModel(2, "Asus", R.drawable.image_asus_logo, 60));
-//            brands.add(new BrandModel(3, "Dell", R.drawable.image_dell_logo, 55));
-//            brands.add(new BrandModel(4, "HP", R.drawable.image_hp_logo, 45));
-//        }
-//        return brands;
-        return null;
+        List<BrandModel> brands = new ArrayList<>();
+        if (category.equals("Laptop")) {
+            brands.add(new BrandModel("Acer", "", "50"));
+            brands.add(new BrandModel("Asus", "", "50"));
+            brands.add(new BrandModel("Dell", "", "50"));
+            brands.add(new BrandModel("HP", "", "50"));
+        } else if (category.equals("Phone")) {
+            brands.add(new BrandModel("Acer", "", "50"));
+            brands.add(new BrandModel("Asus", "", "50"));
+            brands.add(new BrandModel("Dell", "", "50"));
+            brands.add(new BrandModel("HP", "", "50"));
+        } else if (category.equals("Controller")) {
+            brands.add(new BrandModel("Acer", "", "50"));
+            brands.add(new BrandModel("Asus", "", "50"));
+            brands.add(new BrandModel("Dell", "", "50"));
+            brands.add(new BrandModel("HP", "", "50"));
+        }
+        return brands;
     }
 
     public CompletableFuture<Either<Failure,List<CategoryEntity>>> getCategoryList() {
+        return categoryRepository.getCategoryListForHomeScreen().thenApply(r -> {
+            if (r.isRight()) {
+                List<CategoryModel> categoryModels = r.getRight();
+                List<CategoryEntity> categoryEntities = new CategoryModel().toCategoryEntityList(categoryModels);
+                return Either.right(categoryEntities);
+            } else {
+                return Either.left(r.getLeft());
+            }
+        });
+    }
+
+    public CompletableFuture<Either<Failure, List<CategoryEntity>>> getCategoryListForStoreScreen() {
         return categoryRepository.getCategoryListForHomeScreen().thenApply(r -> {
             if (r.isRight()) {
                 List<CategoryModel> categoryModels = r.getRight();
