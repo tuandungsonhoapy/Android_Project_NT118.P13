@@ -1,93 +1,54 @@
 import pandas as pd
+import numpy as np
 import firebase_admin
 from firebase_admin import credentials, firestore
+from datetime import datetime
+from firebase_admin.firestore import SERVER_TIMESTAMP
 
 cred = credentials.Certificate("/mnt/c/Users/Hello/Downloads/credencials.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-file_path = "/mnt/c/Users/Hello/Downloads/cc.xlsx"
+file_path = "/mnt/c/Users/Hello/Downloads/project android.xlsx"
 sheets = pd.ExcelFile(file_path).sheet_names
 
 def process_data(data):
-    products = []
-    current_product = None
-    temp_images = {}
-    temp_options = {}
-    current_option_index = None
+    brands = []
+    current_brand = None
 
-    for _, row in data.iterrows():
+    for _,row in data.iterrows():
         field = row['field']
         value = row['value']
-        detail_field = row.get('detail_field', None)
-        detail_value = row.get('detail_value', None)
 
-        if field == "createdAt":
-            if current_product is not None:
-                if temp_images:
-                    current_product["images"] = [img for _, img in sorted(temp_images.items())]
-                if temp_options:
-                    current_product["options"] = [opt for _, opt in sorted(temp_options.items())]
+        if field == 'createdAt':
+            if current_brand is not None:
+                brands.append(current_brand)
+            try:
+                parsed_date = datetime.strptime(value, "%B %d, %Y at %I:%M:%S %p UTC%z")
+                timestamp = parsed_date.timestamp()
+            except ValueError:
+                timestamp = SERVER_TIMESTAMP
+            current_brand = {"createdAt": timestamp}
 
-                products.append(current_product)
+        elif field == 'updatedAt':
+            if current_brand is not None:
+                current_brand["updatedAt"] = value if not pd.isna(value) else None
+                brands.append(current_brand)
+                current_brand = None
 
-            current_product = {
-                "id": None,
-                "createdAt": value,
-                "images": [],
-                "options": [],
-            }
-            temp_images = {}
-            temp_options = {}
-            current_option_index = None
-            continue
+        elif current_brand is not None:
+            if field == 'id':
+                current_brand["id"] = value
+            elif field == 'name':
+                current_brand["name"] = value
+            elif field == 'description':
+                current_brand["description"] = value
+            elif field == 'imageUrl':
+                current_brand["imageUrl"] = value
+            elif field == 'hidden':
+                current_brand["hidden"] = value
 
-        if current_product is None:
-            continue
-
-        if isinstance(value, str) and value.lower() == "null":
-            continue
-
-        if field == "images":
-            img_index = int(value) if not pd.isna(value) else 0
-            temp_images[img_index] = detail_field
-
-        elif field == "options":
-            if not pd.isna(value):
-                current_option_index = int(value)
-                temp_options.setdefault(current_option_index, {})
-            elif pd.isna(value) and current_option_index is None:
-                current_option_index = len(temp_options)
-                temp_options.setdefault(current_option_index, {})
-
-            if current_option_index is not None and not pd.isna(detail_field):
-                temp_options[current_option_index][detail_field] = (
-                    str(detail_value).strip() if detail_field != "quantity" else int(detail_value)
-                )
-
-        elif pd.isna(field) and not pd.isna(detail_field):
-            if current_option_index is None:
-                print("  Không có option hiện tại, bỏ qua thông tin chi tiết.")
-            else:
-                temp_options[current_option_index][detail_field] = (
-                    str(detail_value).strip() if detail_field != "quantity" else int(detail_value)
-                )
-
-        elif field in ["id", "name", "brandId", "categoryId", "price", "rating", "description", "hidden", "stockQuantity"]:
-            current_product[field] = value
-
-        elif field == "updatedAt":
-            current_product["updatedAt"] = value
-
-    if current_product is not None:
-        if temp_images:
-            current_product["images"] = [img for _, img in sorted(temp_images.items())]
-        if temp_options:
-            current_product["options"] = [opt for _, opt in sorted(temp_options.items())]
-        products.append(current_product)
-
-    return products
-
+    return brands
 
 
 def normalize_data(data):
@@ -100,26 +61,17 @@ def normalize_data(data):
     else:
         return data
 
-data = pd.read_excel(file_path, sheet_name="products", usecols=[1, 2, 3, 4], header=None)
-data.columns = ['field', 'value', 'detail_field', 'detail_value']
+data = pd.read_excel(file_path, sheet_name="Brand", usecols=[1, 2], header=None)
+data.columns = ['field', 'value']
 
 try:
-    products = process_data(data)
+    brands = process_data(data)
 
-    if products:
-        for product in products:
-            product_id = product.get('id')
-            if not product_id:
-                print(f"Sản phẩm không có ID, bỏ qua... Sản phẩm: {product}")
-                continue
-
-            print(f"Đang xử lý sản phẩm ID: {product_id}")
-            normalized_product = normalize_data(product)
-            db.collection('products').document(product_id).set(normalized_product)
-            print(f"Upload thành công: {product_id}")
-    else:
-        print("Không có sản phẩm hợp lệ.")
+    for brand in brands:
+        brand = normalize_data(brand)
+        db.collection('brands').document(brand['id']).set(brand)
+        print("Đẩy dữ liệu thành công")
 except Exception as e:
-    print(f"Lỗi: {str(e)}")
-    import traceback
-    print(traceback.format_exc())
+    print("Có lỗi xảy ra:", e)
+    print("Dừng chương trình")
+    exit(1)
