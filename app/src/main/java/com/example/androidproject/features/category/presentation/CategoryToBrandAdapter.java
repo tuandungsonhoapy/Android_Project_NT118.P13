@@ -28,7 +28,11 @@ public class CategoryToBrandAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        Log.d("CategoryToBrandAdapter", "getItemCount: " + categoryList.size());
         return categoryList.size();
+    }
+
+    public void setCategoryList(List<CategoryEntity> categories) {
+        this.categoryList = categories;
+        notifyDataSetChanged();
     }
 }

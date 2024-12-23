@@ -128,9 +128,12 @@ public class BrandRepositoryImpl implements BrandRepository{
                 .where(Filter.equalTo("hidden", false))
                 .get()
                 .addOnSuccessListener(q -> {
+                    int count = 0;
                     for (DocumentSnapshot document : q) {
+                        if (count >= 4) break;
                         BrandModel brand = document.toObject(BrandModel.class);
                         brandList.add(brand);
+                        count++;
                     }
                     future.complete(Either.right(brandList));
                 })

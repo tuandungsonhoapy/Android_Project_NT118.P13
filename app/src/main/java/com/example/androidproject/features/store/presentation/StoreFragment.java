@@ -88,9 +88,11 @@ public class StoreFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_store, container, false);
 
         recyclerBrandView = view.findViewById(R.id.recycler_brand_view);
+        recyclerBrandView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
         tabLayout = view.findViewById(R.id.tab_categories);
         viewPagerCategoryToBrand = view.findViewById(R.id.view_pager_categories_to_brand);
-        recyclerBrandView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
 
         // Get brand list
         List<BrandEntity> brandList = new ArrayList<>();
@@ -107,16 +109,18 @@ public class StoreFragment extends Fragment {
         // Get category list
         List<CategoryEntity> categoryList = new ArrayList<>();
         CategoryToBrandAdapter categoryToBrandFragment = new CategoryToBrandAdapter(requireActivity(), categoryList);
+        viewPagerCategoryToBrand.setAdapter(categoryToBrandFragment);
         categoryUseCase.getCategoryListForStoreScreen().thenAccept(r -> {
             if (r.isRight()) {
                 categoryList.addAll(r.getRight());
-                getActivity().runOnUiThread(() -> categoryToBrandFragment.notifyDataSetChanged());
+                getActivity().runOnUiThread(() -> {
+                    categoryToBrandFragment.notifyDataSetChanged();
+                    new TabLayoutMediator(tabLayout, viewPagerCategoryToBrand, (tab, position) -> {
+                        tab.setText(categoryList.get(position).getCategoryName());
+                    }).attach();
+                });
             }
         });
-        viewPagerCategoryToBrand.setAdapter(categoryToBrandFragment);
-        new TabLayoutMediator(tabLayout, viewPagerCategoryToBrand, (tab, position) -> {
-            tab.setText(categoryList.get(position).getCategoryName());
-        }).attach();
 
         return view;
     }
