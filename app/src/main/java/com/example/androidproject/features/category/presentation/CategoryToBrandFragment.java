@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.TextView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.brand.data.entity.BrandEntity;
@@ -30,7 +31,10 @@ public class CategoryToBrandFragment extends Fragment {
     private static final String ARG_CATEGORY = "category";
     private String category;
     private RecyclerView recyclerBrandView;
+    private TextView noBrandTextView;
     private BrandUseCase brandUseCase = new BrandUseCase();
+    private ItemBrandToProduct itemBrandToProduct;
+    private List<BrandEntity> brandList = new ArrayList<>();
 
     public static CategoryToBrandFragment newInstance(String category) {
         CategoryToBrandFragment fragment = new CategoryToBrandFragment();
@@ -52,17 +56,27 @@ public class CategoryToBrandFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_to_brand, container, false);
         recyclerBrandView = view.findViewById(R.id.recycler_view_list_brands);
-
-        List<BrandEntity> brandList = new ArrayList<>();
+        noBrandTextView = view.findViewById(R.id.text_no_brands);
+        itemBrandToProduct = new ItemBrandToProduct(getContext(), brandList);
+        recyclerBrandView.setAdapter(itemBrandToProduct);
+        recyclerBrandView.setLayoutManager(new LinearLayoutManager(getContext()));
         brandUseCase.getBrandListByCategory(category).thenAccept(r -> {
             if (r.isRight()) {
-                brandList.addAll(r.getRight());
+                brandList.clear();
+                brandList.addAll(r.getRight());;
 
-                ItemBrandToProduct itemBrandToProduct = new ItemBrandToProduct(getContext(), brandList);
-                recyclerBrandView.setAdapter(itemBrandToProduct);
+                if (brandList.isEmpty()) {
+                    recyclerBrandView.setVisibility(View.GONE);
+                    noBrandTextView.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerBrandView.setVisibility(View.VISIBLE);
+                    noBrandTextView.setVisibility(View.GONE);
+                }
                 itemBrandToProduct.notifyDataSetChanged();
-                recyclerBrandView.scrollToPosition(0);
-                recyclerBrandView.setLayoutManager(new LinearLayoutManager(getContext()));
+            } else {
+                recyclerBrandView.setVisibility(View.GONE);
+                noBrandTextView.setVisibility(View.VISIBLE);
+                noBrandTextView.setText("Hiện không có brand nào.");
             }
         });
 

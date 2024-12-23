@@ -83,7 +83,10 @@ public class BrandUseCase {
                 return productRepository.getBrandListByCategoryFromProduct(categoryModel.getId())
                         .thenCompose(r1 -> {
                             if (r1.isRight()) {
-                                List<String> brandIds = r1.getRight();
+                                List<String> brandIds = r1.getRight()
+                                        .stream()
+                                        .limit(4)
+                                        .collect(Collectors.toList());
                                 List<CompletableFuture<Either<Failure, BrandModel>>> futures = brandIds.stream()
                                         .map(brandId -> brandRepository.getBrandById(brandId))
                                         .collect(Collectors.toList());

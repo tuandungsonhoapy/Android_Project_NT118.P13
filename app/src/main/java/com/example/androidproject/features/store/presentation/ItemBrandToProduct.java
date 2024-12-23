@@ -56,14 +56,12 @@ public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView brandImage;
         TextView brandName;
-        TextView brandQuantity;
         GridLayout gridLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             brandImage = itemView.findViewById(R.id.store_brand_img);
             brandName = itemView.findViewById(R.id.store_brand_name);
-            brandQuantity = itemView.findViewById(R.id.store_brand_quantity);
             gridLayout = itemView.findViewById(R.id.grid_images);
         }
     }
