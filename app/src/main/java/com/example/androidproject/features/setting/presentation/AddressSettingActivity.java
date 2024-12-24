@@ -51,7 +51,7 @@ public class AddressSettingActivity extends AppCompatActivity {
             public void onItemClick(AddressModel address) {
                 Intent intent = new Intent(AddressSettingActivity.this, AddEditAddressActivity.class);
                 intent.putExtra("editMode", true);
-                intent.putExtra("address", address);
+                intent.putExtra("address", address.getId());
                 startActivityForResult(intent, ADD_EDIT_ADDRESS_REQUEST_CODE);
             }
         });

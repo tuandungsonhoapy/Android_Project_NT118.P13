@@ -66,7 +66,6 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
 
     @Override
     public int getItemCount() {
-        Log.d("ListAddressSettingAdapter", "getItemCount: "+addresses.size());
         return addresses.size();
     }
 

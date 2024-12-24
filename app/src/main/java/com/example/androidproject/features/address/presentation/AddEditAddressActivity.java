@@ -188,8 +188,6 @@ public class AddEditAddressActivity extends AppCompatActivity {
                                 }
                                 if (districtIndex != -1) {
                                     spinnerHuyen.setSelection(districtIndex);
-                                } else {
-                                    Log.d("AddEditAddressActivity", "District ID not found: " + districtId);
                                 }
 
                                 // Bật spinner xã
@@ -211,8 +209,6 @@ public class AddEditAddressActivity extends AppCompatActivity {
                                             }
                                             if (wardIndex != -1) {
                                                 spinnerXa.setSelection(wardIndex);
-                                            } else {
-                                                Log.d("AddEditAddressActivity", "Ward ID not found: " + wardId);
                                             }
                                         } else {
                                             Toast.makeText(AddEditAddressActivity.this, "Failed to fetch wards", Toast.LENGTH_SHORT).show();
