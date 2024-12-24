@@ -1,5 +1,6 @@
 package com.example.androidproject.features.product.data.entity;
 
+import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.google.firebase.Timestamp;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class ProductEntity {
     List<ProductOption> options;
     private com.google.firebase.Timestamp createdAt;
     private com.google.firebase.Timestamp updatedAt;
+    private BrandModel brand;
 
     public ProductEntity() {
     }
@@ -53,6 +55,14 @@ public class ProductEntity {
         this.updatedAt = null;
         this.rating = 0;
         this.description = description;
+    }
+
+    public BrandModel getBrand() {
+        return brand;
+    }
+
+    public void setBrand(BrandModel brand) {
+        this.brand = brand;
     }
 
     public String getDescription() {

@@ -12,16 +12,19 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
+import com.example.androidproject.core.utils.ConvertFormat;
 import com.example.androidproject.features.product.data.model.ProductModel;
+import com.example.androidproject.features.product.data.model.ProductModelFB;
 
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
-    private List<ProductModel> products;
+    private List<ProductModelFB> products;
     private Context context;
 
-    public ProductAdapter(Context context, List<ProductModel> products) {
+    public ProductAdapter(Context context, List<ProductModelFB> products) {
         this.context = context;
         this.products = products;
     }
@@ -35,12 +38,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        ProductModel product = products.get(position);
-        holder.productImage.setImageResource(product.getImage());
+        ProductModelFB product = products.get(position);
+        Glide.with(context)
+                .load(product.getImages().get(0))
+                .override(300, 300)
+                .centerCrop()
+                .into(holder.productImage);
         holder.productName.setText(product.getName());
-        holder.productPrice.setText(String.valueOf(product.getPrice()));
+        holder.productPrice.setText(ConvertFormat.formatPriceToVND(product.getPrice()));
         holder.productBrand.setText(product.getBrand().getName());
-        if (product.isFavorite()) {
+        if (true) {
             holder.productFavorite.setImageResource(R.drawable.favorite_heart);
             holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.pink));
         } else {
@@ -51,14 +58,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.productFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (product.isFavorite()) {
-                    holder.productFavorite.setImageResource(R.drawable.favorite_heart);
-                    holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.pink));
-                } else {
-                    holder.productFavorite.setImageResource(R.drawable.unfavorite_heart);
-                    holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.grey));
-                }
-                product.setFavorite(!product.isFavorite());
+//                if (product.isFavorite()) {
+//                    holder.productFavorite.setImageResource(R.drawable.favorite_heart);
+//                    holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.pink));
+//                } else {
+//                    holder.productFavorite.setImageResource(R.drawable.unfavorite_heart);
+//                    holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.grey));
+//                }
+//                product.setFavorite(!product.isFavorite());
             }
         });
 
