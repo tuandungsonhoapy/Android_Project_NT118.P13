@@ -43,7 +43,7 @@ public class CartActivity extends AppCompatActivity {
             emptyCartLayout.setVisibility(View.GONE);
             cartItemsLayout.setVisibility(View.VISIBLE);
             btnCheckout.setVisibility(View.VISIBLE);
-            cartItemsLayout.setAdapter(new ListCartItemAdapter(cartUseCase.getCart(), this));
+//            cartItemsLayout.setAdapter(new ListCartItemAdapter(cartUseCase.getCart(), this));
             cartItemsLayout.setLayoutManager(new LinearLayoutManager(this));
         }
 

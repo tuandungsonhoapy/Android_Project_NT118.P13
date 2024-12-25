@@ -126,4 +126,18 @@ public class ProductRepository implements IProductRepository{
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         return future;
     }
+
+    @Override
+    public CompletableFuture<Either<Failure, ProductModelFB>> getDetailProductById(String id) {
+        CompletableFuture<Either<Failure, ProductModelFB>> future = new CompletableFuture<>();
+        db.collection("products")
+                .document(id)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    ProductModelFB product = documentSnapshot.toObject(ProductModelFB.class);
+                    future.complete(Either.right(product));
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
+    }
 }
