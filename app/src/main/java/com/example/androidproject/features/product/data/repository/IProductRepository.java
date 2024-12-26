@@ -19,4 +19,6 @@ public interface IProductRepository {
     void deleteProductRepository(String id);
 
     CompletableFuture<Either<Failure, List<String>>> getBrandListByCategoryFromProduct(String category);
+
+    CompletableFuture<Either<Failure, ProductModelFB>> getDetailProductById(String id);
 }
