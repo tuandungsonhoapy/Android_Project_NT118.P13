@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface AddressRepository {
-    void addAddressRepository(AddressModel address, long quantity);
+    CompletableFuture<Either<Failure, String>> addAddressRepository(AddressModel address, long quantity);
 
     void updateAddressRepository(AddressModel address);
 
-    void deleteAddressRepository(String id);
+    CompletableFuture<Either<Failure, String>> deleteAddressRepository(String id);
 
     void updateAddressDefault(String id, boolean isDefault);
 
-    CompletableFuture<Either<Failure, List<AddressModel>>> getAddressRepository(String userId);
+    CompletableFuture<Either<Failure, List<AddressModel>>> getAddressRepository();
 }

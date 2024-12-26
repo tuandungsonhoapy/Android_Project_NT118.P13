@@ -4,6 +4,7 @@ import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.address.data.model.AddressModel;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -18,9 +19,11 @@ public class AddressRepositoryImpl implements AddressRepository {
     public AddressRepositoryImpl(FirebaseFirestore db) {
         this.db = db;
     }
+    private String userId;
 
     @Override
-    public void addAddressRepository(AddressModel address, long quantity) {
+    public CompletableFuture<Either<Failure, String>> addAddressRepository(AddressModel address, long quantity) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
         Map<String, Object> addressData = new HashMap<>();
 
         addressData.put("id", address.prefixAddressID(quantity));
@@ -37,6 +40,8 @@ public class AddressRepositoryImpl implements AddressRepository {
         addressData.put("isDefault", address.getIsDefault());
 
         db.collection("addresses").document(address.prefixAddressID(quantity)).set(addressData);
+        future.complete(Either.right("Success"));
+        return future;
     }
 
     @Override
@@ -56,24 +61,26 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
-    public void deleteAddressRepository(String id) {
+    public CompletableFuture<Either<Failure, String>> deleteAddressRepository(String id) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
         db.collection("addresses").document(id).delete();
+        future.complete(Either.right("Success"));
+        return future;
     }
 
     @Override
     public void updateAddressDefault(String id, boolean isDefault) {
         Map<String, Object> addressData = new HashMap<>();
-
         addressData.put("isDefault", isDefault);
-
         db.collection("addresses").document(id).update(addressData);
     }
 
     @Override
-    public CompletableFuture<Either<Failure, List<AddressModel>>> getAddressRepository(String userId) {
+    public CompletableFuture<Either<Failure, List<AddressModel>>> getAddressRepository() {
         CompletableFuture<Either<Failure, List<AddressModel>>> future = new CompletableFuture<>();
         List<AddressModel> addressList = new ArrayList<>();
-
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getCurrentUser().getUid();
         db.collection("addresses")
                 .whereEqualTo("userId", userId)
                 .get()

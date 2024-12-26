@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -77,8 +78,13 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
 
     private void deleteAddress(int position) {
         addresses.remove(position);
-        addressUsecase.deleteAddress(Integer.toString(position));
-        notifyItemRemoved(position);
+        addressUsecase.deleteAddress(Integer.toString(position))
+                        .thenAccept(r -> {
+                            if (r.isRight()) {
+                                Toast.makeText(context, "Xóa địa chỉ thành công", Toast.LENGTH_SHORT).show();
+                                notifyItemRemoved(position);
+                            }
+                        });
     }
 
     public static class ListAddressSettingViewHolder extends RecyclerView.ViewHolder {
