@@ -70,6 +70,7 @@ public class ListCartItemAdapter extends RecyclerView.Adapter<ListCartItemAdapte
                                 int index = holder.getAdapterPosition();
                                 products.remove(product);
                                 notifyItemRemoved(index);
+                                ((CartActivity) context).updateUI();
                                 Toast.makeText(context, "Sản phẩm đã bị xóa khỏi giỏ hàng", Toast.LENGTH_SHORT).show();
                             } else {
                                 product.setQuantity(newQuantity);

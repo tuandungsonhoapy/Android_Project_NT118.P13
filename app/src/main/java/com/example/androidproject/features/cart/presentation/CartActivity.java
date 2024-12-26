@@ -42,12 +42,14 @@ public class CartActivity extends AppCompatActivity {
             if(r) {
                 emptyCartLayout.setVisibility(View.VISIBLE);
                 cartItemsLayout.setVisibility(View.GONE);
+                btnCheckout.setVisibility(View.GONE);
             } else {
                 cartUseCase.getCurrentUserCart()
                         .thenAccept(r1 -> {
                             if(r1.isRight()) {
                                 emptyCartLayout.setVisibility(View.GONE);
                                 cartItemsLayout.setVisibility(View.VISIBLE);
+                                btnCheckout.setVisibility(View.VISIBLE);
                                 ListCartItemAdapter adapter = new ListCartItemAdapter(r1.getRight().getProducts(), this);
                                 cartItemsLayout.setLayoutManager(new LinearLayoutManager(this));
                                 cartItemsLayout.setAdapter(adapter);
@@ -70,6 +72,20 @@ public class CartActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+    }
+
+    public void updateUI() {
+        cartUseCase.getCurrentUserCart().thenAccept(r -> {
+            if (r.isRight() && (r.getRight().getProducts() == null || r.getRight().getProducts().isEmpty())) {
+                emptyCartLayout.setVisibility(View.VISIBLE);
+                cartItemsLayout.setVisibility(View.GONE);
+                btnCheckout.setVisibility(View.GONE);
+            } else {
+                emptyCartLayout.setVisibility(View.GONE);
+                cartItemsLayout.setVisibility(View.VISIBLE);
+                btnCheckout.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void openOrderReviewScreen() {
