@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.androidproject.R;
 import com.example.androidproject.features.banner.data.model.BannerModel;
 import com.example.androidproject.features.banner.presentation.BannerAdapter;
+import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.cart.presentation.CartActivity;
 import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
@@ -26,11 +27,24 @@ import com.example.androidproject.features.category.presentation.CategoryAdapter
 import com.example.androidproject.features.category.usecase.CategoryUseCase;
 import com.example.androidproject.features.home.usecase.HomeUseCase;
 import com.example.androidproject.features.product.data.model.ProductModel;
+import com.example.androidproject.features.product.data.model.ProductModelFB;
 import com.example.androidproject.features.product.presentation.AllProductActivity;
 import com.example.androidproject.features.product.presentation.ProductAdapter;
+import com.example.androidproject.features.shared.data.model.CartState;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +52,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    List<ProductModelFB> productList = new ArrayList<>();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -51,9 +67,10 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerProductView;
     private ViewPager2 viewPagerBanner;
     private ImageView cartIcon;
-    private TextView viewAllProduct;
+    private TextView viewAllProduct, cartItemCount;
     private HomeUseCase homeUseCase = new HomeUseCase();
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
+    private CartState cartState = new CartState();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -97,7 +114,10 @@ public class HomeFragment extends Fragment {
         viewPagerBanner = view.findViewById(R.id.view_pager);
         cartIcon = view.findViewById(R.id.cartIcon);
         viewAllProduct = view.findViewById(R.id.viewAllProduct);
+        cartItemCount = view.findViewById(R.id.cartItemCount);
 
+        Integer count = CartState.getInstance().getCartItemCount().getValue();
+        CartState.getInstance().setCartItemCount(count);
         //view categories
         List<CategoryEntity> categoryList = new ArrayList<>();
         categoryUseCase.getCategoryList().thenAccept(r -> {
@@ -115,9 +135,7 @@ public class HomeFragment extends Fragment {
         viewPagerBanner.setAdapter(bannerAdapter);
 
         //view products
-        ProductAdapter productAdapter = new ProductAdapter(getContext(), homeUseCase.getProductsList());
-        recyclerProductView.setAdapter(productAdapter);
-        recyclerProductView.setLayoutManager(new GridLayoutManager(getContext(), homeUseCase.getColumns(2)));
+        fetchTop10ProductsFromFirestore();
 
         cartIcon.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), CartActivity.class);
@@ -131,4 +149,47 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
+
+    private void fetchTop10ProductsFromFirestore() {
+        Set<String> brandIds = new HashSet<>();
+
+        db.collection("products")
+                .orderBy("stockQuantity", Query.Direction.DESCENDING)
+                .limit(10)
+                .get()
+                .addOnSuccessListener(productSnapshots -> {
+                    for (QueryDocumentSnapshot document : productSnapshots) {
+                        ProductModelFB product = document.toObject(ProductModelFB.class);
+                        productList.add(product);
+                        if (product.getBrandId() != null) {
+                            brandIds.add(product.getBrandId());
+                        }
+                    }
+
+                    // Query tất cả các brand theo danh sách brandIds
+                    db.collection("brands")
+                            .whereIn(FieldPath.documentId(), new ArrayList<>(brandIds))
+                            .get()
+                            .addOnSuccessListener(brandSnapshots -> {
+                                Map<String, BrandModel> brandMap = new HashMap<>();
+                                for (QueryDocumentSnapshot brandDoc : brandSnapshots) {
+                                    BrandModel brand = brandDoc.toObject(BrandModel.class);
+                                    brandMap.put(brandDoc.getId(), brand);
+                                }
+
+                                // Gán brand vào từng sản phẩm
+                                for (ProductModelFB product : productList) {
+                                    product.setBrand(brandMap.get(product.getBrandId()));
+                                }
+
+                                // Set adapter
+                                ProductAdapter productAdapter = new ProductAdapter(getContext(), productList);
+                                recyclerProductView.setAdapter(productAdapter);
+                                recyclerProductView.setLayoutManager(new GridLayoutManager(getContext(), homeUseCase.getColumns(2)));
+                            })
+                            .addOnFailureListener(e -> Log.e("FirestoreError", "Error fetching brands", e));
+                })
+                .addOnFailureListener(e -> Log.e("FirestoreError", "Error fetching products", e));
+    }
+
 }

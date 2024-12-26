@@ -2,26 +2,38 @@ package com.example.androidproject.features.product.presentation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
+import com.example.androidproject.core.utils.ConvertFormat;
+import com.example.androidproject.core.utils.counter.CounterModel;
+import com.example.androidproject.features.cart.usecase.CartUseCase;
+import com.example.androidproject.features.product.data.entity.ProductOption;
 import com.example.androidproject.features.product.data.model.ProductModel;
+import com.example.androidproject.features.product.data.model.ProductModelFB;
+import com.example.androidproject.features.shared.data.model.CartState;
 
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
-    private List<ProductModel> products;
+    private List<ProductModelFB> products;
     private Context context;
+    private CartUseCase cartUseCase = new CartUseCase();
+    private long cartQuantity;
+    private CounterModel counterModel = new CounterModel();
 
-    public ProductAdapter(Context context, List<ProductModel> products) {
+    public ProductAdapter(Context context, List<ProductModelFB> products) {
         this.context = context;
         this.products = products;
     }
@@ -35,12 +47,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        ProductModel product = products.get(position);
-        holder.productImage.setImageResource(product.getImage());
+        ProductModelFB product = products.get(position);
+        Glide.with(context)
+                .load(product.getImages().get(0))
+                .override(300, 300)
+                .centerCrop()
+                .into(holder.productImage);
         holder.productName.setText(product.getName());
-        holder.productPrice.setText(String.valueOf(product.getPrice()));
+        holder.productPrice.setText(ConvertFormat.formatPriceToVND(product.getPrice()));
         holder.productBrand.setText(product.getBrand().getName());
-        if (product.isFavorite()) {
+        if (true) {
             holder.productFavorite.setImageResource(R.drawable.favorite_heart);
             holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.pink));
         } else {
@@ -51,20 +67,59 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.productFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (product.isFavorite()) {
-                    holder.productFavorite.setImageResource(R.drawable.favorite_heart);
-                    holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.pink));
-                } else {
-                    holder.productFavorite.setImageResource(R.drawable.unfavorite_heart);
-                    holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.grey));
-                }
-                product.setFavorite(!product.isFavorite());
+//                if (product.isFavorite()) {
+//                    holder.productFavorite.setImageResource(R.drawable.favorite_heart);
+//                    holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.pink));
+//                } else {
+//                    holder.productFavorite.setImageResource(R.drawable.unfavorite_heart);
+//                    holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.grey));
+//                }
+//                product.setFavorite(!product.isFavorite());
             }
         });
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
             context.startActivity(intent);
+        });
+
+        holder.addToCartIcon.setOnClickListener(v -> {
+            counterModel.getQuantity("cart").addOnSuccessListener(quantity -> {
+                cartQuantity = quantity;
+
+                ProductOption option = product.getOptions().get(0);
+                if(option.getQuantity() <= 0) {
+                    return;
+                }
+
+                cartUseCase.addProductToCart(
+                        product.getId(),
+                        1,
+                        product.getOptions().get(0),
+                        cartQuantity
+                ).thenAccept(r -> {
+                    if (r.isRight()) {
+                        cartQuantity++;
+                        counterModel.updateQuantity("cart");
+                        refeshCartItemCount();
+                        Toast.makeText(context, "Thêm sản phẩm vào giỏ thành công", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(context, "Thêm sản phẩm vào giỏ thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        });
+    }
+
+    private void refeshCartItemCount() {
+        cartUseCase.getCurrentCartItemCount().thenAccept(r -> {
+            if (r.isRight()) {
+                int newCartCount = Integer.parseInt(r.getRight());
+                CartState.getInstance().incrementItemCount(newCartCount);
+            } else {
+                Log.e("ProductAdapter", "refeshCartItemCount: " + r.getLeft().getErrorMessage());
+            }
         });
     }
 
@@ -79,6 +134,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         TextView productPrice;
         TextView productBrand;
         ImageView productFavorite;
+        ImageView addToCartIcon;
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.productImage);
@@ -86,6 +142,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productPrice = itemView.findViewById(R.id.productPrice);
             productBrand = itemView.findViewById(R.id.productBrand);
             productFavorite = itemView.findViewById(R.id.heartIcon);
+            addToCartIcon = itemView.findViewById(R.id.addToCartIcon);
         }
     }
 }

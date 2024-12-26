@@ -1,5 +1,6 @@
 package com.example.androidproject.features.product.data.model;
 
+import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.product.data.entity.ProductEntity;
 import com.example.androidproject.features.product.data.entity.ProductOption;
 import com.example.androidproject.features.product.data.entity.ProductOptions;
@@ -18,6 +19,16 @@ public class ProductModelFB extends ProductEntity {
 
     public ProductModelFB(String name, List<String> images, double price, int stockQuantity, String brandId, String categoryId, List<ProductOption> options, String description) {
         super(name, images, price, stockQuantity, brandId, categoryId, options, description);
+    }
+
+    @Override
+    public BrandModel getBrand() {
+        return super.getBrand();
+    }
+
+    @Override
+    public void setBrand(BrandModel brand) {
+        super.setBrand(brand);
     }
 
     @Override
