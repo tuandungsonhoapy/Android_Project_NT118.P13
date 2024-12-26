@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
+import com.example.androidproject.features.cart.data.model.CartModel;
 import com.example.androidproject.features.cart.data.repository.CartRepositoryImpl;
 import com.example.androidproject.features.product.data.entity.ProductOption;
 import com.example.androidproject.features.product.data.repository.ProductRepository;
@@ -32,6 +33,42 @@ public class CartUseCase {
                         return Either.right(r.getRight());
                     } else {
                         Log.e("CartUseCase", "addProductToCart: " + r.getLeft().getErrorMessage());
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, String>> getCurrentCartItemCount() {
+        return cartRepository.getCurrentCartItemCount()
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        Log.e("CartUseCase", "getCurrentCartItemCount: " + r.getLeft().getErrorMessage());
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, CartModel>> getCurrentUserCart() {
+        return cartRepository.getCurrentUserCart()
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        Log.e("CartUseCase", "getCurrentUserCart: " + r.getLeft().getErrorMessage());
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, String>> updateCartQuantity(String productId, int productQuantity) {
+        return cartRepository.updateCartQuantity(productId, productQuantity)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        Log.e("CartUseCase", "updateCartQuantity: " + r.getLeft().getErrorMessage());
                         return Either.left(r.getLeft());
                     }
                 });

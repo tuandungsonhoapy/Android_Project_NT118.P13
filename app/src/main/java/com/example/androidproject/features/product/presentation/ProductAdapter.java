@@ -22,6 +22,7 @@ import com.example.androidproject.features.cart.usecase.CartUseCase;
 import com.example.androidproject.features.product.data.entity.ProductOption;
 import com.example.androidproject.features.product.data.model.ProductModel;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
+import com.example.androidproject.features.shared.data.model.CartState;
 
 import java.util.List;
 
@@ -100,13 +101,25 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     if (r.isRight()) {
                         cartQuantity++;
                         counterModel.updateQuantity("cart");
-                        Toast.makeText(context, "Add product to cart successfully", Toast.LENGTH_SHORT).show();
+                        refeshCartItemCount();
+                        Toast.makeText(context, "Thêm sản phẩm vào giỏ thành công", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        Toast.makeText(context, "Add product to cart failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Thêm sản phẩm vào giỏ thất bại", Toast.LENGTH_SHORT).show();
                     }
                 });
             });
+        });
+    }
+
+    private void refeshCartItemCount() {
+        cartUseCase.getCurrentCartItemCount().thenAccept(r -> {
+            if (r.isRight()) {
+                int newCartCount = Integer.parseInt(r.getRight());
+                CartState.getInstance().incrementItemCount(newCartCount);
+            } else {
+                Log.e("ProductAdapter", "refeshCartItemCount: " + r.getLeft().getErrorMessage());
+            }
         });
     }
 

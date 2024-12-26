@@ -12,4 +12,10 @@ public interface CartRepository {
     public CompletableFuture<Either<Failure,String>> addProductToCart(String productId, int productQuantity, ProductOption option, long quantity);
 
     public CompletableFuture<Either<Failure, CartModel>> getCartByUserId(String userId);
+
+    public CompletableFuture<Either<Failure, String>> getCurrentCartItemCount();
+
+    public CompletableFuture<Either<Failure, CartModel>> getCurrentUserCart();
+
+    public CompletableFuture<Either<Failure, String>> updateCartQuantity(String productId, int productQuantity);
 }

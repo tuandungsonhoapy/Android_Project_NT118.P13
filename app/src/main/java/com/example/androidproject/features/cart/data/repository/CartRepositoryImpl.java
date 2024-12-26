@@ -114,6 +114,69 @@ public class CartRepositoryImpl implements CartRepository{
         return future;
     }
 
+    @Override
+    public CompletableFuture<Either<Failure,String>> getCurrentCartItemCount() {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        userId = auth.getCurrentUser().getUid();
+
+        getCartByUserId(userId).thenAccept(r -> {
+            if(r.isRight()) {
+                CartModel cart = r.getRight();
+                int total = 0;
+                for (ProductsOnCart product : cart.getProducts()) {
+                    total += product.getQuantity();
+                }
+                future.complete(Either.right(String.valueOf(total)));
+            } else {
+                future.complete(Either.left(new Failure("Cart not found")));
+            }
+        });
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, CartModel>> getCurrentUserCart() {
+        CompletableFuture<Either<Failure, CartModel>> future = new CompletableFuture<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        userId = auth.getCurrentUser().getUid();
+        getCartByUserId(userId).thenAccept(r -> {
+            if(r.isRight()) {
+                future.complete(Either.right(r.getRight()));
+            } else {
+                future.complete(Either.left(new Failure("Cart not found")));
+            }
+        });
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, String>> updateCartQuantity(String productId, int productQuantity) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        userId = auth.getCurrentUser().getUid();
+        getCartByUserId(userId).thenAccept(r -> {
+            if(r.isRight()) {
+                CartModel cart = r.getRight();
+                List<ProductsOnCart> products = cart.getProducts();
+                for (ProductsOnCart product : products) {
+                    if (product.getProductId().equals(productId)) {
+                        product.setQuantity(product.getQuantity() + productQuantity);
+                        if (product.getQuantity() <= 0) {
+                            products.remove(product);
+                        }
+                        break;
+                    }
+                }
+                updateCart(cart, products);
+                future.complete(Either.right("Success"));
+            } else {
+                future.complete(Either.left(new Failure("Cart not found")));
+            }
+        });
+        return future;
+    }
+
     private void createCart(
                         String userId,
                         ProductModelFB product,

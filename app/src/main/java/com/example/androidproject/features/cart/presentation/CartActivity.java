@@ -14,6 +14,8 @@ import com.example.androidproject.R;
 import com.example.androidproject.features.cart.usecase.CartUseCase;
 import com.example.androidproject.features.checkout.presentation.CheckoutActivity;
 
+import java.util.concurrent.CompletableFuture;
+
 public class CartActivity extends AppCompatActivity {
 
     private LinearLayout emptyCartLayout;
@@ -36,24 +38,38 @@ public class CartActivity extends AppCompatActivity {
         btnCheckout = findViewById(R.id.btn_checkout);
         btnContinueShopping = findViewById(R.id.btn_continue_shopping);
 
-        if (isCartEmpty()) {
-            emptyCartLayout.setVisibility(View.VISIBLE);
-            cartItemsLayout.setVisibility(View.GONE);
-        } else {
-            emptyCartLayout.setVisibility(View.GONE);
-            cartItemsLayout.setVisibility(View.VISIBLE);
-            btnCheckout.setVisibility(View.VISIBLE);
-//            cartItemsLayout.setAdapter(new ListCartItemAdapter(cartUseCase.getCart(), this));
-            cartItemsLayout.setLayoutManager(new LinearLayoutManager(this));
-        }
+        isCartEmpty().thenAccept(r -> {
+            if(r) {
+                emptyCartLayout.setVisibility(View.VISIBLE);
+                cartItemsLayout.setVisibility(View.GONE);
+            } else {
+                cartUseCase.getCurrentUserCart()
+                        .thenAccept(r1 -> {
+                            if(r1.isRight()) {
+                                emptyCartLayout.setVisibility(View.GONE);
+                                cartItemsLayout.setVisibility(View.VISIBLE);
+                                ListCartItemAdapter adapter = new ListCartItemAdapter(r1.getRight().getProducts(), this);
+                                cartItemsLayout.setLayoutManager(new LinearLayoutManager(this));
+                                cartItemsLayout.setAdapter(adapter);
+                            }
+                        });
+            }
+        });
 
         btnContinueShopping.setOnClickListener(v -> finish());
 
         btnCheckout.setOnClickListener(v -> openOrderReviewScreen());
     }
 
-    private boolean isCartEmpty() {
-        return false;
+    private CompletableFuture<Boolean> isCartEmpty() {
+        return cartUseCase.getCurrentUserCart()
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return r.getRight().getProducts().isEmpty();
+                    } else {
+                        return true;
+                    }
+                });
     }
 
     private void openOrderReviewScreen() {
