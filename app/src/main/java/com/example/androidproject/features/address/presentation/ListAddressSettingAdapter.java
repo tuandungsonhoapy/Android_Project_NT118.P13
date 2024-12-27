@@ -1,5 +1,6 @@
 package com.example.androidproject.features.address.presentation;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,6 +75,11 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
             addressUsecase.updateAddressDefault(address.getId())
                     .thenAccept(r -> {
                         if (r.isRight()) {
+                            for (AddressModel a : addresses) {
+                                a.setIsDefault(a.getId().equals(address.getId()));
+                            }
+
+                            ((Activity) context).runOnUiThread(() -> notifyDataSetChanged());
                             Toast.makeText(context, "Đặt làm địa chỉ mặc định thành công", Toast.LENGTH_SHORT).show();
                         }
                     });

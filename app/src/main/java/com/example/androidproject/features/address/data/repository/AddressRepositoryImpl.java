@@ -97,6 +97,7 @@ public class AddressRepositoryImpl implements AddressRepository {
                         }
                     }
                     batch.commit();
+                    future.complete(Either.right("Success"));
                 })
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         return future;
