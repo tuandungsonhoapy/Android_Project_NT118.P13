@@ -1,12 +1,15 @@
 package com.example.androidproject.features.address.presentation;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,17 +59,35 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
             }
         });
 
-        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteAddress(position);
-            }
+        holder.btnDelete.setOnClickListener(v -> {
+            addresses.remove(position);
+            addressUsecase.deleteAddress(address.getId())
+                    .thenAccept(r -> {
+                        if (r.isRight()) {
+                            Toast.makeText(context, "Xóa địa chỉ thành công", Toast.LENGTH_SHORT).show();
+                            notifyItemRemoved(position);
+                        }
+                    });
+        });
+
+        holder.rbDefault.setChecked(address.getIsDefault());
+        holder.rbDefault.setOnClickListener(v -> {
+            addressUsecase.updateAddressDefault(address.getId())
+                    .thenAccept(r -> {
+                        if (r.isRight()) {
+                            for (AddressModel a : addresses) {
+                                a.setIsDefault(a.getId().equals(address.getId()));
+                            }
+
+                            ((Activity) context).runOnUiThread(() -> notifyDataSetChanged());
+                            Toast.makeText(context, "Đặt làm địa chỉ mặc định thành công", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
     }
 
     @Override
     public int getItemCount() {
-        Log.d("ListAddressSettingAdapter", "getItemCount: "+addresses.size());
         return addresses.size();
     }
 
@@ -76,20 +97,16 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
         notifyDataSetChanged();
     }
 
-    private void deleteAddress(int position) {
-        addresses.remove(position);
-        addressUsecase.deleteAddress(Integer.toString(position));
-        notifyItemRemoved(position);
-    }
-
     public static class ListAddressSettingViewHolder extends RecyclerView.ViewHolder {
           TextView userAddress;
           Button btnDelete;
-
+          RadioButton rbDefault;
+          
             public ListAddressSettingViewHolder(@NonNull View itemView) {
                 super(itemView);
                 userAddress = itemView.findViewById(R.id.tv_address);
                 btnDelete = itemView.findViewById(R.id.btn_del_address);
+                rbDefault = itemView.findViewById(R.id.rb_default_address);
             }
     }
 }

@@ -42,17 +42,21 @@ public class AddressSettingActivity extends AppCompatActivity {
         addressRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         Button btnAddAddress = findViewById(R.id.addAddressButton);
 
-        addressUsecase.fetchAddress();
-        listAddressSettingAdapter = new ListAddressSettingAdapter(this, addressUsecase.fetchAddress());
-        addressRecyclerView.setAdapter(listAddressSettingAdapter);
-
-        listAddressSettingAdapter.setOnItemClickListener(new ListAddressSettingAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(AddressModel address) {
-                Intent intent = new Intent(AddressSettingActivity.this, AddEditAddressActivity.class);
-                intent.putExtra("editMode", true);
-                intent.putExtra("address", address);
-                startActivityForResult(intent, ADD_EDIT_ADDRESS_REQUEST_CODE);
+        addressUsecase.getAddresses().thenAccept(r -> {
+            if(r.isRight()) {
+                runOnUiThread(() -> {
+                    listAddressSettingAdapter = new ListAddressSettingAdapter(this, r.getRight());
+                    addressRecyclerView.setAdapter(listAddressSettingAdapter);
+                    listAddressSettingAdapter.setOnItemClickListener(new ListAddressSettingAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AddressModel address) {
+                            Intent intent = new Intent(AddressSettingActivity.this, AddEditAddressActivity.class);
+                            intent.putExtra("editMode", true);
+                            intent.putExtra("address_id", address.getId());
+                            startActivityForResult(intent, ADD_EDIT_ADDRESS_REQUEST_CODE);
+                        }
+                    });
+                });
             }
         });
 
@@ -61,7 +65,7 @@ public class AddressSettingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(AddressSettingActivity.this, AddEditAddressActivity.class);
                 intent.putExtra("editMode", false);
-                startActivity(intent);
+                startActivityForResult(intent, ADD_EDIT_ADDRESS_REQUEST_CODE);
             }
         });
 
@@ -82,9 +86,13 @@ public class AddressSettingActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD_EDIT_ADDRESS_REQUEST_CODE && resultCode == RESULT_OK) {
-
-            List<AddressModel> updatedAddresses = addressUsecase.fetchAddress();
-            listAddressSettingAdapter.updateAddressList(updatedAddresses);
+            addressUsecase.getAddresses().thenAccept(r -> {
+                if(r.isRight()) {
+                    runOnUiThread(() -> {
+                        listAddressSettingAdapter.updateAddressList(r.getRight());
+                    });
+                }
+            });
         }
     }
 }
