@@ -10,11 +10,13 @@ import java.util.concurrent.CompletableFuture;
 public interface AddressRepository {
     CompletableFuture<Either<Failure, String>> addAddressRepository(AddressModel address, long quantity);
 
-    void updateAddressRepository(AddressModel address);
+    CompletableFuture<Either<Failure, String>> updateAddressRepository(AddressModel address);
 
     CompletableFuture<Either<Failure, String>> deleteAddressRepository(String id);
 
-    void updateAddressDefault(String id, boolean isDefault);
+    CompletableFuture<Either<Failure, String>> updateAddressDefault(String id);
 
     CompletableFuture<Either<Failure, List<AddressModel>>> getAddressRepository();
+
+    CompletableFuture<Either<Failure, AddressModel>> getAddressById(String id);
 }

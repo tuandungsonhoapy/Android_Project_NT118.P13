@@ -1,12 +1,16 @@
 package com.example.androidproject.features.address.data.repository;
 
+import android.util.Log;
+
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.address.data.model.AddressModel;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +49,8 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
-    public void updateAddressRepository(AddressModel address) {
+    public CompletableFuture<Either<Failure,String>> updateAddressRepository(AddressModel address) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
         Map<String, Object> addressData = new HashMap<>();
 
         addressData.put("street", address.getStreet());
@@ -58,21 +63,43 @@ public class AddressRepositoryImpl implements AddressRepository {
         addressData.put("updatedAt", Timestamp.now());
 
         db.collection("addresses").document(address.getId()).update(addressData);
-    }
-
-    @Override
-    public CompletableFuture<Either<Failure, String>> deleteAddressRepository(String id) {
-        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
-        db.collection("addresses").document(id).delete();
         future.complete(Either.right("Success"));
         return future;
     }
 
     @Override
-    public void updateAddressDefault(String id, boolean isDefault) {
-        Map<String, Object> addressData = new HashMap<>();
-        addressData.put("isDefault", isDefault);
-        db.collection("addresses").document(id).update(addressData);
+    public CompletableFuture<Either<Failure, String>> deleteAddressRepository(String id) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+        db.collection("addresses").document(id).delete()
+                .addOnSuccessListener(unused -> future.complete(Either.right("Success")))
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        future.complete(Either.right("Success"));
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, String>> updateAddressDefault(String id) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+        WriteBatch batch = db.batch();
+        DocumentReference addressRef = db.collection("addresses").document(id);
+        batch.update(addressRef, "isDefault", true);
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getCurrentUser().getUid();
+        db.collection("addresses")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        if (!document.getId().equals(id)) {
+                            DocumentReference addressRef1 = db.collection("addresses").document(document.getId());
+                            batch.update(addressRef1, "isDefault", false);
+                        }
+                    }
+                    batch.commit();
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
     }
 
     @Override
@@ -89,11 +116,23 @@ public class AddressRepositoryImpl implements AddressRepository {
                         AddressModel address = document.toObject(AddressModel.class);
                         addressList.add(address);
                     }
-
                     future.complete(Either.right(addressList));
                 })
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
 
         return future;
     }
+
+    @Override
+    public CompletableFuture<Either<Failure, AddressModel>> getAddressById(String id) {
+        CompletableFuture<Either<Failure, AddressModel>> future = new CompletableFuture<>();
+        db.collection("addresses").document(id).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    AddressModel address = documentSnapshot.toObject(AddressModel.class);
+                    future.complete(Either.right(address));
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
+    }
+
 }

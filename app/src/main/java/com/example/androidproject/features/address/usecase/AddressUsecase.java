@@ -34,12 +34,38 @@ public class AddressUsecase {
         });
     }
 
-    public void editAddress(String id, AddressModel addressModel) {
-        // Edit address in database
+    public CompletableFuture<Either<Failure, String>> editAddress(String id, AddressModel addressModel) {
+        return addressRepository.updateAddressRepository(addressModel).thenApply(r -> {
+            if (r.isRight()) {
+                return Either.right(r.getRight());
+            } else {
+                return Either.left(r.getLeft());
+            }
+        });
     }
 
     public CompletableFuture<Either<Failure, String>> deleteAddress(String id) {
         return addressRepository.deleteAddressRepository(id).thenApply(r -> {
+            if (r.isRight()) {
+                return Either.right(r.getRight());
+            } else {
+                return Either.left(r.getLeft());
+            }
+        });
+    }
+
+    public CompletableFuture<Either<Failure, AddressModel>> getAddressById(String id) {
+        return addressRepository.getAddressById(id).thenApply(r -> {
+            if (r.isRight()) {
+                return Either.right(r.getRight());
+            } else {
+                return Either.left(r.getLeft());
+            }
+        });
+    }
+
+    public CompletableFuture<Either<Failure,String>> updateAddressDefault(String id) {
+        return addressRepository.updateAddressDefault(id).thenApply(r -> {
             if (r.isRight()) {
                 return Either.right(r.getRight());
             } else {

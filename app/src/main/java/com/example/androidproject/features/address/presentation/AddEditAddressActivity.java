@@ -35,13 +35,13 @@ public class AddEditAddressActivity extends AppCompatActivity {
     private EditText ETStreet;
     private Button btnSave;
     private AddressUtils addressUtils= new AddressUtils();
-    private AddressModel address;
     private String provinceId, provinceName;
     private String districtId, districtName;
     private String wardId, wardName;
     private AddressUsecase addressUsecase = new AddressUsecase();
     private CounterModel counterModel = new CounterModel();
     private long addressQuantity;
+    private String addressId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +57,15 @@ public class AddEditAddressActivity extends AppCompatActivity {
         initializeViews();
         handleSpinnerEvent();
 
-//        address = getIntent().getParcelableExtra("address");
-//        if (address != null) {
-//            populateAddressData(address);
-//        }
+        addressId = getIntent().getExtras().getString("address_id");
+        if (addressId != null) {
+            addressUsecase.getAddressById(addressId)
+                    .thenAccept(r -> {
+                        if (r.isRight()) {
+                            fetchDetailAddress(r.getRight());
+                        }
+                    });
+        }
 
         btnSave.setOnClickListener(v -> {
             saveAddress();
@@ -154,21 +159,102 @@ public class AddEditAddressActivity extends AppCompatActivity {
                 wardId
         );
 
-        counterModel.getQuantity("address")
-                        .addOnSuccessListener(quantity -> {
-                            addressQuantity = quantity;
-                            addressUsecase.addAddress(address, quantity)
-                                    .thenAccept(r -> {
-                                        if (r.isRight()) {
-                                            addressQuantity++;
-                                            counterModel.updateQuantity("address");
-                                            Toast.makeText(AddEditAddressActivity.this, "Đã lưu địa chỉ: " + address.getFullAddress(), Toast.LENGTH_LONG).show();
-                                            Intent resultIntent = new Intent();
-                                            setResult(RESULT_OK, resultIntent);
-                                            finish();
-                                        }
-                                    });
+        if(addressId == null) {
+            counterModel.getQuantity("address")
+                    .addOnSuccessListener(quantity -> {
+                        addressQuantity = quantity;
+                        addressUsecase.addAddress(address, quantity)
+                                .thenAccept(r -> {
+                                    if (r.isRight()) {
+                                        addressQuantity++;
+                                        counterModel.updateQuantity("address");
+                                        Toast.makeText(AddEditAddressActivity.this, "Đã lưu địa chỉ: " + address.getFullAddress(), Toast.LENGTH_LONG).show();
+                                        Intent resultIntent = new Intent();
+                                        setResult(RESULT_OK, resultIntent);
+                                        finish();
+                                    }
+                                });
+                    });
+        } else {
+            address.setId(addressId);
+            addressUsecase.editAddress(addressId, address)
+                            .thenAccept(r -> {
+                                if (r.isRight()) {
+                                    Toast.makeText(AddEditAddressActivity.this, "Đã cập nhật địa chỉ: " + address.getFullAddress(), Toast.LENGTH_LONG).show();
+                                    Intent resultIntent = new Intent();
+                                    setResult(RESULT_OK, resultIntent);
+                                    finish();
+                                }
+                            });
+        }
+    }
+
+    private void fetchDetailAddress(AddressModel address) {
+        ETStreet.setText(address.getStreet());
+        addressUtils.fetchProvinces()
+                .thenAccept(r -> {
+                    if(r.isRight()) {
+                        List<AddressProvinceData> provinces = r.getRight();
+                        runOnUiThread(() -> {
+                            ArrayAdapter<AddressProvinceData> adapter = new ArrayAdapter<>(AddEditAddressActivity.this, android.R.layout.simple_spinner_item, provinces);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerTinh.setAdapter(adapter);
+                            spinnerHuyen.setEnabled(true);
+                            for(int i = 0; i < provinces.size(); i++) {
+                                if(provinces.get(i).getId().equals(address.getProvinceId())) {
+                                    spinnerTinh.setSelection(i);
+                                    break;
+                                }
+                            }
+
+                            fetchDistrictForProvince(address);
                         });
+                    }
+                });
+    }
+
+    private void fetchDistrictForProvince(AddressModel address) {
+        addressUtils.fetchDistricts(address.getProvinceId())
+                .thenAccept(r -> {
+                    if(r.isRight()) {
+                        List<AddressDistrictData> districts = r.getRight();
+                        runOnUiThread(() -> {
+                            ArrayAdapter<AddressDistrictData> districtAdapter = new ArrayAdapter<>(AddEditAddressActivity.this, android.R.layout.simple_spinner_item, districts);
+                            districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerHuyen.setAdapter(districtAdapter);
+                            spinnerXa.setEnabled(true);
+                            for(int i = 0; i < districts.size(); i++) {
+                                if(districts.get(i).getId().equals(address.getDistrictId())) {
+                                    spinnerHuyen.setSelection(i);
+                                    break;
+                                }
+                            }
+
+                            fetchWardsForDistrict(address);
+                        });
+                    }
+                });
+    }
+
+    private void fetchWardsForDistrict(AddressModel address) {
+        addressUtils.fetchWards(address.getDistrictId())
+                .thenAccept(r -> {
+                    if(r.isRight()) {
+                        List<AddressWardData> wards = r.getRight();
+                        runOnUiThread(() -> {
+                            ArrayAdapter<AddressWardData> wardAdapter = new ArrayAdapter<>(AddEditAddressActivity.this, android.R.layout.simple_spinner_item, wards);
+                            wardAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerXa.setAdapter(wardAdapter);
+
+                            for(int i = 0; i < wards.size(); i++) {
+                                if(wards.get(i).getId().equals(address.getWardId())) {
+                                    spinnerXa.setSelection(i);
+                                    break;
+                                }
+                            }
+                        });
+                    }
+                });
     }
 
     @Override
