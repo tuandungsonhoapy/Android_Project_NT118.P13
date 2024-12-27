@@ -19,4 +19,6 @@ public interface AddressRepository {
     CompletableFuture<Either<Failure, List<AddressModel>>> getAddressRepository();
 
     CompletableFuture<Either<Failure, AddressModel>> getAddressById(String id);
+
+    CompletableFuture<Either<Failure, AddressModel>> getDefaultAddress();
 }

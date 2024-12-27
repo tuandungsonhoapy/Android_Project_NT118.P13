@@ -1,21 +1,31 @@
 package com.example.androidproject.features.checkout.usecase;
 
 import com.example.androidproject.R;
+import com.example.androidproject.core.errors.Failure;
+import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.brand.data.model.BrandModel;
+import com.example.androidproject.features.checkout.data.model.CheckoutModel;
+import com.example.androidproject.features.checkout.data.repository.CheckoutRepository;
+import com.example.androidproject.features.checkout.data.repository.CheckoutRepositoryImpl;
 import com.example.androidproject.features.order.data.ProductDataForOrderModel;
 import com.example.androidproject.features.product.data.model.ProductModel;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class CheckoutUseCase {
-    public List<ProductDataForOrderModel> getCheckout() {
-//        List<ProductDataForOrderModel> checkoutItem = new ArrayList<>();
-//        checkoutItem.add(new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1));
-//        checkoutItem.add(new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1));
-//        checkoutItem.add(new ProductDataForOrderModel("1", new ProductModel("Legion 5 2021", R.drawable.image_product, 1299, 12, new BrandModel(1, "Lenovo", R.drawable.image_asus_logo,1), true), "1", 1));
-//
-//        return checkoutItem;
-        return null;
+    private CheckoutRepository checkoutRepository = new CheckoutRepositoryImpl(FirebaseFirestore.getInstance());
+
+    public CompletableFuture<Either<Failure, String>> addCheckout(CheckoutModel checkoutModel, long quantity) {
+        return checkoutRepository.addCheckoutRepository(checkoutModel, quantity)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
     }
 }

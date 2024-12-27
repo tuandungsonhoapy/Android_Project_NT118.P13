@@ -1,6 +1,7 @@
 package com.example.androidproject.features.cart.presentation;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,7 @@ public class ListCartItemAdapter extends RecyclerView.Adapter<ListCartItemAdapte
     public int getItemCount() {
         return products.size();
     }
+
     public static class ListCartItemAdapterViewHolder extends RecyclerView.ViewHolder {
         ImageView ivItemImage;
         TextView tvItemName;

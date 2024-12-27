@@ -2,6 +2,7 @@ package com.example.androidproject.features.product.presentation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +89,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 if(option.getQuantity() <= 0) {
                     return;
                 }
-
+                Log.d("ProductAdapter", "add cart: " + product.getId());
                 cartUseCase.addProductToCart(
                         product.getId(),
                         1,

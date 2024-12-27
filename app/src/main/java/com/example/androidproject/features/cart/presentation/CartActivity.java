@@ -22,21 +22,14 @@ public class CartActivity extends AppCompatActivity {
     private RecyclerView cartItemsLayout;
     private Button btnCheckout, btnContinueShopping;
     private CartUseCase cartUseCase = new CartUseCase();
+    private static final int REQUEST_CHECKOUT = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        emptyCartLayout = findViewById(R.id.empty_cart_layout);
-        cartItemsLayout = findViewById(R.id.rvCartItem);
-        btnCheckout = findViewById(R.id.btn_checkout);
-        btnContinueShopping = findViewById(R.id.btn_continue_shopping);
+        initView();
 
         isCartEmpty().thenAccept(r -> {
             if(r) {
@@ -74,6 +67,19 @@ public class CartActivity extends AppCompatActivity {
                 });
     }
 
+    private void initView() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        emptyCartLayout = findViewById(R.id.empty_cart_layout);
+        cartItemsLayout = findViewById(R.id.rvCartItem);
+        btnCheckout = findViewById(R.id.btn_checkout);
+        btnContinueShopping = findViewById(R.id.btn_continue_shopping);
+    }
+
     public void updateUI() {
         cartUseCase.getCurrentUserCart().thenAccept(r -> {
             if (r.isRight() && (r.getRight().getProducts() == null || r.getRight().getProducts().isEmpty())) {
@@ -90,7 +96,15 @@ public class CartActivity extends AppCompatActivity {
 
     private void openOrderReviewScreen() {
         Intent intent = new Intent(this, CheckoutActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CHECKOUT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CHECKOUT && resultCode == RESULT_OK) {
+            updateUI();
+        }
     }
 
     @Override
