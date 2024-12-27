@@ -73,4 +73,16 @@ public class CartUseCase {
                     }
                 });
     }
+
+    public CompletableFuture<Either<Failure, String>> deleteCart(String userId) {
+        return cartRepository.deleteCart(userId)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        Log.e("CartUseCase", "deleteCart: " + r.getLeft().getErrorMessage());
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
 }

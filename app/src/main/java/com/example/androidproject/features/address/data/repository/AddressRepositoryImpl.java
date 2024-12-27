@@ -136,4 +136,22 @@ public class AddressRepositoryImpl implements AddressRepository {
         return future;
     }
 
+    @Override
+    public CompletableFuture<Either<Failure, AddressModel>> getDefaultAddress() {
+        CompletableFuture<Either<Failure, AddressModel>> future = new CompletableFuture<>();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getCurrentUser().getUid();
+        db.collection("addresses")
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("isDefault", true)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        AddressModel address = document.toObject(AddressModel.class);
+                        future.complete(Either.right(address));
+                    }
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
+    }
 }

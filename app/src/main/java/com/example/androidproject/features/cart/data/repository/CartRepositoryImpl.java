@@ -177,6 +177,22 @@ public class CartRepositoryImpl implements CartRepository{
         return future;
     }
 
+    @Override
+    public CompletableFuture<Either<Failure, String>> deleteCart(String userId) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+        db.collection("carts")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    Log.d("CartRepository", "deleteCart: " + queryDocumentSnapshots.getDocuments().size());
+                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                        db.collection("carts").document(document.getId()).delete();
+                    }
+                });
+        future.complete(Either.right("Success"));
+        return future;
+    }
+
     private void createCart(
                         String userId,
                         ProductModelFB product,
@@ -200,9 +216,9 @@ public class CartRepositoryImpl implements CartRepository{
         newCart.setId(newCart.prefixCartId(quantity));
 
         HashMap<String, Object> cartData = new HashMap<>();
-        cartData.put("id", newCart.getId());
+        cartData.put("id", newCart.prefixCartId(quantity));
         cartData.put("userId", newCart.getUserId());
-        cartData.put("products", Arrays.asList(newCart.getProducts()));
+        cartData.put("products", newCart.getProducts());
         cartData.put("total", newCart.getTotal());
 
         db.collection("carts").document(newCart.getId()).set(cartData);
