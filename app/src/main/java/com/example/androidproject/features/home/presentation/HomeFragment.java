@@ -17,23 +17,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.androidproject.R;
-import com.example.androidproject.features.banner.data.model.BannerModel;
 import com.example.androidproject.features.banner.presentation.BannerAdapter;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.cart.presentation.CartActivity;
 import com.example.androidproject.features.category.data.entity.CategoryEntity;
-import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.presentation.CategoryAdapter;
 import com.example.androidproject.features.category.usecase.CategoryUseCase;
 import com.example.androidproject.features.home.usecase.HomeUseCase;
-import com.example.androidproject.features.product.data.model.ProductModel;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
 import com.example.androidproject.features.product.presentation.AllProductActivity;
 import com.example.androidproject.features.product.presentation.ProductAdapter;
-import com.example.androidproject.features.shared.data.model.CartState;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -67,10 +60,9 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerProductView;
     private ViewPager2 viewPagerBanner;
     private ImageView cartIcon;
-    private TextView viewAllProduct, cartItemCount;
+    private TextView viewAllProduct;
     private HomeUseCase homeUseCase = new HomeUseCase();
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
-    private CartState cartState = new CartState();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -114,10 +106,7 @@ public class HomeFragment extends Fragment {
         viewPagerBanner = view.findViewById(R.id.view_pager);
         cartIcon = view.findViewById(R.id.cartIcon);
         viewAllProduct = view.findViewById(R.id.viewAllProduct);
-        cartItemCount = view.findViewById(R.id.cartItemCount);
 
-        Integer count = CartState.getInstance().getCartItemCount().getValue();
-        CartState.getInstance().setCartItemCount(count);
         //view categories
         List<CategoryEntity> categoryList = new ArrayList<>();
         categoryUseCase.getCategoryList().thenAccept(r -> {

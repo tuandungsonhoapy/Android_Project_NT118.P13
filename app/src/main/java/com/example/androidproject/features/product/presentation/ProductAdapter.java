@@ -2,7 +2,6 @@ package com.example.androidproject.features.product.presentation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +19,7 @@ import com.example.androidproject.core.utils.ConvertFormat;
 import com.example.androidproject.core.utils.counter.CounterModel;
 import com.example.androidproject.features.cart.usecase.CartUseCase;
 import com.example.androidproject.features.product.data.entity.ProductOption;
-import com.example.androidproject.features.product.data.model.ProductModel;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
-import com.example.androidproject.features.shared.data.model.CartState;
 
 import java.util.List;
 
@@ -101,7 +98,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     if (r.isRight()) {
                         cartQuantity++;
                         counterModel.updateQuantity("cart");
-                        refeshCartItemCount();
                         Toast.makeText(context, "Thêm sản phẩm vào giỏ thành công", Toast.LENGTH_SHORT).show();
                     }
                     else {
@@ -109,17 +105,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     }
                 });
             });
-        });
-    }
-
-    private void refeshCartItemCount() {
-        cartUseCase.getCurrentCartItemCount().thenAccept(r -> {
-            if (r.isRight()) {
-                int newCartCount = Integer.parseInt(r.getRight());
-                CartState.getInstance().incrementItemCount(newCartCount);
-            } else {
-                Log.e("ProductAdapter", "refeshCartItemCount: " + r.getLeft().getErrorMessage());
-            }
         });
     }
 
