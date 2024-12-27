@@ -90,6 +90,9 @@ public class CartActivity extends AppCompatActivity {
                 emptyCartLayout.setVisibility(View.GONE);
                 cartItemsLayout.setVisibility(View.VISIBLE);
                 btnCheckout.setVisibility(View.VISIBLE);
+                ListCartItemAdapter adapter = new ListCartItemAdapter(r.getRight().getProducts(), this);
+                cartItemsLayout.setLayoutManager(new LinearLayoutManager(this));
+                cartItemsLayout.setAdapter(adapter);
             }
         });
     }

@@ -81,39 +81,39 @@ public class CheckoutActivity extends AppCompatActivity {
                 String userId = auth.getCurrentUser().getUid();
                 counterModel.getQuantity("checkout").addOnSuccessListener(quantity -> {
                     checkoutQuantity = quantity;
+
+                    CheckoutModel checkoutModel = new CheckoutModel(
+                            userId,
+                            addressId,
+                            etNote.getText().toString(),
+                            productsOnCart,
+                            fullAddress,
+                            MoneyFomat.parseMoney(tvTotalPrice.getText().toString())
+                    );
+
+                    checkoutUseCase.addCheckout(checkoutModel, checkoutQuantity)
+                            .thenAccept(r -> {
+                                if(r.isRight()) {
+                                    cartUseCase.deleteCart(userId).thenAccept(r1 -> {
+                                        if (r1.isRight()) {
+                                            counterModel.updateQuantity("checkout");
+                                            paymentSuccessLayout.setVisibility(View.VISIBLE);
+                                            btnPayment.setVisibility(View.GONE);
+                                            rvCheckoutItem.setVisibility(View.GONE);
+                                            llTotalPrice.setVisibility(View.GONE);
+                                            btnContinueShopping.setVisibility(View.VISIBLE);
+                                            llUserAddress.setVisibility(View.GONE);
+                                            tvUserInformation.setVisibility(View.GONE);
+                                            llNote.setVisibility(View.GONE);
+                                            getIntent().addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                            Toast.makeText(this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 });
-
-                CheckoutModel checkoutModel = new CheckoutModel(
-                        userId,
-                        addressId,
-                        etNote.getText().toString(),
-                        productsOnCart,
-                        fullAddress,
-                        MoneyFomat.parseMoney(tvTotalPrice.getText().toString())
-                );
-
-                checkoutUseCase.addCheckout(checkoutModel, checkoutQuantity)
-                        .thenAccept(r -> {
-                            if(r.isRight()) {
-                                cartUseCase.deleteCart(userId).thenAccept(r1 -> {
-                                    if (r1.isRight()) {
-                                        counterModel.updateQuantity("checkout");
-                                        paymentSuccessLayout.setVisibility(View.VISIBLE);
-                                        btnPayment.setVisibility(View.GONE);
-                                        rvCheckoutItem.setVisibility(View.GONE);
-                                        llTotalPrice.setVisibility(View.GONE);
-                                        btnContinueShopping.setVisibility(View.VISIBLE);
-                                        llUserAddress.setVisibility(View.GONE);
-                                        tvUserInformation.setVisibility(View.GONE);
-                                        llNote.setVisibility(View.GONE);
-                                        getIntent().addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                        Toast.makeText(this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
-                            }
-                        });
             } else {
                 Toast.makeText(this, "Vui lòng thêm địa chỉ giao hàng", Toast.LENGTH_SHORT).show();
             }
