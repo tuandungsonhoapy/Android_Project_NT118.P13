@@ -59,23 +59,6 @@
                 android:layout_marginTop="40dp"
                 app:tint="@color/white" />
 
-            <TextView
-                android:id="@+id/cartItemCount"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:background="@drawable/circle_black_background"
-                android:text="5"
-                android:textColor="@android:color/white"
-                android:gravity="center"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@id/cartIcon"
-                app:layout_constraintTop_toTopOf="@id/cartIcon"
-                app:layout_constraintStart_toEndOf="@+id/cartIcon"
-                android:layout_marginEnd="0dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginStart="8dp"
-                android:translationY="-6dp"
-                />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
