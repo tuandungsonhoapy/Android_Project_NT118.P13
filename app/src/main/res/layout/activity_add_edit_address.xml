@@ -9,11 +9,11 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:title="Thiết Lập Địa Chỉ"
         />
 
     <TextView
@@ -102,6 +102,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/addressEditText"
         android:layout_margin="16dp"
+        android:backgroundTint="@color/primary"
         android:text="Lưu Địa Chỉ"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
