@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,7 +60,8 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerCategoryView;
     private RecyclerView recyclerProductView;
     private ViewPager2 viewPagerBanner;
-    private ImageView cartIcon;
+    private ImageView cartIcon, img_search;
+    private EditText edt_search;
     private TextView viewAllProduct;
     private HomeUseCase homeUseCase = new HomeUseCase();
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
@@ -122,6 +124,15 @@ public class HomeFragment extends Fragment {
         //view banners
         BannerAdapter bannerAdapter = new BannerAdapter(getContext(), homeUseCase.getBannersList());
         viewPagerBanner.setAdapter(bannerAdapter);
+
+        img_search = view.findViewById(R.id.img_search);
+        edt_search = view.findViewById(R.id.edt_search);
+        img_search.setOnClickListener(v -> {
+            String search = edt_search.getText().toString();
+            Intent intent = new Intent(getActivity(), AllProductActivity.class);
+            intent.putExtra("search", search);
+            startActivity(intent);
+        });
 
         //view products
         fetchTop10ProductsFromFirestore();
