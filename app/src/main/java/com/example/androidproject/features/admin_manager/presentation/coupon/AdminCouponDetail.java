@@ -13,7 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.androidproject.R;
-import com.example.androidproject.core.utils.JsonUtil;
+import com.example.androidproject.core.utils.JsonUtils;
 import com.example.androidproject.features.admin_manager.data.model.CouponModel;
 
 import java.text.NumberFormat;
@@ -37,7 +37,7 @@ public class AdminCouponDetail extends AppCompatActivity {
         // get data and render
         String couponJson = getIntent().getStringExtra("coupon");
         if (couponJson != null) {
-            CouponModel coupon = JsonUtil.jsonToObject(couponJson, CouponModel.class);
+            CouponModel coupon = JsonUtils.jsonToObject(couponJson, CouponModel.class);
             renderData(coupon);
         }
     }

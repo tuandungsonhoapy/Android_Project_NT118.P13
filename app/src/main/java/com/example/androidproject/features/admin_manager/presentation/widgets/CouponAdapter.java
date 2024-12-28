@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
-import com.example.androidproject.core.utils.JsonUtil;
+import com.example.androidproject.core.utils.JsonUtils;
 import com.example.androidproject.features.admin_manager.data.model.CouponModel;
 import com.example.androidproject.features.admin_manager.presentation.coupon.AdminCouponDetail;
 
@@ -45,7 +45,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.CouponView
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, AdminCouponDetail.class);
-            String couponJson = JsonUtil.objectToJson(coupon);
+            String couponJson = JsonUtils.objectToJson(coupon);
             intent.putExtra("coupon", couponJson);
             context.startActivity(intent);
         });

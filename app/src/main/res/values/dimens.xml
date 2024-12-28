@@ -11,16 +11,34 @@
     <dimen name="text_large">20dp</dimen>
     <!--  START:by size  -->
     <!--  dp  -->
+    <dimen name="_4dp">4dp</dimen>
+    <dimen name="_8dp">8dp</dimen>
     <dimen name="_12dp">12dp</dimen>
     <dimen name="_16dp">16dp</dimen>
+    <dimen name="_18dp">18dp</dimen>
+    <dimen name="_24dp">24dp</dimen>
+    <dimen name="_32dp">32dp</dimen>
+    <dimen name="_36dp">36dp</dimen>
+    <dimen name="_40dp">40dp</dimen>
+    <dimen name="_42dp">42dp</dimen>
+    <dimen name="_48dp">48dp</dimen>
+    <dimen name="_52dp">52dp</dimen>
+    <dimen name="_60dp">60dp</dimen>
+    <dimen name="_80dp">80dp</dimen>
+    <dimen name="_120dp">120dp</dimen>
     <dimen name="_200dp">200dp</dimen>
     <!--  END:by size  -->
 
     <!--  START:custom  -->
-    <dimen name="et_vertical">@dimen/_12dp</dimen>
+    <dimen name="et_vertical">12dp</dimen>
+    <dimen name="et_auth_horizontal">8dp</dimen>
     <dimen name="screen_vertical">@dimen/_16dp</dimen>
     <dimen name="screen_horizontal">@dimen/_16dp</dimen>
     <dimen name="logo_entry">@dimen/_200dp</dimen>
+    <dimen name="radio_gap">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="manager_detail_gap">12dp</dimen>
+    <dimen name="auth_input_gap">8dp</dimen>
     <!--  END:custom  -->
 
     <!--  START:text  -->
@@ -37,10 +55,6 @@
     <dimen name="_3gr_fb">0.764</dimen> <!-- 1 - 0.236 -->
     <dimen name="_4gr_fb">0.854</dimen> <!-- 1 - 0.146 -->
     <dimen name="_5gr_fb">0.910</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="manager_detail_gap">12dp</dimen>
-    <dimen name="auth_input_gap">8dp</dimen>
-    <dimen name="et_auth_horizontal">8dp</dimen>
     <!--  END:ratio  -->
 
 </resources>
