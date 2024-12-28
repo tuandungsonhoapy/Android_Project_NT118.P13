@@ -2,27 +2,38 @@ package com.example.androidproject.features.product.presentation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
+import com.example.androidproject.core.utils.MoneyFomat;
+import com.example.androidproject.core.utils.counter.CounterModel;
+import com.example.androidproject.features.cart.usecase.CartUseCase;
+import com.example.androidproject.features.product.data.entity.ProductOption;
 import com.example.androidproject.features.product.data.model.ProductModel;
+import com.example.androidproject.features.product.data.model.ProductModelFB;
 
 import java.util.List;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 
 public class AllProductListAdapter extends RecyclerView.Adapter<AllProductListAdapter.AllProductListAdapterViewHolder> {
-    private List<ProductModel> productList;
+    private List<ProductModelFB> productList;
     private Context context;
-
-    public AllProductListAdapter(List<ProductModel> productList, Context context) {
+    private CartUseCase cartUseCase = new CartUseCase();
+    private long cartQuantity;
+    private CounterModel counterModel = new CounterModel();
+    
+    public AllProductListAdapter(List<ProductModelFB> productList, Context context) {
         this.productList = productList;
         this.context = context;
     }
@@ -36,38 +47,44 @@ public class AllProductListAdapter extends RecyclerView.Adapter<AllProductListAd
 
     @Override
     public void onBindViewHolder(@NonNull AllProductListAdapterViewHolder holder, int position) {
-        ProductModel product = productList.get(position);
-        holder.productImage.setImageResource(product.getImage());
-        holder.productName.setText(product.getName());
-        holder.productBrand.setText("Laptop");
-        holder.productPrice.setText(String.valueOf(product.getPrice()));
-        holder.addToCartIcon.setOnClickListener(v -> {
+        ProductModelFB product = productList.get(position);
 
+        Glide.with(context)
+                .load(product.getImages().get(0))
+                .override(300, 300)
+                .centerCrop()
+                .into(holder.productImage);
+
+        holder.productName.setText(product.getName());
+        holder.productBrand.setText(product.getBrandId());
+        holder.productPrice.setText(MoneyFomat.format(product.getPrice()));
+        holder.addToCartIcon.setOnClickListener(v -> {
+            counterModel.getQuantity("cart").addOnSuccessListener(quantity -> {
+                cartQuantity = quantity;
+
+                ProductOption option = product.getOptions().get(0);
+                if(option.getQuantity() <= 0) {
+                    return;
+                }
+                cartUseCase.addProductToCart(
+                        product.getId(),
+                        1,
+                        product.getOptions().get(0),
+                        cartQuantity
+                ).thenAccept(r -> {
+                    if (r.isRight()) {
+                        cartQuantity++;
+                        counterModel.updateQuantity("cart");
+                        Toast.makeText(context, "Thêm sản phẩm vào giỏ thành công", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(context, "Thêm sản phẩm vào giỏ thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
         });
         holder.heartIcon.setOnClickListener(v -> {
 
-        });
-
-        if (product.isFavorite()) {
-            holder.heartIcon.setImageResource(R.drawable.favorite_heart);
-            holder.heartIcon.setColorFilter(ContextCompat.getColor(context, R.color.pink));
-        } else {
-            holder.heartIcon.setImageResource(R.drawable.unfavorite_heart);
-            holder.heartIcon.setColorFilter(ContextCompat.getColor(context, R.color.grey));
-        }
-
-        holder.heartIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (product.isFavorite()) {
-                    holder.heartIcon.setImageResource(R.drawable.favorite_heart);
-                    holder.heartIcon.setColorFilter(ContextCompat.getColor(context, R.color.pink));
-                } else {
-                    holder.heartIcon.setImageResource(R.drawable.unfavorite_heart);
-                    holder.heartIcon.setColorFilter(ContextCompat.getColor(context, R.color.grey));
-                }
-                product.setFavorite(!product.isFavorite());
-            }
         });
 
         holder.itemView.setOnClickListener(v -> {

@@ -89,7 +89,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 if(option.getQuantity() <= 0) {
                     return;
                 }
-                Log.d("ProductAdapter", "add cart: " + product.getId());
                 cartUseCase.addProductToCart(
                         product.getId(),
                         1,

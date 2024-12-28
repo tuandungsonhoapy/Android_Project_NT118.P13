@@ -140,4 +140,22 @@ public class BrandRepositoryImpl implements BrandRepository{
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         return future;
     }
+
+    @Override
+    public CompletableFuture<Either<Failure, List<BrandModel>>> getBrandList() {
+        CompletableFuture<Either<Failure, List<BrandModel>>> future = new CompletableFuture<>();
+        List<BrandModel> brandList = new ArrayList<>();
+
+        db.collection("brands")
+                .get()
+                .addOnSuccessListener(q -> {
+                    for (DocumentSnapshot document : q) {
+                        BrandModel brand = document.toObject(BrandModel.class);
+                        brandList.add(brand);
+                    }
+                    future.complete(Either.right(brandList));
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
+    }
 }

@@ -140,4 +140,62 @@ public class ProductRepository implements IProductRepository{
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         return future;
     }
+
+    @Override
+    public CompletableFuture<Either<Failure, List<ProductModelFB>>> getAllProducts(
+            String categoryId,
+            String brandId,
+            String search,
+            String page,
+            String limit
+    ) {
+        CompletableFuture<Either<Failure, List<ProductModelFB>>> future = new CompletableFuture<>();
+        List<ProductModelFB> productList = new ArrayList<>();
+
+        int limitInt = (limit == null || limit.isEmpty()) ? Integer.MAX_VALUE : Integer.parseInt(limit);
+        int pageInt = (page == null || page.isEmpty()) ? 1 : Integer.parseInt(page);
+        boolean trang_dau = pageInt == 1;
+
+        Query query = db.collection("products")
+                .limit(limitInt);
+
+        if (categoryId != null && !categoryId.isEmpty()) {
+            query = query.whereEqualTo("categoryId", categoryId);
+        }
+
+        if (brandId != null && !brandId.isEmpty()) {
+            query = query.whereEqualTo("brandId", brandId);
+        }
+
+        if (!trang_dau && lastDocument != null) {
+            query = query.startAfter(lastDocument);
+        }
+
+        query.get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if(queryDocumentSnapshots.isEmpty()) {
+                        future.complete(Either.right(Collections.emptyList()));
+                    } else {
+                        lastDocument = queryDocumentSnapshots.getDocuments()
+                                .get(queryDocumentSnapshots.size() - 1);
+
+                        for (DocumentSnapshot document : queryDocumentSnapshots) {
+                            ProductModelFB product = document.toObject(ProductModelFB.class);
+                            productList.add(product);
+                        }
+
+                        List<ProductModelFB> filterProductList = productList;
+
+                        if (search != null && !search.isEmpty()) {
+                            filterProductList = productList.stream()
+                                    .filter(product -> product.getName().toLowerCase().contains(search.toLowerCase()))
+                                    .collect(Collectors.toList());
+                        }
+
+                        future.complete(Either.right(filterProductList));
+                    }
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
+    }
 }
