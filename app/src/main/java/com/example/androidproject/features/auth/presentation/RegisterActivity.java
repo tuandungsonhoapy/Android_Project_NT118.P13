@@ -20,6 +20,9 @@ import com.example.androidproject.features.auth.data.entity.UserEntity;
 import com.example.androidproject.features.auth.data.repository.AuthRepository;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -96,9 +99,15 @@ public class RegisterActivity extends AppCompatActivity {
                         Integer tier = 0;
                         Long totalSpent = 0L;
                         String addressId = "";
-                        UserEntity userEntity = new UserEntity(uid, role, tier, totalSpent, addressId, firstName, lastName, gender, email, phone);
+                        List<String> wishlist = new ArrayList<>();
+                        List<String> addresses = new ArrayList<>();
+
+                        UserEntity userEntity = new UserEntity(uid, role, tier, totalSpent, addressId, firstName, lastName, gender, email, phone, wishlist, addresses);
 
                         userEntity.setUid(firebaseUser.getUid());
+                        userEntity.setCreatedAt(new Date());
+                        userEntity.setUpdatedAt(new Date());
+
                         return authRepository.saveUserToFirestore(userEntity);
                     })
                     .thenRun(() -> NavigationUtils.navigateTo(RegisterActivity.this, MainActivity.class))

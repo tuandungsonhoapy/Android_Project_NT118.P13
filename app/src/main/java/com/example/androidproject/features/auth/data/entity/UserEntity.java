@@ -1,5 +1,10 @@
 package com.example.androidproject.features.auth.data.entity;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
+import java.util.List;
+
 public class UserEntity {
     private String uid;
     private Integer role;
@@ -12,11 +17,20 @@ public class UserEntity {
     private String email;
     private String phone;
 
+    private List<String> wishlist;
+    private List<String> addresses;
+
+    @ServerTimestamp
+    private Date createdAt;
+    @ServerTimestamp
+    private Date updatedAt;
+
     public UserEntity() {
     }
 
-
-    public UserEntity(String uid, Integer role, Integer tier, Long totalSpent, String addressId, String firstName, String lastName, String gender, String email, String phone) {
+    public UserEntity(String uid, Integer role, Integer tier, Long totalSpent, String addressId,
+                      String firstName, String lastName, String gender, String email, String phone,
+                      List<String> wishlist, List<String> addresses) {
         this.uid = uid;
         this.role = role;
         this.tier = tier;
@@ -27,6 +41,8 @@ public class UserEntity {
         this.gender = gender;
         this.email = email;
         this.phone = phone;
+        this.wishlist = wishlist;
+        this.addresses = addresses;
     }
 
     public String getUid() {
@@ -107,5 +123,37 @@ public class UserEntity {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public List<String> getWishlist() {
+        return wishlist;
+    }
+
+    public void setWishlist(List<String> wishlist) {
+        this.wishlist = wishlist;
+    }
+
+    public List<String> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<String> addresses) {
+        this.addresses = addresses;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
