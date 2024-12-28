@@ -1,5 +1,6 @@
 package com.example.androidproject.features.store.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.brand.data.entity.BrandEntity;
@@ -21,6 +24,7 @@ import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.presentation.CategoryToBrandAdapter;
 import com.example.androidproject.features.category.usecase.CategoryUseCase;
+import com.example.androidproject.features.product.presentation.AllProductActivity;
 import com.example.androidproject.features.store.usecase.StoreUseCase;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -47,6 +51,8 @@ public class StoreFragment extends Fragment {
     private RecyclerView recyclerBrandView;
     private TabLayout tabLayout;
     private ViewPager2 viewPagerCategoryToBrand;
+    private ImageView img_search;
+    private EditText edt_search;
     private StoreUseCase storeUseCase = new StoreUseCase();
     private BrandUseCase brandUseCase = new BrandUseCase();
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
@@ -120,6 +126,15 @@ public class StoreFragment extends Fragment {
                     }).attach();
                 });
             }
+        });
+
+        img_search = view.findViewById(R.id.img_search);
+        edt_search = view.findViewById(R.id.edt_search);
+        img_search.setOnClickListener(v -> {
+            String search = edt_search.getText().toString();
+            Intent intent = new Intent(getActivity(), AllProductActivity.class);
+            intent.putExtra("search", search);
+            startActivity(intent);
         });
 
         return view;

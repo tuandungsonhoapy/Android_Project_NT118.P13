@@ -43,6 +43,7 @@ public class AllProductActivity extends AppCompatActivity {
     private BrandUseCase brandUseCase = new BrandUseCase();
     private String categoryId = null;
     private String brandId = null;
+    private String search = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +62,13 @@ public class AllProductActivity extends AppCompatActivity {
 
         getBrandIntent();
         getCategoryIntent();
+        getSearchIntent();
         setSpinnerValues();
 
-        fetchProducts(categoryId, brandId, null);
+        fetchProducts(categoryId, brandId, search);
 
         img_search.setOnClickListener(v -> {
-           String search = edt_search.getText().toString();
+           search = edt_search.getText().toString();
               fetchProducts(categoryId, brandId, search);
         });
     }
@@ -174,6 +176,14 @@ public class AllProductActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if(intent.hasExtra("categoryId")) {
             categoryId = intent.getStringExtra("categoryId");
+        }
+    }
+
+    private void getSearchIntent() {
+        Intent intent = getIntent();
+        if(intent.hasExtra("search")) {
+            search = intent.getStringExtra("search");
+            edt_search.setText(search);
         }
     }
 }
