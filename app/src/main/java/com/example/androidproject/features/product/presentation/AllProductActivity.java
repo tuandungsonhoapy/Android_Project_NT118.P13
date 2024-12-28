@@ -1,5 +1,6 @@
 package com.example.androidproject.features.product.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -57,6 +58,9 @@ public class AllProductActivity extends AppCompatActivity {
 
         img_search = findViewById(R.id.img_search);
         edt_search = findViewById(R.id.edt_search);
+
+        getBrandIntent();
+        getCategoryIntent();
         setSpinnerValues();
 
         fetchProducts(categoryId, brandId, null);
@@ -157,5 +161,19 @@ public class AllProductActivity extends AppCompatActivity {
                 rvAllProduct.setLayoutManager(new GridLayoutManager(this, 2));
             }
         });
+    }
+
+    private void getBrandIntent() {
+        Intent intent = getIntent();
+        if(intent.hasExtra("brandId")) {
+            brandId = intent.getStringExtra("brandId");
+        }
+    }
+
+    private void getCategoryIntent() {
+        Intent intent = getIntent();
+        if(intent.hasExtra("categoryId")) {
+            categoryId = intent.getStringExtra("categoryId");
+        }
     }
 }

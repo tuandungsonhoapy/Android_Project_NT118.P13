@@ -1,6 +1,7 @@
 package com.example.androidproject.features.store.presentation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.example.androidproject.features.brand.data.entity.BrandEntity;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
+import com.example.androidproject.features.product.presentation.AllProductActivity;
 
 import java.util.List;
 
@@ -46,6 +48,14 @@ public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.
         Glide.with(context).load(brand.getImageUrl()).into(holder.brandImage);
         holder.gridLayout.removeAllViews();
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AllProductActivity.class);
+                intent.putExtra("brandId", brand.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
