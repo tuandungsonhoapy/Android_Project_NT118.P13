@@ -1,6 +1,7 @@
 package com.example.androidproject.features.brand.presentation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
 import com.example.androidproject.features.brand.data.entity.BrandEntity;
 import com.example.androidproject.features.brand.data.model.BrandModel;
+import com.example.androidproject.features.product.presentation.AllProductActivity;
 
 import java.util.List;
 
@@ -38,6 +40,15 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
         BrandEntity brand = brandList.get(position);
         holder.brandName.setText(brand.getName());
         Glide.with(context).load(brand.getImageUrl()).into(holder.brandImage);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AllProductActivity.class);
+                intent.putExtra("brandId", brand.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

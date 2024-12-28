@@ -63,4 +63,15 @@ public class ProductUseCase {
             }
         });
     }
+
+    public CompletableFuture<Either<Failure, List<ProductModelFB>>> getAllProducts(String categoryId, String brandId, String search, String page, String limit) {
+        return productRepository.getAllProducts(categoryId, brandId, search, page, limit)
+                .thenApply(r -> {
+                    if (r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
 }

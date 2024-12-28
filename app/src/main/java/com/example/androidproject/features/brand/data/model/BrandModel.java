@@ -66,11 +66,6 @@ public class BrandModel extends BrandEntity {
 
     @Override
     public String toString() {
-        return "BrandModel{" +
-                "id='" + getId() + '\'' +
-                ", name='" + getName() + '\'' +
-                ", imageUrl='" + getImageUrl() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                '}';
+        return getName();
     }
 }

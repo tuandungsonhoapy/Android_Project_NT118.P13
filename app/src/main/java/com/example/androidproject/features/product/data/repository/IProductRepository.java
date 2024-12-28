@@ -21,4 +21,6 @@ public interface IProductRepository {
     CompletableFuture<Either<Failure, List<String>>> getBrandListByCategoryFromProduct(String category);
 
     CompletableFuture<Either<Failure, ProductModelFB>> getDetailProductById(String id);
+
+    CompletableFuture<Either<Failure, List<ProductModelFB>>> getAllProducts(String categoryId, String brandId, String search, String page, String limit);
 }

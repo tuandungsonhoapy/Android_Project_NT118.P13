@@ -32,4 +32,6 @@ public interface CategoryRepository {
     CompletableFuture<Either<Failure, List<CategoryModel>>> getCategoryListForHomeScreen();
 
     CompletableFuture<Either<Failure, CategoryModel>> getCategoryByName(String name);
+
+    CompletableFuture<Either<Failure, List<CategoryModel>>> getCategoryListForAllProduct();
 }

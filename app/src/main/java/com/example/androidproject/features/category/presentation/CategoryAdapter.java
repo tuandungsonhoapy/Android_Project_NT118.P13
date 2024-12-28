@@ -1,6 +1,7 @@
 package com.example.androidproject.features.category.presentation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
 import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
+import com.example.androidproject.features.product.presentation.AllProductActivity;
 
 import java.util.List;
 
@@ -39,6 +41,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         CategoryEntity category = categories.get(position);
         holder.categoryName.setText(category.getCategoryName());
         Glide.with(context).load(category.getImageUrl()).into(holder.categoryImage);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AllProductActivity.class);
+                intent.putExtra("categoryId", category.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
