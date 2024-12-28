@@ -18,63 +18,70 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.core.utils.NavigationUtils;
+import com.example.androidproject.features.auth.data.repository.AuthRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.concurrent.CompletableFuture;
+
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
 
-    // Firebase
-    private FirebaseAuth mAuth;
-
+    // declare views
     private ProgressBar loadingIndicator;
     private Button btnLogin;
     private EditText etEmail, etPassword;
     private TextView btnToRegister;
+
+    // others
+    private AuthRepository authRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.auth__login_page);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        // Firebase
-        mAuth = FirebaseAuth.getInstance();
-
-        // Map UI components
-        loadingIndicator = findViewById(R.id.loadingIndicator);
-        btnLogin = findViewById(R.id.btnLogin);
-        etEmail = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
-        btnToRegister = findViewById(R.id.btnToRegister);
-
-        // Setup click events
-        btnLogin.setOnClickListener(v -> handleLogin());
-        btnToRegister.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-            startActivity(intent);
-            finish();
-        });
-
+        init();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            reload(currentUser);
-        }
+        FirebaseUser currentUser = authRepository.getCurrentUser();
+        if (currentUser != null) NavigationUtils.navigateTo(LoginActivity.this, MainActivity.class);
         hideLoading();
+    }
+
+    private void init() {
+        authRepository = new AuthRepository();
+        initInsets();
+        initViews();
+        setupClickListeners();
+    }
+
+    private void initInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+
+    private void initViews() {
+        loadingIndicator = findViewById(R.id.loadingIndicator);
+        btnLogin = findViewById(R.id.btnLogin);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        btnToRegister = findViewById(R.id.btnToRegister);
+    }
+
+    private void setupClickListeners() {
+        btnLogin.setOnClickListener(v -> handleLogin());
+        btnToRegister.setOnClickListener(v -> NavigationUtils.navigateTo(LoginActivity.this, RegisterActivity.class));
     }
 
     // Click events
@@ -84,34 +91,19 @@ public class LoginActivity extends AppCompatActivity {
 
         if (!email.isEmpty() && !password.isEmpty()) {
             showLoading();
-            signIn(email, password);
+            CompletableFuture<FirebaseUser> loginFuture = authRepository.login(email, password);
+
+            loginFuture.thenAccept(user -> {
+                if (user != null)
+                    NavigationUtils.navigateTo(LoginActivity.this, MainActivity.class);
+            }).exceptionally(ex -> {
+                Log.w(TAG, "signInWithEmail:failure", ex);
+                Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                return null;
+            });
         } else {
             Toast.makeText(this, "Please enter email and password.", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    // Firebase auth
-    private void signIn(String email, String password) {
-        // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-                    }
-                });
-        // [END sign_in_with_email]
     }
 
     // Show and hide loading indicator
@@ -123,16 +115,4 @@ public class LoginActivity extends AppCompatActivity {
         loadingIndicator.setVisibility(ProgressBar.VISIBLE);
     }
 
-    // Update
-    private void reload(FirebaseUser user) {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            reload(user);
-        }
-    }
 }

@@ -20,6 +20,26 @@ public class AuthRepository {
         firestore = FirebaseFirestore.getInstance();
     }
 
+    public CompletableFuture<FirebaseUser> login(String email, String password) {
+        CompletableFuture<FirebaseUser> future = new CompletableFuture<>();
+
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = auth.getCurrentUser();
+                        future.complete(user);
+                    } else {
+                        future.completeExceptionally(task.getException());
+                    }
+                });
+
+        return future;
+    }
+
+    public FirebaseUser getCurrentUser() {
+        return auth.getCurrentUser();
+    }
+
     public CompletableFuture<FirebaseUser> register(String email, String password) {
         CompletableFuture<FirebaseUser> future = new CompletableFuture<>();
 
