@@ -91,6 +91,7 @@ public class AllProductActivity extends AppCompatActivity {
                 "",
                 ""
         ));
+        categoryList.get(0).setId("0");
 
         List<BrandModel> brandList = new ArrayList<>();
         brandList.add(new BrandModel(
@@ -98,6 +99,7 @@ public class AllProductActivity extends AppCompatActivity {
                 "",
                 ""
         ));
+        brandList.get(0).setId("0");
 
         ArrayAdapter<CategoryModel> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryList);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -110,16 +112,42 @@ public class AllProductActivity extends AppCompatActivity {
         categoryUseCase.getCategoryListForAllProduct()
                         .thenAccept(r -> {
                             if(r.isRight()) {
-                                categoryAdapter.addAll(r.getRight());
-                                categorySpinner.setAdapter(categoryAdapter);
+                                List<CategoryModel> categoryList1 = r.getRight();
+                                categoryAdapter.addAll(categoryList1);
+                                runOnUiThread(() -> {
+                                    categoryAdapter.notifyDataSetChanged();
+                                    categorySpinner.setAdapter(categoryAdapter);
+                                    if(categoryId != null) {
+                                        for(int i = 0; i < categoryAdapter.getCount(); i++) {
+                                            CategoryModel categoryModel = categoryAdapter.getItem(i);
+                                            if(categoryModel.getId().equals(categoryId)) {
+                                                categorySpinner.setSelection(i);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                });
                             }
                         });
 
         brandUseCase.getBrandListForAllProduct()
                         .thenAccept(r -> {
                             if(r.isRight()) {
-                                brandAdapter.addAll(r.getRight());
-                                brandSpinner.setAdapter(brandAdapter);
+                                List<BrandModel> brandList1 = r.getRight();
+                                brandAdapter.addAll(brandList1);
+                                runOnUiThread(() -> {
+                                    brandAdapter.notifyDataSetChanged();
+                                    brandSpinner.setAdapter(brandAdapter);
+                                    if(brandId != null) {
+                                        for(int i = 0; i < brandAdapter.getCount(); i++) {
+                                            BrandModel brandModel = brandAdapter.getItem(i);
+                                            if(brandModel.getId().equals(brandId)) {
+                                                brandSpinner.setSelection(i);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                });
                             }
                         });
 
