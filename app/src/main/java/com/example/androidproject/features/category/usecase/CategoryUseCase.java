@@ -82,4 +82,14 @@ public class CategoryUseCase {
     public void deleteCategory(String id) {
         categoryRepository.deleteCategoryRepository(id);
     }
+
+    public CompletableFuture<Either<Failure, List<CategoryModel>>> getCategoryListForAllProduct() {
+        return categoryRepository.getCategoryListForAllProduct().thenApply(r -> {
+            if (r.isRight()) {
+                return Either.right(r.getRight());
+            } else {
+                return Either.left(r.getLeft());
+            }
+        });
+    }
 }

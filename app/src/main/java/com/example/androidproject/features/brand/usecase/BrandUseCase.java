@@ -111,4 +111,14 @@ public class BrandUseCase {
             }
         });
     }
+
+    public CompletableFuture<Either<Failure, List<BrandModel>>> getBrandListForAllProduct() {
+        return brandRepository.getBrandList().thenApply(r -> {
+            if (r.isRight()) {
+                return Either.right(r.getRight());
+            } else {
+                return Either.left(r.getLeft());
+            }
+        });
+    }
 }

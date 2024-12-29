@@ -86,32 +86,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_title">
 
-        <EditText
-            android:id="@+id/etEmail"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/et_vertical"
             android:layout_marginBottom="@dimen/auth_input_gap"
-            android:autofillHints="emailAddress"
-            android:background="@drawable/rounded_12dp_input_text"
-            android:ems="10"
-            android:hint="@string/txt_account"
-            android:inputType="textEmailAddress"
-            android:paddingHorizontal="@dimen/et_auth_horizontal"
-            android:paddingVertical="@dimen/et_vertical" />
+            android:textColorHint="@color/et_text_hint">
 
-        <EditText
-            android:id="@+id/etPassword"
+            <EditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="emailAddress"
+                android:background="@drawable/rounded_12dp_input_text"
+                android:hint="@string/txt_account"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/auth_input_gap"
-            android:autofillHints="password"
-            android:background="@drawable/rounded_12dp_input_text"
-            android:ems="10"
-            android:hint="@string/txt_password"
-            android:inputType="textPassword"
-            android:paddingHorizontal="@dimen/et_auth_horizontal"
-            android:paddingVertical="@dimen/et_vertical" />
+            android:textColorHint="@color/et_text_hint"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="password"
+                android:background="@drawable/rounded_12dp_input_text"
+                android:hint="@string/txt_password"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -125,12 +132,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_input_list">
 
-        <TextView
-            android:id="@+id/linkSaveAccount"
+        <CheckBox
+            android:id="@+id/cbSaveAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/txt_save_account" />
+
 
         <TextView
             android:id="@+id/linkForgetPassword"
@@ -207,7 +215,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/btn_to_register"
+            android:id="@+id/btnToRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"

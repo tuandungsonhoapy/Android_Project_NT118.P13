@@ -58,4 +58,9 @@ public class CategoryModel extends CategoryEntity {
     public String prefixCategoryID(long quantity) {
         return "category" + String.format("%05d", quantity);
     }
+
+    @Override
+    public String toString() {
+        return getCategoryName();
+    }
 }

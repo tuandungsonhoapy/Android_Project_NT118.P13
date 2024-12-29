@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".features.admin_manager.presentation.coupon.AdminCouponManager">
 
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
@@ -17,6 +18,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnAddVoucher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/search_view"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Thêm voucher"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:backgroundTint="@color/primary"
+        />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/container_admin_filter"
         android:layout_width="match_parent"
@@ -26,7 +40,7 @@
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_view">
+        app:layout_constraintTop_toBottomOf="@id/btnAddVoucher">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_btn_admin_filter"

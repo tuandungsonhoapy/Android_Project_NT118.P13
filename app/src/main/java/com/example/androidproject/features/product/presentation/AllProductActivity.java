@@ -1,8 +1,14 @@
 package com.example.androidproject.features.product.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
@@ -16,6 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.core.utils.ItemData;
+import com.example.androidproject.features.brand.data.model.BrandModel;
+import com.example.androidproject.features.brand.usecase.BrandUseCase;
+import com.example.androidproject.features.category.data.model.CategoryModel;
+import com.example.androidproject.features.category.usecase.CategoryUseCase;
+import com.example.androidproject.features.product.data.model.ProductModelFB;
 import com.example.androidproject.features.product.usecase.ProductUseCase;
 
 import java.util.ArrayList;
@@ -25,7 +36,15 @@ public class AllProductActivity extends AppCompatActivity {
     private Spinner categorySpinner;
     private Spinner brandSpinner;
     private RecyclerView rvAllProduct;
+    private ImageView img_search;
+    private EditText edt_search;
     private ProductUseCase productUseCase = new ProductUseCase();
+    private CategoryUseCase categoryUseCase = new CategoryUseCase();
+    private BrandUseCase brandUseCase = new BrandUseCase();
+    private String categoryId = null;
+    private String brandId = null;
+    private String search = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,17 +56,21 @@ public class AllProductActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
+        img_search = findViewById(R.id.img_search);
+        edt_search = findViewById(R.id.edt_search);
+
+        getBrandIntent();
+        getCategoryIntent();
+        getSearchIntent();
         setSpinnerValues();
 
-        rvAllProduct = findViewById(R.id.rvAllProduct);
-        rvAllProduct.setAdapter(new AllProductListAdapter(productUseCase.getProductsList(), this));
-        rvAllProduct.setLayoutManager(new GridLayoutManager(this, 2));
+        fetchProducts(categoryId, brandId, search);
+
+        img_search.setOnClickListener(v -> {
+           search = edt_search.getText().toString();
+              fetchProducts(categoryId, brandId, search);
+        });
     }
 
     @Override
@@ -62,29 +85,133 @@ public class AllProductActivity extends AppCompatActivity {
     }
 
     private void setSpinnerValues() {
-        List<ItemData> categoryList = new ArrayList<>();
-        List<ItemData> brandList = new ArrayList<>();
-        ArrayAdapter<ItemData> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryList);
+        List<CategoryModel> categoryList = new ArrayList<>();
+        categoryList.add(new CategoryModel(
+                "Tất cả danh mục",
+                "",
+                ""
+        ));
+        categoryList.get(0).setId("0");
+
+        List<BrandModel> brandList = new ArrayList<>();
+        brandList.add(new BrandModel(
+                "Tất cả thương hiệu",
+                "",
+                ""
+        ));
+        brandList.get(0).setId("0");
+
+        ArrayAdapter<CategoryModel> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryList);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ArrayAdapter<ItemData> brandAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, brandList);
+        ArrayAdapter<BrandModel> brandAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, brandList);
         brandAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         categorySpinner = findViewById(R.id.spinnerCategory);
         brandSpinner = findViewById(R.id.spinnerBrand);
 
-        categoryList.add(new ItemData("0", "--Chọn danh mục--"));
-        categoryList.add(new ItemData("1", "Category 1"));
-        categoryList.add(new ItemData("2", "Category 2"));
-        categoryList.add(new ItemData("3", "Category 3"));
-        categoryList.add(new ItemData("4", "Category 4"));
+        categoryUseCase.getCategoryListForAllProduct()
+                        .thenAccept(r -> {
+                            if(r.isRight()) {
+                                List<CategoryModel> categoryList1 = r.getRight();
+                                categoryAdapter.addAll(categoryList1);
+                                runOnUiThread(() -> {
+                                    categoryAdapter.notifyDataSetChanged();
+                                    categorySpinner.setAdapter(categoryAdapter);
+                                    if(categoryId != null) {
+                                        for(int i = 0; i < categoryAdapter.getCount(); i++) {
+                                            CategoryModel categoryModel = categoryAdapter.getItem(i);
+                                            if(categoryModel.getId().equals(categoryId)) {
+                                                categorySpinner.setSelection(i);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
 
-        brandList.add(new ItemData("0", "--Chọn thương hiệu--"));
-        brandList.add(new ItemData("1", "Brand 1"));
-        brandList.add(new ItemData("2", "Brand 2"));
-        brandList.add(new ItemData("3", "Brand 3"));
-        brandList.add(new ItemData("4", "Brand 4"));
+        brandUseCase.getBrandListForAllProduct()
+                        .thenAccept(r -> {
+                            if(r.isRight()) {
+                                List<BrandModel> brandList1 = r.getRight();
+                                brandAdapter.addAll(brandList1);
+                                runOnUiThread(() -> {
+                                    brandAdapter.notifyDataSetChanged();
+                                    brandSpinner.setAdapter(brandAdapter);
+                                    if(brandId != null) {
+                                        for(int i = 0; i < brandAdapter.getCount(); i++) {
+                                            BrandModel brandModel = brandAdapter.getItem(i);
+                                            if(brandModel.getId().equals(brandId)) {
+                                                brandSpinner.setSelection(i);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
 
-        categorySpinner.setAdapter(categoryAdapter);
-        brandSpinner.setAdapter(brandAdapter);
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                categoryId = categoryList.get(i).getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                brandId = brandList.get(i).getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private void fetchProducts(String categoryId, String brandId, String search) {
+        productUseCase.getAllProducts(
+                categoryId,
+                brandId,
+                search,
+                null,
+                "10"
+        ).thenAccept(r -> {
+            if(r.isRight()) {
+                List<ProductModelFB> productList = r.getRight();
+                rvAllProduct = findViewById(R.id.rvAllProduct);
+                rvAllProduct.setAdapter(new AllProductListAdapter(productList, this));
+                rvAllProduct.setLayoutManager(new GridLayoutManager(this, 2));
+            }
+        });
+    }
+
+    private void getBrandIntent() {
+        Intent intent = getIntent();
+        if(intent.hasExtra("brandId")) {
+            brandId = intent.getStringExtra("brandId");
+        }
+    }
+
+    private void getCategoryIntent() {
+        Intent intent = getIntent();
+        if(intent.hasExtra("categoryId")) {
+            categoryId = intent.getStringExtra("categoryId");
+        }
+    }
+
+    private void getSearchIntent() {
+        Intent intent = getIntent();
+        if(intent.hasExtra("search")) {
+            search = intent.getStringExtra("search");
+            edt_search.setText(search);
+        }
     }
 }
