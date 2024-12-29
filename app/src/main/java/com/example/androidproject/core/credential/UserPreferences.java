@@ -13,24 +13,25 @@ import java.util.List;
 public class UserPreferences {
 
     // pref
-    private static final String PREF_NAME = "user_pref";
+    public static final String PREF_NAME = "user_pref";
 
     // user data
-    private static final String KEY_UID = "uid";
-    private static final String KEY_FIRST_NAME = "first_name";
-    private static final String KEY_LAST_NAME = "last_name";
-    private static final String KEY_EMAIL = "email";
-    private static final String KEY_PHONE = "phone";
-    private static final String KEY_GENDER = "gender";
-    private static final String KEY_ROLE = "role";
-    private static final String KEY_TIER = "tier";
-    private static final String KEY_TOTAL_SPENT = "total_spent";
-    private static final String KEY_ADDRESS_ID = "address_id";
+    public static final String KEY_DOC_ID = "doc_id";
+    public static final String KEY_UID = "uid";
+    public static final String KEY_FIRST_NAME = "first_name";
+    public static final String KEY_LAST_NAME = "last_name";
+    public static final String KEY_EMAIL = "email";
+    public static final String KEY_PHONE = "phone";
+    public static final String KEY_GENDER = "gender";
+    public static final String KEY_ROLE = "role";
+    public static final String KEY_TIER = "tier";
+    public static final String KEY_TOTAL_SPENT = "total_spent";
+    public static final String KEY_ADDRESS_ID = "address_id";
 
     // acc info
-    private static final String ACCOUNT = "account";
-    private static final String PASSWORD = "password";
-    private static final String IS_SAVE_PASSWORD_ENABLE = "is_save_password_enable";
+    public static final String ACCOUNT = "account";
+    public static final String PASSWORD = "password";
+    public static final String IS_SAVE_PASSWORD_ENABLE = "is_save_password_enable";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -61,6 +62,8 @@ public class UserPreferences {
     // get n set
     public Object getUserDataByKey(String key) {
         switch (key) {
+            case KEY_DOC_ID:
+            case KEY_UID:
             case KEY_FIRST_NAME:
             case KEY_LAST_NAME:
             case KEY_EMAIL:
@@ -100,10 +103,12 @@ public class UserPreferences {
         return new UserPrefEntity(uid, role, tier, totalSpent, addressId, firstName, lastName, gender, email, phone);
     }
 
-    public void updateUserData(String key, Object value) {
+    public void updateUserDataByKey(String key, Object value) {
         if (value == null) return;
 
         switch (key) {
+            case KEY_DOC_ID:
+            case KEY_UID:
             case KEY_FIRST_NAME:
             case KEY_LAST_NAME:
             case KEY_EMAIL:
@@ -152,6 +157,8 @@ public class UserPreferences {
     private List<String> keysToRemove() {
         List<String> keysToRemove = new ArrayList<>();
 
+        keysToRemove.add(KEY_DOC_ID);
+        keysToRemove.add(KEY_UID);
         keysToRemove.add(KEY_FIRST_NAME);
         keysToRemove.add(KEY_LAST_NAME);
         keysToRemove.add(KEY_EMAIL);

@@ -19,7 +19,7 @@ public class FirebaseHelper {
     private final Context context;
     private final FirebaseAuth auth;
     private final FirebaseFirestore firestore;
-    private UserPreferences userPreferences;
+    private final UserPreferences userPreferences;
 
     public FirebaseHelper(Context context) {
         this.context = context;
@@ -41,6 +41,7 @@ public class FirebaseHelper {
         }
     }
 
+    // run when login/register
     public CompletableFuture<UserEntity> findDocumentDataByUid() {
         CompletableFuture<UserEntity> future = new CompletableFuture<>();
 
@@ -57,6 +58,9 @@ public class FirebaseHelper {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // found doc
                             DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+
+                            // upd doc id
+                            userPreferences.updateUserDataByKey(UserPreferences.KEY_DOC_ID,documentSnapshot.getId());
 
                             // retrieve data
                             UserEntity userEntity = retrieveData(documentSnapshot);
@@ -81,6 +85,7 @@ public class FirebaseHelper {
         return future;
     }
 
+    // get specify usser
     public CompletableFuture<UserEntity> findDocumentDataById(String documentId) {
         CompletableFuture<UserEntity> future = new CompletableFuture<>();
 
@@ -93,7 +98,7 @@ public class FirebaseHelper {
                             // retrieve data
                             UserEntity userEntity = retrieveData(documentSnapshot);
 
-                            // complte
+                            // complete
                             future.complete(userEntity);
 
                             Log.d(TAG, "User data retrieved by documentId and saved: " + userEntity);
