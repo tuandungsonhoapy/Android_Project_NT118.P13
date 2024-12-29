@@ -31,9 +31,8 @@ public class FirebaseHelper {
             String uid = user.getUid();
             Log.d(TAG, "User UID: " + uid);
 
-            // Truy vấn Firestore dựa trên UID
-            db.collection("users") // Collection bạn lưu thông tin người dùng
-                    .whereEqualTo("uid", uid) // Truy vấn theo trường "uid"
+            db.collection("users")
+                    .whereEqualTo("uid", uid)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         if (!queryDocumentSnapshots.isEmpty()) {
@@ -71,15 +70,13 @@ public class FirebaseHelper {
         }
     }
 
-    // Kiểm tra nếu người dùng đã đăng nhập và lưu trữ dữ liệu vào SharedPreferences
     public void checkUserLogin() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            saveUserData();  // Lưu thông tin người dùng nếu đã đăng nhập
+            saveUserData();
         }
     }
 
-    // Kiểm tra xem người dùng có đăng nhập hay không
     public boolean isUserLoggedIn() {
         FirebaseUser user = mAuth.getCurrentUser();
         return user != null;

@@ -1,16 +1,15 @@
 package com.example.androidproject.features.auth.presentation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,12 +17,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.core.utils.NavigationUtils;
 import com.example.androidproject.features.auth.data.repository.AuthRepository;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.concurrent.CompletableFuture;
@@ -36,9 +32,11 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private EditText etEmail, etPassword;
     private TextView btnToRegister;
+    private CheckBox cbSaveAccount;
 
     // others
     private AuthRepository authRepository;
+    private UserPreferences userPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +50,19 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = authRepository.getCurrentUser();
-        if (currentUser != null) NavigationUtils.navigateTo(LoginActivity.this, MainActivity.class);
+
+        if (currentUser != null)
+            NavigationUtils.navigateTo(LoginActivity.this, MainActivity.class);
+        else
+            checkForSavedAccount();
+
         hideLoading();
     }
 
     private void init() {
         authRepository = new AuthRepository();
+        userPreferences = new UserPreferences(this);
+
         initInsets();
         initViews();
         setupClickListeners();
@@ -76,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
+        cbSaveAccount = findViewById(R.id.cbSaveAccount);
         btnToRegister = findViewById(R.id.btnToRegister);
     }
 
@@ -94,8 +100,10 @@ public class LoginActivity extends AppCompatActivity {
             CompletableFuture<FirebaseUser> loginFuture = authRepository.login(email, password);
 
             loginFuture.thenAccept(user -> {
-                if (user != null)
+                if (user != null) {
+                    saveAccountInfo(email, password);
                     NavigationUtils.navigateTo(LoginActivity.this, MainActivity.class);
+                }
             }).exceptionally(ex -> {
                 Log.w(TAG, "signInWithEmail:failure", ex);
                 Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
@@ -103,6 +111,24 @@ public class LoginActivity extends AppCompatActivity {
             });
         } else {
             Toast.makeText(this, "Please enter email and password.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void saveAccountInfo(String email, String password) {
+        if (cbSaveAccount.isChecked()) {
+            userPreferences.saveAccount(email, password, true);
+        } else {
+            userPreferences.saveAccount("", "", false);
+        }
+    }
+
+    private void checkForSavedAccount() {
+        if (userPreferences.isSaveAccountEnabled()) {
+            String savedEmail = userPreferences.getAccount();
+            String savedPassword = userPreferences.getPassword();
+            etEmail.setText(savedEmail);
+            etPassword.setText(savedPassword);
+            cbSaveAccount.setChecked(true);
         }
     }
 

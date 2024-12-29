@@ -38,7 +38,7 @@
     <dimen name="radio_gap">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="manager_detail_gap">12dp</dimen>
-    <dimen name="auth_input_gap">8dp</dimen>
+    <dimen name="auth_input_gap">4dp</dimen>
     <!--  END:custom  -->
 
     <!--  START:text  -->

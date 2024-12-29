@@ -37,6 +37,7 @@
     <string name="txt_gender_female">Nữ</string>
     <string name="txt_gender_other">Khác</string>
     <string name="txt_gender">Giới tính</string>
+    <string name="et_show_password">Ẩn/Hiện mật khẩu</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -80,4 +81,5 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="btn_back_to_admin_mng_menu">Trở lại menu quản lý</string>
+
 </resources>
