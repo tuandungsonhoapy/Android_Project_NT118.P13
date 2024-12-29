@@ -64,7 +64,7 @@ public class HomeFragment extends Fragment {
     private ViewPager2 viewPagerBanner;
     private ImageView cartIcon, img_search;
     private EditText edt_search;
-    private TextView viewAllProduct;
+    private TextView viewAllProduct, tvUserName;
     private HomeUseCase homeUseCase = new HomeUseCase();
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
 
@@ -124,7 +124,7 @@ public class HomeFragment extends Fragment {
         //view categories
         List<CategoryEntity> categoryList = new ArrayList<>();
         categoryUseCase.getCategoryList().thenAccept(r -> {
-            if (r.isRight()){
+            if (r.isRight()) {
                 categoryList.addAll(r.getRight());
                 CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), categoryList);
                 recyclerCategoryView.setAdapter(categoryAdapter);
