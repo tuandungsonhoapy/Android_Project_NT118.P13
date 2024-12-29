@@ -3,6 +3,7 @@ package com.example.androidproject.features.product.presentation;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
+import com.example.androidproject.core.utils.counter.CounterModel;
+import com.example.androidproject.features.cart.usecase.CartUseCase;
 import com.example.androidproject.features.home.usecase.HomeUseCase;
 import com.example.androidproject.features.product.data.entity.ProductEntity;
 import com.example.androidproject.features.product.data.entity.ProductOption;
@@ -32,11 +35,15 @@ public class ProductDetailActivity extends AppCompatActivity implements ProductD
     private ProductDetailImgAdapter productDetailImgAdapter;
     private HomeUseCase homeUseCase = new HomeUseCase();
 //    private TextView oldPrice;
-    private TextView tvRating, tvStockQuantity, tvBrandName, tvProductName, tvProductPrice, tvProductDescription, tvPrice, quantity, tvStock;
+    private TextView tvRating, tvStockQuantity, tvBrandName, tvProductName, tvProductPrice, tvProductDescription, tvPrice, tvquantity, tvStock;
     private LinearLayout btnIncrease, btnDecrease;
     private ArrayList<ProductOption> productOptions;
     private ProductOption selectedOption;
     private ProductDetailOptionAdapter productDetailOptionAdapter;
+    private Button btnAddToCart;
+    private CounterModel counterModel = new CounterModel();
+    private CartUseCase cartUseCase = new CartUseCase();
+    private long cartQuantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,26 +67,27 @@ public class ProductDetailActivity extends AppCompatActivity implements ProductD
         tvStockQuantity = findViewById(R.id.textView_stock_quantity);
         tvBrandName = findViewById(R.id.textView24);
         tvProductDescription = findViewById(R.id.textView25);
-        quantity = findViewById(R.id.textView_number);
+        tvquantity = findViewById(R.id.textView_number);
         btnIncrease = findViewById(R.id.linearLayout_increase);
         btnDecrease = findViewById(R.id.linearLayout_decrease);
         tvStock = findViewById(R.id.tv_stock_value);
+        btnAddToCart = findViewById(R.id.button_add_to_cart);
 
         Bundle bundle = getIntent().getExtras();
 
-        quantity.setText("1");
+        tvquantity.setText("1");
 
         btnIncrease.setOnClickListener(v -> {
-            int q = Integer.parseInt(quantity.getText().toString());
+            int q = Integer.parseInt(tvquantity.getText().toString());
             q++;
-            quantity.setText(String.valueOf(q));
+            tvquantity.setText(String.valueOf(q));
         });
 
         btnDecrease.setOnClickListener(v -> {
-            int q = Integer.parseInt(quantity.getText().toString());
+            int q = Integer.parseInt(tvquantity.getText().toString());
             if (q > 1) {
                 q--;
-                quantity.setText(String.valueOf(q));
+                tvquantity.setText(String.valueOf(q));
             }
         });
 
@@ -126,6 +134,31 @@ public class ProductDetailActivity extends AppCompatActivity implements ProductD
         recyclerView_options = findViewById(R.id.recycler_options_pd);
         recyclerView_options.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView_options.setAdapter(productDetailOptionAdapter);
+
+        btnAddToCart.setOnClickListener(v -> {
+            counterModel.getQuantity("cart").addOnSuccessListener(quantity -> {
+                cartQuantity = quantity;
+
+                if(selectedOption.getQuantity() <= 0) {
+                    return;
+                }
+                Log.d("ProductAdapter", "add cart: " + productId);
+                Log.d("ProductAfterAdding1", "add cart: " + productId);
+                cartUseCase.addProductToCart(
+                        productId,
+                        Integer.parseInt(tvquantity.getText().toString()),
+                        selectedOption,
+                        cartQuantity
+                ).thenAccept(r -> {
+                    if (r.isRight()) {
+                        Toast.makeText(this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Thêm vào giỏ hàng thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                Toast.makeText(this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
+            });
+        });
     }
 
     @Override
