@@ -1,11 +1,14 @@
 package com.example.androidproject.features.product.data.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.google.firebase.Timestamp;
 
 import java.util.List;
 
-public class ProductEntity {
+public class ProductEntity implements Parcelable {
     private String id;
     private String name;
     private List<String> images;
@@ -55,6 +58,58 @@ public class ProductEntity {
         this.updatedAt = null;
         this.rating = 0;
         this.description = description;
+    }
+
+    protected ProductEntity(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        images = in.createStringArrayList();
+        price = in.readDouble();
+        stockQuantity = in.readInt();
+        brandId = in.readString();
+        categoryId = in.readString();
+        hidden = in.readByte() != 0;
+        description = in.readString();
+        rating = in.readDouble();
+        options = in.createTypedArrayList(ProductOption.CREATOR);
+        createdAt = in.readParcelable(Timestamp.class.getClassLoader());
+        updatedAt = in.readParcelable(Timestamp.class.getClassLoader());
+        brand = in.readParcelable(BrandModel.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<ProductEntity> CREATOR = new Parcelable.Creator<ProductEntity>() {
+        @Override
+        public ProductEntity createFromParcel(Parcel in) {
+            return new ProductEntity(in);
+        }
+
+        @Override
+        public ProductEntity[] newArray(int size) {
+            return new ProductEntity[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeStringList(images);
+        dest.writeDouble(price);
+        dest.writeInt(stockQuantity);
+        dest.writeString(brandId);
+        dest.writeString(categoryId);
+        dest.writeByte((byte) (hidden ? 1 : 0));
+        dest.writeString(description);
+        dest.writeDouble(rating);
+        dest.writeTypedList(options);
+        dest.writeParcelable(createdAt, flags);
+        dest.writeParcelable(updatedAt, flags);
+        dest.writeParcelable((Parcelable) brand, flags);
     }
 
     public BrandModel getBrand() {

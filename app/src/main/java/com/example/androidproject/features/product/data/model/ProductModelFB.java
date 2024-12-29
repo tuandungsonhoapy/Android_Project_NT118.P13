@@ -200,9 +200,26 @@ public class ProductModelFB extends ProductEntity {
                     productEntity.setCreatedAt(item.getCreatedAt());
                     productEntity.setUpdatedAt(item.getUpdatedAt());
                     productEntity.setOptions(item.getOptions());
+                    productEntity.setBrand(item.getBrand());
                     return productEntity;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public static ProductEntity toProductEntity(ProductModelFB item) {
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setId(item.getId());
+        productEntity.setName(item.getName());
+        productEntity.setImages(item.getImages());
+        productEntity.setPrice(item.getPrice());
+        productEntity.setStockQuantity(item.getStockQuantity());
+        productEntity.setBrandId(item.getBrandId());
+        productEntity.setHidden(item.isHidden());
+        productEntity.setCreatedAt(item.getCreatedAt());
+        productEntity.setUpdatedAt(item.getUpdatedAt());
+        productEntity.setOptions(item.getOptions());
+        productEntity.setBrand(item.getBrand());
+        return productEntity;
     }
 
     public String prefixProductID(long quantity) {

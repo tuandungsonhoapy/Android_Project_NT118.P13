@@ -10,17 +10,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.features.product.data.entity.ProductOption;
 
 import java.util.List;
 
 public class ProductDetailOptionAdapter extends RecyclerView.Adapter<ProductDetailOptionAdapter.ProductDetailOptionViewHolder> {
-    private List<String> optionsList;
+    private List<ProductOption> productOptions;
     Context context;
     private int selectedItem = 0;
+    private OnOptionSelectedListener onOptionSelectedListener;
 
-    public ProductDetailOptionAdapter(List<String> optionsList, Context context) {
-        this.optionsList = optionsList;
+    public ProductDetailOptionAdapter(List<ProductOption> productOptions, Context context) {
+        this.productOptions = productOptions;
         this.context = context;
+    }
+
+    public void setOnOptionSelectedListener(OnOptionSelectedListener listener) {
+        this.onOptionSelectedListener = listener;
+    }
+
+    public interface OnOptionSelectedListener {
+        void onOptionSelected(ProductOption selectedOption);
     }
 
     @NonNull
@@ -32,7 +42,23 @@ public class ProductDetailOptionAdapter extends RecyclerView.Adapter<ProductDeta
 
     @Override
     public void onBindViewHolder(@NonNull ProductDetailOptionViewHolder holder, int position) {
-        holder.item_option.setText(optionsList.get(position));
+        ProductOption productOption = productOptions.get(position);
+
+        holder.item_option.setText(productOption.getChip() + " - " + productOption.getRam() + "/" + productOption.getRom());
+
+        // Thiết lập click listener
+        holder.itemView.setOnClickListener(v -> {
+            int adapterPosition = holder.getAdapterPosition(); // Lấy vị trí thực tế của item
+            if (onOptionSelectedListener != null) {
+                onOptionSelectedListener.onOptionSelected(productOption);
+            }
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                // Cập nhật vị trí item được chọn
+                selectedItem = adapterPosition;
+                // Thông báo cho adapter cập nhật giao diện
+                notifyDataSetChanged();
+            }
+        });
 
         // Cập nhật màu nền dựa trên trạng thái đã chọn
         if (position == selectedItem) {
@@ -42,25 +68,18 @@ public class ProductDetailOptionAdapter extends RecyclerView.Adapter<ProductDeta
             holder.item_option.setTextColor(context.getResources().getColor(R.color.black));
             holder.itemView.setBackgroundResource(R.drawable.item_background_white_selector);
         }
-
-        // Thiết lập click listener
-        holder.itemView.setOnClickListener(v -> {
-            int adapterPosition = holder.getAdapterPosition(); // Lấy vị trí thực tế của item
-            if (adapterPosition != RecyclerView.NO_POSITION) {
-                // Cập nhật vị trí item được chọn
-                selectedItem = adapterPosition;
-                // Thông báo cho adapter cập nhật giao diện
-                notifyDataSetChanged();
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
-        if(optionsList == null) {
+        if(productOptions == null) {
             return 0;
         }
-        return optionsList.size();
+        return productOptions.size();
+    }
+
+    public ProductOption getSelectedItem() {
+        return productOptions.get(selectedItem);
     }
 
     public class ProductDetailOptionViewHolder extends RecyclerView.ViewHolder {

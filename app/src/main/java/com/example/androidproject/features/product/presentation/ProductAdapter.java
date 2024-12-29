@@ -2,6 +2,7 @@ package com.example.androidproject.features.product.presentation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.example.androidproject.features.cart.usecase.CartUseCase;
 import com.example.androidproject.features.product.data.entity.ProductOption;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
@@ -78,6 +80,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("productId", product.getId());
+            bundle.putString("productName", product.getName());
+            bundle.putString("productPrice", ConvertFormat.formatPriceToVND(product.getPrice()));
+            bundle.putDouble("productRating", product.getRating());
+            bundle.putStringArrayList("productImages", (ArrayList<String>) product.getImages());
+            bundle.putInt("productStockQuantity", product.getStockQuantity());
+            bundle.putString("brandId", product.getBrand().getId());
+            bundle.putString("brandName", product.getBrand().getName());
+            bundle.putString("productDescription", product.getDescription());
+            bundle.putParcelableArrayList("productOptions", new ArrayList<>(product.getOptions()));
+            intent.putExtras(bundle);
             context.startActivity(intent);
         });
 

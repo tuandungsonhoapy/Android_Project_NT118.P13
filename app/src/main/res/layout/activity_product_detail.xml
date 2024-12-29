@@ -150,14 +150,14 @@
                                 />
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/textView_old_price_pd"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="16.000.000đ"
-                            android:layout_gravity="center"
-                            />
+<!--                        <TextView-->
+<!--                            android:id="@+id/textView_old_price_pd"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginLeft="10dp"-->
+<!--                            android:text="16.000.000đ"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            />-->
 
                         <TextView
                             android:id="@+id/textView_new_price_pd"
@@ -264,7 +264,17 @@
                             app:layout_constraintTop_toTopOf="parent"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
-                            android:text="Price" />
+                            android:text="Price:" />
+
+                        <TextView
+                            android:id="@+id/textView_price"
+                            android:layout_width="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            app:layout_constraintLeft_toRightOf="@+id/textView_price_pd"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="1,000,000đ" />
 
                         <TextView
                             android:id="@+id/textView_stock_status_pd"
@@ -274,7 +284,17 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
                             android:textStyle="bold"
-                            android:text="Stock" />
+                            android:text="Stock:" />
+
+                        <TextView
+                            android:id="@+id/textView_stock_quantity"
+                            android:layout_width="wrap_content"
+                            app:layout_constraintLeft_toRightOf="@+id/textView_stock_status_pd"
+                            app:layout_constraintTop_toBottomOf="@+id/textView_price_pd"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:textStyle="bold"
+                            android:text="100" />
 
                         <TextView
                             android:id="@+id/textView25"
@@ -293,36 +313,8 @@
                         android:paddingTop="4dp"
                         >
 
-
-                        <TextView
-                            android:id="@+id/textView_colors_pd"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Color"
-                            android:textStyle="bold"
-                            android:textSize="18sp"
-
-                            />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recycler_colors_pd"
-                            android:layout_width="match_parent"
-                            android:layout_marginTop="12dp"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView_colors_pd"
-                            >
-
-
-                        </androidx.recyclerview.widget.RecyclerView>
-
                         <TextView
                             android:id="@+id/textView_options_pd"
-                            app:layout_constraintTop_toBottomOf="@+id/recycler_colors_pd"
-                            app:layout_constraintLeft_toLeftOf="@+id/textView_colors_pd"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Option"
@@ -344,6 +336,32 @@
 
 
                         </androidx.recyclerview.widget.RecyclerView>
+
+                        <TextView
+                            android:id="@+id/tv_stock"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tồn kho:"
+                            app:layout_constraintTop_toBottomOf="@+id/recycler_options_pd"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            android:layout_marginTop="12dp"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/tv_stock_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:layout_marginLeft="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/recycler_options_pd"
+                            app:layout_constraintLeft_toRightOf="@+id/tv_stock"
+                            android:layout_marginTop="12dp"
+                            android:textSize="18sp"
+
+                            />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -381,7 +399,7 @@
         >
 
         <LinearLayout
-            android:id="@+id/linearLayout_decrease_increase"
+            android:id="@+id/linearLayout_decrease"
             android:layout_width="32dp"
             android:layout_height="32dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -409,17 +427,18 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginLeft="10dp"
-            app:layout_constraintTop_toTopOf="@+id/linearLayout_decrease_increase"
-            app:layout_constraintLeft_toRightOf="@+id/linearLayout_decrease_increase"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout_decrease"
+            app:layout_constraintLeft_toRightOf="@+id/linearLayout_decrease"
             android:text="10" />
 
         <LinearLayout
+            android:id="@+id/linearLayout_increase"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:gravity="center"
             android:layout_marginLeft="10dp"
             android:background="@drawable/circle_main_background"
-            app:layout_constraintTop_toTopOf="@+id/linearLayout_decrease_increase"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout_decrease"
             app:layout_constraintLeft_toRightOf="@+id/textView_number"
             >
 
