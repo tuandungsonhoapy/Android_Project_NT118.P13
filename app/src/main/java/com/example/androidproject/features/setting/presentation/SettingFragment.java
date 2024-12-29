@@ -21,6 +21,7 @@ import com.example.androidproject.features.admin.presentation.AdminHomeActivity;
 import com.example.androidproject.features.auth.presentation.LoginActivity;
 import com.example.androidproject.features.cart.presentation.CartActivity;
 import com.example.androidproject.features.setting.usecase.SettingUseCase;
+import com.example.androidproject.features.voucher.presentation.VoucherActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.net.URL;
@@ -145,7 +146,7 @@ public class SettingFragment extends Fragment {
         voucherLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 Intent intent = new Intent(getActivity(), VoucherSettingActivity.class);
+                 Intent intent = new Intent(getActivity(), VoucherActivity.class);
                  startActivity(intent);
             }
         });
