@@ -1,7 +1,7 @@
 package com.example.androidproject.core.credential.data.entity;
 
 public class UserPrefEntity {
-    private String uid;
+    private String id;
     private Integer role;
     private Integer tier;
     private Long totalSpent;
@@ -13,8 +13,8 @@ public class UserPrefEntity {
     private String phone;
 
 
-    public UserPrefEntity(String uid, Integer role, Integer tier, Long totalSpent, String addressId, String firstName, String lastName, String gender, String email, String phone) {
-        this.uid = uid;
+    public UserPrefEntity(String id, Integer role, Integer tier, Long totalSpent, String addressId, String firstName, String lastName, String gender, String email, String phone) {
+        this.id = id;
         this.role = role;
         this.tier = tier;
         this.totalSpent = totalSpent;
@@ -26,12 +26,12 @@ public class UserPrefEntity {
         this.phone = phone;
     }
 
-    public String getUid() {
-        return uid;
+    public String getId() {
+        return id;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Integer getRole() {

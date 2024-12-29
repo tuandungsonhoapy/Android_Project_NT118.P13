@@ -17,7 +17,7 @@ public class UserPreferences {
 
     // user data
     public static final String KEY_DOC_ID = "doc_id";
-    public static final String KEY_UID = "uid";
+    public static final String KEY_ID = "id";
     public static final String KEY_FIRST_NAME = "first_name";
     public static final String KEY_LAST_NAME = "last_name";
     public static final String KEY_EMAIL = "email";
@@ -46,7 +46,7 @@ public class UserPreferences {
 
     // user data
     public void saveUser(UserEntity userEntity) {
-        editor.putString(KEY_UID, EncryptionUtils.encrypt(userEntity.getUid(), secretKey));
+        editor.putString(KEY_ID, EncryptionUtils.encrypt(userEntity.getId(), secretKey));
         editor.putString(KEY_FIRST_NAME, EncryptionUtils.encrypt(userEntity.getFirstName(), secretKey));
         editor.putString(KEY_LAST_NAME, EncryptionUtils.encrypt(userEntity.getLastName(), secretKey));
         editor.putString(KEY_EMAIL, EncryptionUtils.encrypt(userEntity.getEmail(), secretKey));
@@ -63,7 +63,7 @@ public class UserPreferences {
     public Object getUserDataByKey(String key) {
         switch (key) {
             case KEY_DOC_ID:
-            case KEY_UID:
+            case KEY_ID:
             case KEY_FIRST_NAME:
             case KEY_LAST_NAME:
             case KEY_EMAIL:
@@ -85,8 +85,8 @@ public class UserPreferences {
     }
 
     public UserPrefEntity getUserEntity() {
-        String uid = sharedPreferences.getString(KEY_UID, null);
-        if (uid == null) {
+        String id = sharedPreferences.getString(KEY_ID, null);
+        if (id == null) {
             return null;
         }
 
@@ -100,7 +100,7 @@ public class UserPreferences {
         long totalSpent = sharedPreferences.getLong(KEY_TOTAL_SPENT, 0L); // df=0
         String addressId = EncryptionUtils.decrypt(sharedPreferences.getString(KEY_ADDRESS_ID, null), secretKey);
 
-        return new UserPrefEntity(uid, role, tier, totalSpent, addressId, firstName, lastName, gender, email, phone);
+        return new UserPrefEntity(id, role, tier, totalSpent, addressId, firstName, lastName, gender, email, phone);
     }
 
     public void updateUserDataByKey(String key, Object value) {
@@ -108,7 +108,7 @@ public class UserPreferences {
 
         switch (key) {
             case KEY_DOC_ID:
-            case KEY_UID:
+            case KEY_ID:
             case KEY_FIRST_NAME:
             case KEY_LAST_NAME:
             case KEY_EMAIL:
@@ -158,7 +158,7 @@ public class UserPreferences {
         List<String> keysToRemove = new ArrayList<>();
 
         keysToRemove.add(KEY_DOC_ID);
-        keysToRemove.add(KEY_UID);
+        keysToRemove.add(KEY_ID);
         keysToRemove.add(KEY_FIRST_NAME);
         keysToRemove.add(KEY_LAST_NAME);
         keysToRemove.add(KEY_EMAIL);
@@ -190,7 +190,7 @@ public class UserPreferences {
 
     // boom ez life
     public boolean isUserLoggedIn() {
-        return sharedPreferences.contains(KEY_UID);
+        return sharedPreferences.contains(KEY_ID);
     }
 
     public boolean isAdmin() {

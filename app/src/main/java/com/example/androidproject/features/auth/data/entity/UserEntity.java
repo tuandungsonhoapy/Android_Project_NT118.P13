@@ -6,19 +6,20 @@ import java.util.Date;
 import java.util.List;
 
 public class UserEntity {
-    private String uid;
+    private String id;
     private Integer role;
     private Integer tier;
     private Long totalSpent;
     private String addressId;
+    private String fullAddress;
     private String firstName;
     private String lastName;
     private String gender;
     private String email;
     private String phone;
 
+    private List<String> vouchers;
     private List<String> wishlist;
-    private List<String> addresses;
 
     @ServerTimestamp
     private Date createdAt;
@@ -28,29 +29,30 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(String uid, Integer role, Integer tier, Long totalSpent, String addressId,
+    public UserEntity(String id, Integer role, Integer tier, Long totalSpent, String addressId, String fullAddress,
                       String firstName, String lastName, String gender, String email, String phone,
-                      List<String> wishlist, List<String> addresses) {
-        this.uid = uid;
+                      List<String> vouchers, List<String> wishlist) {
+        this.id = id;
         this.role = role;
         this.tier = tier;
         this.totalSpent = totalSpent;
         this.addressId = addressId;
+        this.fullAddress = fullAddress;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.email = email;
         this.phone = phone;
+        this.vouchers = vouchers;
         this.wishlist = wishlist;
-        this.addresses = addresses;
     }
 
-    public String getUid() {
-        return uid;
+    public String getId() {
+        return id;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Integer getRole() {
@@ -83,6 +85,14 @@ public class UserEntity {
 
     public void setAddressId(String addressId) {
         this.addressId = addressId;
+    }
+
+    public String getFullAddress() {
+        return fullAddress;
+    }
+
+    public void setFullAddress(String fullAddress) {
+        this.fullAddress = fullAddress;
     }
 
     public String getFirstName() {
@@ -125,20 +135,20 @@ public class UserEntity {
         this.phone = phone;
     }
 
+    public List<String> getVouchers() {
+        return vouchers;
+    }
+
+    public void setVouchers(List<String> vouchers) {
+        this.vouchers = vouchers;
+    }
+
     public List<String> getWishlist() {
         return wishlist;
     }
 
     public void setWishlist(List<String> wishlist) {
         this.wishlist = wishlist;
-    }
-
-    public List<String> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<String> addresses) {
-        this.addresses = addresses;
     }
 
     public Date getCreatedAt() {

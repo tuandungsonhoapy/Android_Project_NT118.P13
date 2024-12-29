@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.core.utils.NavigationUtils;
 import com.example.androidproject.features.auth.data.entity.UserEntity;
 import com.example.androidproject.features.auth.data.repository.AuthRepository;
@@ -34,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     //others
     private AuthRepository authRepository;
+    private UserPreferences userPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void init() {
         authRepository = new AuthRepository();
+        userPreferences = new UserPreferences(this);
 
         initInsets();
         initViews();
@@ -94,27 +97,34 @@ public class RegisterActivity extends AppCompatActivity {
             registrationFuture
                     .thenCompose(firebaseUser -> {
                         // default
-                        String uid = "";
+                        String id = "";
                         Integer role = 1;
                         Integer tier = 0;
                         Long totalSpent = 0L;
                         String addressId = "";
+                        String fullAddress = "";
+                        List<String> vouchers = new ArrayList<>();
                         List<String> wishlist = new ArrayList<>();
-                        List<String> addresses = new ArrayList<>();
 
-                        UserEntity userEntity = new UserEntity(uid, role, tier, totalSpent, addressId, firstName, lastName, gender, email, phone, wishlist, addresses);
+                        UserEntity userEntity = new UserEntity(id, role, tier, totalSpent, addressId, fullAddress, firstName, lastName, gender, email, phone, vouchers, wishlist);
 
-                        userEntity.setUid(firebaseUser.getUid());
-                        userEntity.setCreatedAt(new Date());
-                        userEntity.setUpdatedAt(new Date());
+                        saveAccountInfo(email, password);
 
-                        return authRepository.saveUserToFirestore(userEntity);
+                        return authRepository.saveUserToFirestore(firebaseUser.getUid(), userEntity);
                     })
                     .thenRun(() -> NavigationUtils.navigateTo(RegisterActivity.this, MainActivity.class))
                     .exceptionally(ex -> {
                         Toast.makeText(RegisterActivity.this, "Registration failed: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
                         return null;
                     });
+        }
+    }
+
+    private void saveAccountInfo(String email, String password) {
+        if (userPreferences.isSaveAccountEnabled()) {
+            userPreferences.saveAccount(email, password, true);
+        } else {
+            userPreferences.saveAccount("", "", false);
         }
     }
 

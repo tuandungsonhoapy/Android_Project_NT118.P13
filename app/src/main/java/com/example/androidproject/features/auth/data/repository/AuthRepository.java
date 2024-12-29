@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
 public class AuthRepository {
@@ -56,11 +57,16 @@ public class AuthRepository {
         return future;
     }
 
-    public CompletableFuture<Void> saveUserToFirestore(UserEntity userEntity) {
+    public CompletableFuture<Void> saveUserToFirestore(String uid, UserEntity userEntity) {
         CompletableFuture<Void> future = new CompletableFuture<>();
 
         counterModel.getNewId("user").addOnSuccessListener(documentId -> {
-            DocumentReference userRef = firestore.collection("users").document(documentId);
+
+            userEntity.setId(documentId);
+            userEntity.setCreatedAt(new Date());
+            userEntity.setUpdatedAt(new Date());
+
+            DocumentReference userRef = firestore.collection("users").document(uid);
             userRef.set(userEntity)
                     .addOnSuccessListener(aVoid -> future.complete(null))
                     .addOnFailureListener(e -> future.completeExceptionally(e));

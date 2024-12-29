@@ -41,53 +41,11 @@ public class FirebaseHelper {
         }
     }
 
-    // run when login/register
+    // get specify usser
     public CompletableFuture<UserEntity> findDocumentDataByUid() {
         CompletableFuture<UserEntity> future = new CompletableFuture<>();
 
-        String uid = getUid();  // Retrieve current user UID
-
-        if (uid != null) {
-            Log.d(TAG, "User UID: " + uid);
-
-            firestore.collection("users")
-                    .whereEqualTo("uid", uid)
-                    .limit(1)
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            // found doc
-                            DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
-
-                            // upd doc id
-                            userPreferences.updateUserDataByKey(UserPreferences.KEY_DOC_ID,documentSnapshot.getId());
-
-                            // retrieve data
-                            UserEntity userEntity = retrieveData(documentSnapshot);
-
-                            // complete
-                            future.complete(userEntity);
-                        } else {
-                            Log.w(TAG, "No document found for UID: " + uid);
-                            future.completeExceptionally(new Exception("No document found for UID: " + uid));
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.w(TAG, "Error getting document by UID: ", e);
-                        future.completeExceptionally(e);
-                    });
-
-        } else {
-            Log.w(TAG, "No user is logged in.");
-            future.completeExceptionally(new Exception("No user is logged in."));
-        }
-
-        return future;
-    }
-
-    // get specify usser
-    public CompletableFuture<UserEntity> findDocumentDataById(String documentId) {
-        CompletableFuture<UserEntity> future = new CompletableFuture<>();
+        String documentId = getUid();
 
         if (documentId != null && !documentId.isEmpty()) {
             firestore.collection("users")
@@ -120,7 +78,7 @@ public class FirebaseHelper {
     }
 
     private UserEntity retrieveData(DocumentSnapshot documentSnapshot) {
-        String uid = documentSnapshot.getString("uid");
+        String id = documentSnapshot.getString("id");
         String firstName = documentSnapshot.getString("firstName");
         String lastName = documentSnapshot.getString("lastName");
         String email = documentSnapshot.getString("email");
@@ -130,10 +88,11 @@ public class FirebaseHelper {
         int tier = documentSnapshot.getLong("tier").intValue();
         long totalSpent = documentSnapshot.getLong("totalSpent");
         String addressId = documentSnapshot.getString("addressId");
+        String fullAddress = documentSnapshot.getString("fullAddress");
 
-        // wishlist
-        List<String> wishlist = (List<String>) documentSnapshot.get("wishlist");
-        if (wishlist == null) wishlist = new ArrayList<>();
+        // vouchers
+        List<String> vouchers = (List<String>) documentSnapshot.get("vouchers");
+        if (vouchers == null) vouchers = new ArrayList<>();
 
         // addresses
         List<String> addresses = (List<String>) documentSnapshot.get("addresses");
@@ -141,17 +100,18 @@ public class FirebaseHelper {
 
         // create entity
         UserEntity userEntity = new UserEntity(
-                uid,
+                id,
                 role,
                 tier,
                 totalSpent,
                 addressId,
+                fullAddress,
                 firstName,
                 lastName,
                 gender,
                 email,
                 phone,
-                wishlist,
+                vouchers,
                 addresses
         );
 
