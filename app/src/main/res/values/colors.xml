@@ -40,4 +40,7 @@
     <color name="light_red">
         #FFF3F3
     </color>
+    <color name="et_text_hint">
+        #808080
+    </color>
 </resources>

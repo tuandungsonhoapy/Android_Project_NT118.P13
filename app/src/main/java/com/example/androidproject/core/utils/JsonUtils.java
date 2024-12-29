@@ -2,7 +2,7 @@ package com.example.androidproject.core.utils;
 
 import com.google.gson.Gson;
 
-public class JsonUtil {
+public class JsonUtils {
     private static final Gson gson = new Gson();
 
     public static String objectToJson(Object object) {

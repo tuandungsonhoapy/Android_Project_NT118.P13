@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.core.credential.FirebaseHelper;
+import com.example.androidproject.features.banner.data.model.BannerModel;
 import com.example.androidproject.features.banner.presentation.BannerAdapter;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.cart.presentation.CartActivity;
@@ -66,6 +68,9 @@ public class HomeFragment extends Fragment {
     private HomeUseCase homeUseCase = new HomeUseCase();
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
 
+    // others
+    private FirebaseHelper firebaseHelper;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -95,6 +100,9 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        // firebase helper
+        firebaseHelper = new FirebaseHelper(getContext());
     }
 
     @Override
@@ -108,6 +116,10 @@ public class HomeFragment extends Fragment {
         viewPagerBanner = view.findViewById(R.id.view_pager);
         cartIcon = view.findViewById(R.id.cartIcon);
         viewAllProduct = view.findViewById(R.id.viewAllProduct);
+        tvUserName = view.findViewById(R.id.tvUserName);
+
+        // Get the user data and update the username TextView
+        updateUserName();
 
         //view categories
         List<CategoryEntity> categoryList = new ArrayList<>();
@@ -148,6 +160,22 @@ public class HomeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void updateUserName() {
+        firebaseHelper.findDocumentDataByUid()
+                .thenAccept(userEntity -> {
+                    if (userEntity != null) {
+                        String userName = userEntity.getFirstName();
+                        if (tvUserName != null) {
+                            tvUserName.setText("Hello, " + userName);
+                        }
+                    }
+                })
+                .exceptionally(e -> {
+                    Log.e("HomeFragment", "Error fetching user data", e);
+                    return null;
+                });
     }
 
     private void fetchTop10ProductsFromFirestore() {
