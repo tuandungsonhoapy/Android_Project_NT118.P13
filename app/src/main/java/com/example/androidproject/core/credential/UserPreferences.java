@@ -34,11 +34,13 @@ public class UserPreferences {
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
-    private final String secretKey = "TECHNOPHOBIC69";
+    private final String secretKey;
 
     public UserPreferences(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        secretKey = "TECHNOUIT69";
+        // secretKey = context.getString(R.id.secret_key)
     }
 
     // user data
