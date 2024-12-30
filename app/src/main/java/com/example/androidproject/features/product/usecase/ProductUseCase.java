@@ -6,6 +6,7 @@ import com.example.androidproject.R;
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.brand.data.model.BrandModel;
+import com.example.androidproject.features.cart.data.entity.ProductsOnCart;
 import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.product.data.entity.ProductEntity;
@@ -55,7 +56,6 @@ public class ProductUseCase {
         return productRepository.getProductRepository(page, limit, search).thenApply(r -> {
             if (r.isRight()) {
                 List<ProductModelFB> productModels = r.getRight();
-                Log.d("ProductUseCase", "getProducts: " + productModels.size());
                 List<ProductEntity> productEntities = new ProductModelFB().toProductEntityList(productModels);
                 return Either.right(productEntities);
             } else {
@@ -66,6 +66,39 @@ public class ProductUseCase {
 
     public CompletableFuture<Either<Failure, List<ProductModelFB>>> getAllProducts(String categoryId, String brandId, String search, String page, String limit) {
         return productRepository.getAllProducts(categoryId, brandId, search, page, limit)
+                .thenApply(r -> {
+                    if (r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, ProductModelFB>> getDetailProductById(String productId) {
+        return productRepository.getDetailProductById(productId)
+                .thenApply(r -> {
+                    if (r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, List<ProductModelFB>>> getProductsAndMapBrands() {
+        return productRepository.getProductsAndMapBrands()
+                .thenApply(r -> {
+                    if (r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, String>> updateProductQuantity(List<ProductsOnCart> productsOnCart) {
+        return productRepository.updateProductQuantity(productsOnCart)
                 .thenApply(r -> {
                     if (r.isRight()) {
                         return Either.right(r.getRight());

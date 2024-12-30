@@ -43,20 +43,26 @@ public class CartRepositoryImpl implements CartRepository{
            if(r.isRight()) {
                 CartModel cart = r.getRight();
                 List<ProductsOnCart> products = cart.getProducts();
+                boolean productExist = false;
 
-                boolean isExist = false;
-                for (ProductsOnCart product : products) {
-                    if (product.getProductId().equals(productId)) {
-                        product.setQuantity(product.getQuantity() + (int) productQuantity);
+                for (ProductsOnCart product : new ArrayList<>(products)) {
+                    if(
+                            product.getProductId().equals(productId)
+                            && (option == null || product.getProductOptions() == null || product.getProductOptions().equals(option))
+                    ) {
+                        product.setQuantity(product.getQuantity() + productQuantity);
+                        productExist = true;
                         if (product.getQuantity() <= 0) {
                             products.remove(product);
                         }
-                        isExist = true;
-                        break;
+                        updateCart(cart, products);
+                        future.complete(Either.right("Success"));
+                        return;
                     }
                 }
 
-               if (!isExist) {
+               if (!productExist) {
+                     Log.d("CartRepository", "addProductToCart: " + 3);
                    productRepository.getDetailProductById(productId)
                            .thenAccept(productResult -> {
                                if (productResult.isRight()) {
@@ -67,12 +73,14 @@ public class CartRepositoryImpl implements CartRepository{
                                    );
                                    products.add(newProduct);
                                    updateCart(cart, products);
+                                      future.complete(Either.right("Success"));
                                } else {
                                    future.complete(Either.left(new Failure("Product not found")));
                                }
                            });
                }
            } else {
+               Log.d("CartRepository", "addProductToCart: " + 4);
                productRepository.getDetailProductById(productId)
                        .thenAccept(productResult -> {
                            if (productResult.isRight()) {
@@ -83,6 +91,7 @@ public class CartRepositoryImpl implements CartRepository{
                                        option,
                                        quantity
                                );
+                                 future.complete(Either.right("Success"));
                            } else {
                                future.complete(Either.left(new Failure("Product not found")));
                            }
@@ -240,4 +249,5 @@ public class CartRepositoryImpl implements CartRepository{
         newProduct.setQuantity(quantity);
         return newProduct;
     }
+
 }

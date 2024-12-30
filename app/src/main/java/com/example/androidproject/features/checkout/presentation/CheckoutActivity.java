@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.core.utils.MoneyFomat;
 import com.example.androidproject.core.utils.counter.CounterModel;
 import com.example.androidproject.features.address.data.model.AddressModel;
@@ -30,6 +31,7 @@ import com.example.androidproject.features.cart.data.entity.ProductsOnCart;
 import com.example.androidproject.features.cart.usecase.CartUseCase;
 import com.example.androidproject.features.checkout.data.model.CheckoutModel;
 import com.example.androidproject.features.checkout.usecase.CheckoutUseCase;
+import com.example.androidproject.features.product.usecase.ProductUseCase;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
@@ -47,6 +49,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private CartUseCase cartUseCase = new CartUseCase();
     private AddressUsecase addressUsecase = new AddressUsecase();
     private CounterModel counterModel = new CounterModel();
+    private ProductUseCase productUseCase = new ProductUseCase();
     private long checkoutQuantity;
     private String addressId;
     private String fullAddress;
@@ -96,17 +99,22 @@ public class CheckoutActivity extends AppCompatActivity {
                                 if(r.isRight()) {
                                     cartUseCase.deleteCart(userId).thenAccept(r1 -> {
                                         if (r1.isRight()) {
-                                            counterModel.updateQuantity("checkout");
-                                            paymentSuccessLayout.setVisibility(View.VISIBLE);
-                                            btnPayment.setVisibility(View.GONE);
-                                            rvCheckoutItem.setVisibility(View.GONE);
-                                            llTotalPrice.setVisibility(View.GONE);
-                                            btnContinueShopping.setVisibility(View.VISIBLE);
-                                            llUserAddress.setVisibility(View.GONE);
-                                            tvUserInformation.setVisibility(View.GONE);
-                                            llNote.setVisibility(View.GONE);
-                                            getIntent().addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                            Toast.makeText(this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                                            productUseCase.updateProductQuantity(productsOnCart)
+                                                            .thenAccept(r2 -> {
+                                                                if(r2.isRight()) {
+                                                                    counterModel.updateQuantity("checkout");
+                                                                    paymentSuccessLayout.setVisibility(View.VISIBLE);
+                                                                    btnPayment.setVisibility(View.GONE);
+                                                                    rvCheckoutItem.setVisibility(View.GONE);
+                                                                    llTotalPrice.setVisibility(View.GONE);
+                                                                    btnContinueShopping.setVisibility(View.VISIBLE);
+                                                                    llUserAddress.setVisibility(View.GONE);
+                                                                    tvUserInformation.setVisibility(View.GONE);
+                                                                    llNote.setVisibility(View.GONE);
+                                                                    getIntent().addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                                                    Toast.makeText(this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
                                         }
                                     });
                                 } else {

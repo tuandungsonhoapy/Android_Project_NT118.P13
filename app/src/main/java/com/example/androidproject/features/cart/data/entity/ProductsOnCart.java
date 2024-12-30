@@ -69,4 +69,9 @@ public class ProductsOnCart {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return getProductOptions() != null ? getProductName() + " - " + getProductOptions().getChip() : getProductName();
+    }
 }

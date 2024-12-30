@@ -43,7 +43,7 @@ public class ListCartItemAdapter extends RecyclerView.Adapter<ListCartItemAdapte
     public void onBindViewHolder(@NonNull ListCartItemAdapterViewHolder holder, int position) {
         ProductsOnCart product = products.get(position);
 
-        holder.tvItemName.setText(product.getProductName());
+        holder.tvItemName.setText(product.toString());
         holder.tvItemQuantity.setText(String.valueOf(product.getQuantity()));
         holder.tvItemPrice.setText(MoneyFomat.format(product.getProductPrice()));
         Glide.with(context).load(product.getProductImage()).into(holder.ivItemImage);

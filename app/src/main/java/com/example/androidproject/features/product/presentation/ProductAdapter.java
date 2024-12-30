@@ -80,18 +80,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("productId", product.getId());
-            bundle.putString("productName", product.getName());
-            bundle.putString("productPrice", ConvertFormat.formatPriceToVND(product.getPrice()));
-            bundle.putDouble("productRating", product.getRating());
-            bundle.putStringArrayList("productImages", (ArrayList<String>) product.getImages());
-            bundle.putInt("productStockQuantity", product.getStockQuantity());
-            bundle.putString("brandId", product.getBrand().getId());
-            bundle.putString("brandName", product.getBrand().getName());
-            bundle.putString("productDescription", product.getDescription());
-            bundle.putParcelableArrayList("productOptions", new ArrayList<>(product.getOptions()));
-            intent.putExtras(bundle);
+            Log.d("ProductAdapter", "onBindViewHolder: " + product.getBrand().getName());
+            intent.putExtra("productId", product.getId());
+            intent.putExtra("brandName", product.getBrand().getName());
             context.startActivity(intent);
         });
 

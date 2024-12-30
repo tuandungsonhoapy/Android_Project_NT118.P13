@@ -46,7 +46,7 @@ public class ListCheckoutItemAdapter extends RecyclerView.Adapter<ListCheckoutIt
         Glide.with(context)
                 .load(product.getProductImage())
                 .into(holder.ivItemImage);
-        holder.tvItemName.setText(product.getProductName());
+        holder.tvItemName.setText(product.toString());
         holder.tvItemQuantity.setText(String.valueOf(product.getQuantity()));
         holder.tvItemPrice.setText(MoneyFomat.format(product.getProductPrice()));
 

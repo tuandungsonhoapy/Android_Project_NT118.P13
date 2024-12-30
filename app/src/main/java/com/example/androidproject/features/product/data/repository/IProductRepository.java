@@ -3,6 +3,7 @@ package com.example.androidproject.features.product.data.repository;
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.brand.data.entity.BrandEntity;
+import com.example.androidproject.features.cart.data.entity.ProductsOnCart;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
 
@@ -23,4 +24,8 @@ public interface IProductRepository {
     CompletableFuture<Either<Failure, ProductModelFB>> getDetailProductById(String id);
 
     CompletableFuture<Either<Failure, List<ProductModelFB>>> getAllProducts(String categoryId, String brandId, String search, String page, String limit);
+
+    CompletableFuture<Either<Failure, List<ProductModelFB>>> getProductsAndMapBrands();
+
+    CompletableFuture<Either<Failure, String>> updateProductQuantity(List<ProductsOnCart> productsOnCart);
 }

@@ -30,6 +30,7 @@ import com.example.androidproject.features.home.usecase.HomeUseCase;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
 import com.example.androidproject.features.product.presentation.AllProductActivity;
 import com.example.androidproject.features.product.presentation.ProductAdapter;
+import com.example.androidproject.features.product.usecase.ProductUseCase;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -67,6 +68,7 @@ public class HomeFragment extends Fragment {
     private TextView viewAllProduct, tvUserName;
     private HomeUseCase homeUseCase = new HomeUseCase();
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
+    private ProductUseCase productUseCase = new ProductUseCase();
 
     // others
     private FirebaseHelper firebaseHelper;
@@ -179,45 +181,13 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchTop10ProductsFromFirestore() {
-        Set<String> brandIds = new HashSet<>();
-
-        db.collection("products")
-                .orderBy("stockQuantity", Query.Direction.DESCENDING)
-                .limit(10)
-                .get()
-                .addOnSuccessListener(productSnapshots -> {
-                    for (QueryDocumentSnapshot document : productSnapshots) {
-                        ProductModelFB product = document.toObject(ProductModelFB.class);
-                        productList.add(product);
-                        if (product.getBrandId() != null) {
-                            brandIds.add(product.getBrandId());
-                        }
-                    }
-
-                    // Query tất cả các brand theo danh sách brandIds
-                    db.collection("brands")
-                            .whereIn(FieldPath.documentId(), new ArrayList<>(brandIds))
-                            .get()
-                            .addOnSuccessListener(brandSnapshots -> {
-                                Map<String, BrandModel> brandMap = new HashMap<>();
-                                for (QueryDocumentSnapshot brandDoc : brandSnapshots) {
-                                    BrandModel brand = brandDoc.toObject(BrandModel.class);
-                                    brandMap.put(brandDoc.getId(), brand);
-                                }
-
-                                // Gán brand vào từng sản phẩm
-                                for (ProductModelFB product : productList) {
-                                    product.setBrand(brandMap.get(product.getBrandId()));
-                                }
-
-                                // Set adapter
-                                ProductAdapter productAdapter = new ProductAdapter(getContext(), productList);
-                                recyclerProductView.setAdapter(productAdapter);
-                                recyclerProductView.setLayoutManager(new GridLayoutManager(getContext(), homeUseCase.getColumns(2)));
-                            })
-                            .addOnFailureListener(e -> Log.e("FirestoreError", "Error fetching brands", e));
-                })
-                .addOnFailureListener(e -> Log.e("FirestoreError", "Error fetching products", e));
+        productUseCase.getProductsAndMapBrands().thenAccept(r -> {
+            if (r.isRight()) {
+                productList.addAll(r.getRight());
+                ProductAdapter productAdapter = new ProductAdapter(getContext(), productList);
+                recyclerProductView.setAdapter(productAdapter);
+                recyclerProductView.setLayoutManager(new GridLayoutManager(getContext(), homeUseCase.getColumns(2)));
+            }
+        });
     }
-
 }
