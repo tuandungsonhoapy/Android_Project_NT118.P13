@@ -26,7 +26,6 @@ import com.example.androidproject.features.voucher.presentation.VoucherActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.net.URL;
-import java.util.Objects;
 
 public class SettingFragment extends Fragment {
 
@@ -88,7 +87,7 @@ public class SettingFragment extends Fragment {
     }
 
     private void setupClickListeners() {
-        ibProfileSetting.setOnClickListener(v -> NavigationUtils.navigateTo(getActivity(), ProfileSetting.class, false));
+        ibProfileSetting.setOnClickListener(v -> NavigationUtils.navigateTo(getActivity(), ProfileSettingActivity.class, false));
 
         // admin menu
         if (userDataBundle != null && userDataBundle.getBoolean("isAdmin", false)) {

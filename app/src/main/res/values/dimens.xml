@@ -55,6 +55,9 @@
     <dimen name="_3gr_fb">0.764</dimen> <!-- 1 - 0.236 -->
     <dimen name="_4gr_fb">0.854</dimen> <!-- 1 - 0.146 -->
     <dimen name="_5gr_fb">0.910</dimen>
+    <dimen name="user_detail_item_padding">4dp</dimen>
+    <dimen name="user_detail_title">120dp</dimen>
+    <dimen name="_160dp">160dp</dimen>
     <!--  END:ratio  -->
 
 </resources>
