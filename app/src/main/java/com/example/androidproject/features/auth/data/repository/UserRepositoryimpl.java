@@ -68,4 +68,28 @@ public class UserRepositoryimpl implements UserRepository {
         }
         return future;
     }
+
+    @Override
+    public CompletableFuture<Either<Failure, String>> deleteUserVoucher(String voucherId) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+        if(uid != null) {
+            getAllUserVouchers()
+                    .thenAccept(r -> {
+                        List<String> vouchers = r.getRight().getVouchers();
+                        if(vouchers.contains(voucherId)) {
+                            vouchers.remove(voucherId);
+                            db.collection("users")
+                                    .document(uid)
+                                    .update("vouchers", vouchers)
+                                    .addOnSuccessListener(aVoid -> future.complete(Either.right("Xóa voucher thành công")))
+                                    .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+                        } else {
+                            future.complete(Either.left(new Failure("Voucher không tồn tại")));
+                        }
+                    });
+        }
+        return future;
+    }
 }

@@ -45,7 +45,15 @@
                     android:textSize="12sp" />
 
             </LinearLayout>
-
+            <Button
+                android:id="@+id/delVoucher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Xóa"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/primary"
+                />
         </LinearLayout>
 
         <View

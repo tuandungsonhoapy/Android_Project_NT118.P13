@@ -41,4 +41,15 @@ public class UserUseCase {
                     }
                 });
     }
+
+    public CompletableFuture<Either<Failure, String>> deleteUserVoucher(String voucherId) {
+        return userRepository.deleteUserVoucher(voucherId)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
 }

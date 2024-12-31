@@ -11,4 +11,6 @@ public interface UserRepository {
     CompletableFuture<Either<Failure, String>> addVoucherRepository(String voucherId);
 
     CompletableFuture<Either<Failure, UserEntity>> getAllUserVouchers();
+
+    CompletableFuture<Either<Failure, String>> deleteUserVoucher(String voucherId);
 }

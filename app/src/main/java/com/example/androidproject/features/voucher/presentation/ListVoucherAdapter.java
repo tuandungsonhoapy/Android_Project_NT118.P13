@@ -20,9 +20,11 @@ import java.util.List;
 public class ListVoucherAdapter extends RecyclerView.Adapter<ListVoucherAdapter.ListVoucherViewHolder> {
     private List<VoucherModel> allVouchers;
     private final Context ctx;
+    private UserUseCase userUseCase;
     public ListVoucherAdapter(List<VoucherModel> vouchers, Context ctx) {
         this.allVouchers = vouchers;
         this.ctx = ctx;
+        userUseCase = new UserUseCase(ctx);
     }
 
     @NonNull
@@ -44,6 +46,19 @@ public class ListVoucherAdapter extends RecyclerView.Adapter<ListVoucherAdapter.
         } else {
             holder.couponValue.setText("Giảm " + voucher.getValue() + "đ");
         }
+
+        holder.delVoucher.setOnClickListener(v -> {
+            userUseCase.deleteUserVoucher(voucher.getId())
+                    .thenAccept(r -> {
+                        if(r.isRight()) {
+                            allVouchers.remove(position);
+                            notifyDataSetChanged();
+                            Log.d("Voucher", "Xóa voucher thành công");
+                        } else {
+                            Log.d("Voucher", "Xóa voucher thất bại");
+                        }
+                    });
+        });
     }
 
     @Override
@@ -57,7 +72,7 @@ public class ListVoucherAdapter extends RecyclerView.Adapter<ListVoucherAdapter.
         private TextView couponDate;
         private TextView couponType;
         private TextView couponValue;
-
+        private Button delVoucher;
         public ListVoucherViewHolder(@NonNull View itemView) {
             super(itemView);
             couponName = itemView.findViewById(R.id.admin_coupon_card_name);
@@ -65,6 +80,7 @@ public class ListVoucherAdapter extends RecyclerView.Adapter<ListVoucherAdapter.
             couponDate = itemView.findViewById(R.id.admin_coupon_card_date);
             couponType = itemView.findViewById(R.id.admin_coupon_card_type);
             couponValue = itemView.findViewById(R.id.admin_coupon_card_value);
+            delVoucher = itemView.findViewById(R.id.delVoucher);
         }
     }
 }
