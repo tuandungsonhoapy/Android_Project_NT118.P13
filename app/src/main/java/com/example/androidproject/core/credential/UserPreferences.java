@@ -63,7 +63,7 @@ public class UserPreferences {
 
     // get n set
     public UserPrefEntity getUserEntity() {
-        String id = sharedPreferences.getString(KEY_ID, null);
+        String id = EncryptionUtils.decrypt(sharedPreferences.getString(KEY_ID, null), secretKey);
         if (id == null) {
             return null;
         }
