@@ -1,6 +1,7 @@
 package com.example.androidproject.features.admin.presentation;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.core.credential.UserPreferences;
+import com.example.androidproject.core.utils.NavigationUtils;
 import com.example.androidproject.databinding.ActivityAdminHomeBinding;
 import com.example.androidproject.databinding.ActivityMainBinding;
 import com.example.androidproject.features.admin_dashboard.presentation.AdminDashboardFragment;
@@ -21,6 +25,8 @@ import com.example.androidproject.features.setting.presentation.SettingFragment;
 import com.example.androidproject.features.store.presentation.StoreFragment;
 
 public class AdminHomeActivity extends AppCompatActivity {
+    private UserPreferences userPreferences;
+
     ActivityAdminHomeBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,8 @@ public class AdminHomeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(binding.getRoot());
 
+        userPreferences = new UserPreferences(this);
+        checkForPermission();
 
         binding.bottomAdminNavigationView.setOnItemSelectedListener(item -> {
             if(item.getItemId() == R.id.dashboard) {
@@ -46,6 +54,15 @@ public class AdminHomeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    private void checkForPermission() {
+        if (!userPreferences.isAdmin()){
+            Toast.makeText(this, "No Permission", Toast.LENGTH_SHORT).show();
+            NavigationUtils.navigateTo(this, MainActivity.class);
+        } else {
+            Toast.makeText(this, "Hello, Admin", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void replaceFragment(Fragment fragment) {
