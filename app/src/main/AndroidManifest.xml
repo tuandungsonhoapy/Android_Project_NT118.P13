@@ -18,6 +18,9 @@
         android:theme="@style/Theme.AndroidProject"
         tools:targetApi="31">
         <activity
+            android:name=".features.setting.presentation.ProfileSetting"
+            android:exported="false" />
+        <activity
             android:name=".features.admin_manager.presentation.coupon.AddVoucherActivity"
             android:exported="false" />
         <activity

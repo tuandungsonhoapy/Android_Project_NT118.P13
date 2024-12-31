@@ -18,8 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.androidproject.R;
-import com.example.androidproject.core.credential.FirebaseHelper;
-import com.example.androidproject.features.banner.data.model.BannerModel;
 import com.example.androidproject.features.banner.presentation.BannerAdapter;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.cart.presentation.CartActivity;
@@ -42,23 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<ProductModelFB> productList = new ArrayList<>();
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private RecyclerView recyclerCategoryView;
     private RecyclerView recyclerProductView;
     private ViewPager2 viewPagerBanner;
@@ -69,40 +54,20 @@ public class HomeFragment extends Fragment {
     private CategoryUseCase categoryUseCase = new CategoryUseCase();
 
     // others
-    private FirebaseHelper firebaseHelper;
+    private Bundle userDataBundle;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
-        // firebase helper
-        firebaseHelper = new FirebaseHelper(getContext());
+        // get arg
+        if (getArguments() != null) {
+            userDataBundle = getArguments();
+        }
     }
 
     @Override
@@ -118,7 +83,7 @@ public class HomeFragment extends Fragment {
         viewAllProduct = view.findViewById(R.id.viewAllProduct);
         tvUserName = view.findViewById(R.id.tvUserName);
 
-        // Get the user data and update the username TextView
+        //username
         updateUserName();
 
         //view categories
@@ -163,19 +128,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateUserName() {
-        firebaseHelper.findDocumentDataByUid()
-                .thenAccept(userEntity -> {
-                    if (userEntity != null) {
-                        String userName = userEntity.getFirstName();
-                        if (tvUserName != null) {
-                            tvUserName.setText("Hello, " + userName);
-                        }
-                    }
-                })
-                .exceptionally(e -> {
-                    Log.e("HomeFragment", "Error fetching user data", e);
-                    return null;
-                });
+        if (userDataBundle != null) {
+            String name = userDataBundle.getString("name");
+            tvUserName.setText("Hello, " + name);
+        } else {
+            tvUserName.setText("Hello, User");
+        }
     }
 
     private void fetchTop10ProductsFromFirestore() {
@@ -219,5 +177,4 @@ public class HomeFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> Log.e("FirestoreError", "Error fetching products", e));
     }
-
 }
