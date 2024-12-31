@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/_12dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="0dp">
+    app:cardElevation="0dp"
+    android:padding="10dp"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,15 +46,6 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/addVoucher"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Thêm"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:backgroundTint="@color/primary"
-                />
         </LinearLayout>
 
         <View

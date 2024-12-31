@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.features.auth.usecase.UserUseCase;
 import com.example.androidproject.features.voucher.data.model.VoucherModel;
 
 import java.util.List;
@@ -19,7 +20,6 @@ import java.util.List;
 public class ListVoucherAdapter extends RecyclerView.Adapter<ListVoucherAdapter.ListVoucherViewHolder> {
     private List<VoucherModel> allVouchers;
     private final Context ctx;
-
     public ListVoucherAdapter(List<VoucherModel> vouchers, Context ctx) {
         this.allVouchers = vouchers;
         this.ctx = ctx;
@@ -44,10 +44,6 @@ public class ListVoucherAdapter extends RecyclerView.Adapter<ListVoucherAdapter.
         } else {
             holder.couponValue.setText("Giảm " + voucher.getValue() + "đ");
         }
-
-        holder.btnAddVoucher.setOnClickListener(v -> {
-
-        });
     }
 
     @Override
@@ -61,7 +57,6 @@ public class ListVoucherAdapter extends RecyclerView.Adapter<ListVoucherAdapter.
         private TextView couponDate;
         private TextView couponType;
         private TextView couponValue;
-        private Button btnAddVoucher;
 
         public ListVoucherViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,7 +65,6 @@ public class ListVoucherAdapter extends RecyclerView.Adapter<ListVoucherAdapter.
             couponDate = itemView.findViewById(R.id.admin_coupon_card_date);
             couponType = itemView.findViewById(R.id.admin_coupon_card_type);
             couponValue = itemView.findViewById(R.id.admin_coupon_card_value);
-            btnAddVoucher = itemView.findViewById(R.id.addVoucher);
         }
     }
 }

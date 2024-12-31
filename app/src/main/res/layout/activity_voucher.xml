@@ -18,15 +18,46 @@
         app:titleTextColor="@color/black"
         />
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_view"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:queryHint="Tìm kiếm voucher..."
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linear_header"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/white_background_home_search"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        >
+        <ImageView
+            android:id="@+id/img_search"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_plus"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="60dp"
+            app:tint="@color/black"
+            android:layout_marginEnd="10dp"
+            />
+        <EditText
+            android:id="@+id/edt_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@id/img_search"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="60dp"
+            android:hint="Nhập sản phẩm..."
+            android:background="@android:color/transparent"
+            android:paddingTop="5dp"
+            android:layout_marginStart="20dp"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tvNoVoucher"
@@ -37,7 +68,6 @@
         android:textStyle="bold"
         android:layout_marginTop="8dp"
         android:layout_gravity="center"
-        android:visibility="gone"
         />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -46,15 +76,5 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginTop="10dp"
-        />
-
-    <Button
-        android:id="@+id/btnMyVoucher"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Xem voucher đã sở hữu"
-        android:backgroundTint="@color/primary"
-        android:layout_marginBottom="20dp"
         />
 </LinearLayout>

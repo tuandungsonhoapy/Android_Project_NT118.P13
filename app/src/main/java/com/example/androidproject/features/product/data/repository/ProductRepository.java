@@ -80,7 +80,6 @@ public class ProductRepository implements IProductRepository{
 
         query.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    Log.d("FIREBASE_DEBUG", "Query succeeded, documents count: " + queryDocumentSnapshots.size());
                     if(queryDocumentSnapshots.isEmpty()) {
                         future.complete(Either.right(Collections.emptyList()));
                     } else {
@@ -89,7 +88,6 @@ public class ProductRepository implements IProductRepository{
 
                         for (DocumentSnapshot document : queryDocumentSnapshots) {
                             ProductModelFB product = document.toObject(ProductModelFB.class);
-                            Log.d("FIREBASE_DEBUG_REPO", "Product ID: " + product.getId());
                             productList.add(product);
                         }
 
@@ -264,10 +262,8 @@ public class ProductRepository implements IProductRepository{
             } else {
                 resultFuture = resultFuture.thenCompose(previousResult -> {
                     if (previousResult.isLeft()) {
-                        Log.e("ProductRepository", "updateProductQuantity: " + previousResult.getLeft().getErrorMessage());
                         return CompletableFuture.completedFuture(previousResult);
                     }
-                    Log.d("ProductRepository", "updateProductQuantity: " + productsOnCart.getProductId());
                     return updateStockQuantityWithOption(productsOnCart.getQuantity(), productsOnCart.getProductId(), productsOnCart.getProductOptions());
                 });;
             }
@@ -303,11 +299,9 @@ public class ProductRepository implements IProductRepository{
                                 .document(productId)
                                 .update("stockQuantity", newQuantity)
                                 .addOnSuccessListener(aVoid -> {
-                                    Log.d("ProductRepository", "Update stockQuantity success: " + productId);
                                     future.complete(Either.right("Success"));
                                 })
                                 .addOnFailureListener(e -> {
-                                    Log.e("ProductRepository", "Update stockQuantity failed: " + e.getMessage());
                                     future.complete(Either.left(new Failure(e.getMessage())));
                                 });
                     } else {
@@ -343,12 +337,10 @@ public class ProductRepository implements IProductRepository{
                                  ).addOnSuccessListener(aVoid -> {
                                       future.complete(Either.right("Success"));
                                  }).addOnFailureListener(e -> {
-                                      Log.e("ProductRepository", "Update options failed: " + e.getMessage());
                                       future.complete(Either.left(new Failure(e.getMessage())));
                                  });
                             return future;
                      } else {
-                       Log.e("ProductRepository", "updateStockQuantityWithOption: " + r.getLeft().getErrorMessage());
                        return CompletableFuture.completedFuture(Either.left(r.getLeft()));
                    }
                 });
@@ -368,11 +360,9 @@ public class ProductRepository implements IProductRepository{
                                     .document(productId)
                                     .update("stockQuantity", newQuantity)
                                     .addOnSuccessListener(aVoid -> {
-                                        Log.d("ProductRepository", "Update stockQuantity success: " + productId);
                                         future.complete(null);
                                     })
                                     .addOnFailureListener(e -> {
-                                        Log.e("ProductRepository", "Update stockQuantity failed: " + e.getMessage());
                                         future.completeExceptionally(e);
                                     });
                             return future;

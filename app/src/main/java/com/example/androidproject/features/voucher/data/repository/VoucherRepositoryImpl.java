@@ -82,24 +82,31 @@ public class VoucherRepositoryImpl implements VoucherRepository {
     }
 
     @Override
-    public CompletableFuture<Either<Failure, List<VoucherModel>>> getAllActiveVouchers(String search) {
+    public CompletableFuture<Either<Failure, List<VoucherModel>>> getAllActiveVouchers(List<String> voucherIds) {
         CompletableFuture<Either<Failure, List<VoucherModel>>> future = new CompletableFuture<>();
         List<VoucherModel> voucherList = new ArrayList<>();
+
+        if (voucherIds == null || voucherIds.isEmpty()) {
+            future.complete(Either.right(voucherList));
+            return future;
+        }
+
         db.collection("vouchers")
                 .whereEqualTo("hidden", false)
+                .whereIn("id", voucherIds)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
                         VoucherModel voucher = document.toObject(VoucherModel.class);
                         voucherList.add(voucher);
                     }
-
-                    List<VoucherModel> filteredVoucherList = voucherList.stream()
-                            .filter(voucher -> search == null || search.isEmpty() ||
-                                    voucher.getName().toLowerCase().contains(search.toLowerCase()))
-                            .collect(Collectors.toList());
-                    future.complete(Either.right(filteredVoucherList));
+                    future.complete(Either.right(voucherList));
+                })
+                .addOnFailureListener(e -> {
+                    Failure failure = new Failure("Failed to fetch vouchers: " + e.getMessage());
+                    future.complete(Either.left(failure));
                 });
+
         return future;
     }
 }

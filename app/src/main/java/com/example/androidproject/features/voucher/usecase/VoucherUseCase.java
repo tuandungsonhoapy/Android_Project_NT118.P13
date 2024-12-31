@@ -78,8 +78,8 @@ public class VoucherUseCase {
                 });
     }
 
-    public CompletableFuture<Either<Failure, List<VoucherModel>>> getAllActiveVouchers(String search) {
-        return voucherRepository.getAllActiveVouchers(search)
+    public CompletableFuture<Either<Failure, List<VoucherModel>>> getAllActiveVouchers(List<String> voucherIds) {
+        return voucherRepository.getAllActiveVouchers(voucherIds)
                 .thenApply(r -> {
                     if (r.isRight()) {
                         return Either.right(r.getRight());

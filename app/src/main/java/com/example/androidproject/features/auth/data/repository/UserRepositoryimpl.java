@@ -1,40 +1,71 @@
 package com.example.androidproject.features.auth.data.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
+import com.example.androidproject.features.auth.data.entity.UserEntity;
 import com.example.androidproject.features.voucher.data.model.VoucherModel;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class UserRepositoryimpl implements UserRepository {
     private final FirebaseFirestore db;
     private final Context ctx;
-    public UserRepositoryimpl(FirebaseFirestore db, Context ctx) {
+    private final UserPreferences userPreferences;
+    public UserRepositoryimpl(FirebaseFirestore db, Context ctx, UserPreferences userPreferences) {
         this.db = db;
         this.ctx = ctx;
+        this.userPreferences = userPreferences;
     }
-    private UserPreferences userPreferences = new UserPreferences(ctx);
 
     @Override
-    public CompletableFuture<Either<Failure, String>> addVoucherRepository(VoucherModel voucherModel) {
+    public CompletableFuture<Either<Failure, String>> addVoucherRepository(String voucherId) {
         CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
-        db.collection("users").document(voucherModel.getId()).set(voucherModel);
-        future.complete(Either.right("Success"));
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+        if(uid != null) {
+            getAllUserVouchers()
+                    .thenAccept(r -> {
+                        List<String> vouchers = r.getRight().getVouchers();
+                        if(vouchers.contains(voucherId)) {
+                            Log.d("Voucher", "Voucher đã có");
+                            future.complete(Either.left(new Failure("Voucher đã có")));
+                        } else {
+                            vouchers.add(voucherId);
+                            db.collection("users")
+                                    .document(uid)
+                                    .update("vouchers", vouchers)
+                                    .addOnSuccessListener(aVoid -> future.complete(Either.right("Thêm voucher thành công")))
+                                    .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+                            Log.d("Voucher", "Thêm voucher thành công");
+                        }
+                    });
+        }
         return future;
     }
 
     @Override
-    public CompletableFuture<Either<Failure, String>> getAllUserVouchers() {
-        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
-        String userId = (String)userPreferences.getUserDataByKey(UserPreferences.KEY_DOC_ID);
-        db.collection("users").document(userId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    future.complete(Either.right("Success"));
-                });
+    public CompletableFuture<Either<Failure, UserEntity>> getAllUserVouchers() {
+        CompletableFuture<Either<Failure, UserEntity>> future = new CompletableFuture<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+        if (uid != null) {
+            db.collection("users")
+                    .document(uid)
+                    .get()
+                    .addOnSuccessListener(r -> {
+                        UserEntity userEntity = r.toObject(UserEntity.class);
+                        future.complete(Either.right(userEntity));
+                    });
+        } else {
+            future.complete(Either.left(new Failure("User not found")));
+        }
         return future;
     }
 }
