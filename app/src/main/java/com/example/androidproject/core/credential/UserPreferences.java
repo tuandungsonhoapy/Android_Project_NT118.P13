@@ -27,6 +27,7 @@ public class UserPreferences {
     public static final String KEY_TIER = "tier";
     public static final String KEY_TOTAL_SPENT = "total_spent";
     public static final String KEY_ADDRESS_ID = "address_id";
+    public static final String KEY_FULL_ADDRESS = "full_address";
 
     // acc info
     public static final String ACCOUNT = "account";
@@ -56,34 +57,11 @@ public class UserPreferences {
         editor.putInt(KEY_TIER, userEntity.getTier());
         editor.putLong(KEY_TOTAL_SPENT, userEntity.getTotalSpent());
         editor.putString(KEY_ADDRESS_ID, EncryptionUtils.encrypt(userEntity.getAddressId(), secretKey));
+        editor.putString(KEY_FULL_ADDRESS, EncryptionUtils.encrypt(userEntity.getFullAddress(), secretKey));
         editor.apply();
     }
 
     // get n set
-    public Object getUserDataByKey(String key) {
-        switch (key) {
-            case KEY_DOC_ID:
-            case KEY_ID:
-            case KEY_FIRST_NAME:
-            case KEY_LAST_NAME:
-            case KEY_EMAIL:
-            case KEY_PHONE:
-            case KEY_GENDER:
-            case KEY_ADDRESS_ID:
-                return EncryptionUtils.decrypt(sharedPreferences.getString(key, null), secretKey);
-
-            case KEY_ROLE:
-            case KEY_TIER:
-                return sharedPreferences.getInt(key, 1);
-
-            case KEY_TOTAL_SPENT:
-                return sharedPreferences.getLong(key, 0L);
-
-            default:
-                return null;
-        }
-    }
-
     public UserPrefEntity getUserEntity() {
         String id = sharedPreferences.getString(KEY_ID, null);
         if (id == null) {
@@ -99,11 +77,37 @@ public class UserPreferences {
         int tier = sharedPreferences.getInt(KEY_TIER, 0); // df=0
         long totalSpent = sharedPreferences.getLong(KEY_TOTAL_SPENT, 0L); // df=0
         String addressId = EncryptionUtils.decrypt(sharedPreferences.getString(KEY_ADDRESS_ID, null), secretKey);
+        String fullAddress = EncryptionUtils.decrypt(sharedPreferences.getString(KEY_FULL_ADDRESS, null), secretKey);
 
-        return new UserPrefEntity(id, role, tier, totalSpent, addressId, firstName, lastName, gender, email, phone);
+        return new UserPrefEntity(id, role, tier, totalSpent, addressId, fullAddress, firstName, lastName, gender, email, phone);
     }
 
-    public void updateUserDataByKey(String key, Object value) {
+    public Object getUserDataByKey(String key) {
+        switch (key) {
+            case KEY_DOC_ID:
+            case KEY_ID:
+            case KEY_FIRST_NAME:
+            case KEY_LAST_NAME:
+            case KEY_EMAIL:
+            case KEY_PHONE:
+            case KEY_GENDER:
+            case KEY_ADDRESS_ID:
+            case KEY_FULL_ADDRESS:
+                return EncryptionUtils.decrypt(sharedPreferences.getString(key, null), secretKey);
+
+            case KEY_ROLE:
+            case KEY_TIER:
+                return sharedPreferences.getInt(key, 1);
+
+            case KEY_TOTAL_SPENT:
+                return sharedPreferences.getLong(key, 0L);
+
+            default:
+                return null;
+        }
+    }
+
+    public void setUserDataByKey(String key, Object value) {
         if (value == null) return;
 
         switch (key) {
@@ -115,6 +119,7 @@ public class UserPreferences {
             case KEY_PHONE:
             case KEY_GENDER:
             case KEY_ADDRESS_ID:
+            case KEY_FULL_ADDRESS:
                 editor.putString(key, EncryptionUtils.encrypt((String) value, secretKey));
                 break;
 
@@ -168,6 +173,7 @@ public class UserPreferences {
         keysToRemove.add(KEY_TIER);
         keysToRemove.add(KEY_TOTAL_SPENT);
         keysToRemove.add(KEY_ADDRESS_ID);
+        keysToRemove.add(KEY_FULL_ADDRESS);
 
         return keysToRemove;
     }
