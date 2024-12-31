@@ -18,7 +18,18 @@
         app:titleTextColor="@color/black"
         />
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:queryHint="Tìm kiếm voucher..."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
+        android:id="@+id/tvNoVoucher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Danh sách voucher hiện có"
@@ -26,6 +37,7 @@
         android:textStyle="bold"
         android:layout_marginTop="8dp"
         android:layout_gravity="center"
+        android:visibility="gone"
         />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ProductRepository implements IProductRepository{
     private final FirebaseFirestore db;
@@ -250,21 +251,40 @@ public class ProductRepository implements IProductRepository{
 
     @Override
     public CompletableFuture<Either<Failure, String>> updateProductQuantity(List<ProductsOnCart> productsOnCarts) {
-        List<CompletableFuture<Either<Failure, String>>> futures = new ArrayList<>();
+        CompletableFuture<Either<Failure, String>> resultFuture = CompletableFuture.completedFuture(Either.right("Success"));
         for(ProductsOnCart productsOnCart: productsOnCarts) {
             if (productsOnCart.getProductOptions() == null) {
-                CompletableFuture<Either<Failure, String>> future = updateStockQuantityWithoutOption(productsOnCart.getQuantity(), productsOnCart.getProductId());
-                futures.add(future);
+                resultFuture = resultFuture.thenCompose(r -> {
+                    if (r.isRight()) {
+                        return updateStockQuantityWithoutOption(productsOnCart.getQuantity(), productsOnCart.getProductId());
+                    } else {
+                        return CompletableFuture.completedFuture(Either.left(r.getLeft()));
+                    }
+                });
             } else {
-                CompletableFuture<Either<Failure, String>> future = updateStockQuantityWithOption(productsOnCart.getQuantity(), productsOnCart.getProductId(), productsOnCart.getProductOptions());
-                futures.add(future);
+                resultFuture = resultFuture.thenCompose(previousResult -> {
+                    if (previousResult.isLeft()) {
+                        Log.e("ProductRepository", "updateProductQuantity: " + previousResult.getLeft().getErrorMessage());
+                        return CompletableFuture.completedFuture(previousResult);
+                    }
+                    Log.d("ProductRepository", "updateProductQuantity: " + productsOnCart.getProductId());
+                    return updateStockQuantityWithOption(productsOnCart.getQuantity(), productsOnCart.getProductId(), productsOnCart.getProductOptions());
+                });;
             }
         }
 
-        return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
-                .thenApply(v ->
-                     Either.right("Success")
-                );
+        return resultFuture.thenCompose(r -> {
+            if (r.isLeft()) {
+                return CompletableFuture.completedFuture(r);
+            }
+
+            List<CompletableFuture<Void>> updateStockFutures = productsOnCarts.stream()
+                    .map(productsOnCart -> updateStockQuantityProductHasOption(productsOnCart.getProductId()))
+                    .collect(Collectors.toList());
+
+            return CompletableFuture.allOf(updateStockFutures.toArray(new CompletableFuture[0]))
+                    .thenApply(v -> Either.right("Success"));
+        });
     }
 
     private CompletableFuture<Either<Failure, String>> updateStockQuantityWithoutOption(int quantity, String productId) {
@@ -282,7 +302,14 @@ public class ProductRepository implements IProductRepository{
                         db.collection("products")
                                 .document(productId)
                                 .update("stockQuantity", newQuantity)
-                                .addOnSuccessListener(aVoid -> future.complete(Either.right("Success")));
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("ProductRepository", "Update stockQuantity success: " + productId);
+                                    future.complete(Either.right("Success"));
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("ProductRepository", "Update stockQuantity failed: " + e.getMessage());
+                                    future.complete(Either.left(new Failure(e.getMessage())));
+                                });
                     } else {
                         future.complete(Either.left(r.getLeft()));
                     }
@@ -291,37 +318,68 @@ public class ProductRepository implements IProductRepository{
     }
 
     private CompletableFuture<Either<Failure,String>> updateStockQuantityWithOption(int optionQuantity, String productId, ProductOption option) {
-        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
-        getDetailProductById(productId)
-                .thenAccept(r -> {
+        return getDetailProductById(productId)
+                .thenCompose(r -> {
                    if(r.isRight()) {
                           ProductModelFB product = r.getRight();
                           int index = findOptionIndex(product.getOptions(), option);
                           if(index == -1) {
-                            future.complete(Either.left(new Failure("Không tìm thấy option")));
-                            return;
+                              return CompletableFuture.completedFuture(Either.left(new Failure("Không tìm thấy option")));
                           }
 
                           ProductOption productOption = product.getOptions().get(index);
                           int newOpionQuantity = productOption.getQuantity() - optionQuantity;
                           if(newOpionQuantity < 0) {
-                            future.complete(Either.left(new Failure("Số lượng không đủ")));
-                            return;
+                              return CompletableFuture.completedFuture(Either.left(new Failure("Số lượng không đủ")));
                           }
                           productOption.setQuantity(newOpionQuantity);
+                          product.getOptions().set(index, productOption);
 
+                          CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
                           db.collection("products")
                                  .document(productId)
                                  .update(
-                                         "options." + index, productOption,
-                                         "stockQuantity", product.getStockQuantity() - optionQuantity
-                                 )
-                                 .addOnSuccessListener(aVoid -> future.complete(Either.right("Success")));
+                                         "options", product.getOptions()
+                                 ).addOnSuccessListener(aVoid -> {
+                                      future.complete(Either.right("Success"));
+                                 }).addOnFailureListener(e -> {
+                                      Log.e("ProductRepository", "Update options failed: " + e.getMessage());
+                                      future.complete(Either.left(new Failure(e.getMessage())));
+                                 });
+                            return future;
                      } else {
-                          future.complete(Either.left(r.getLeft()));
+                       Log.e("ProductRepository", "updateStockQuantityWithOption: " + r.getLeft().getErrorMessage());
+                       return CompletableFuture.completedFuture(Either.left(r.getLeft()));
                    }
                 });
-        return future;
+    }
+
+    private CompletableFuture<Void> updateStockQuantityProductHasOption(String productId) {
+        return getDetailProductById(productId)
+                .thenCompose(r -> {
+                    if(r.isRight()) {
+                        ProductModelFB product = r.getRight();
+                        if(product.getOptions() != null) {
+                            int newQuantity = product.getOptions().stream()
+                                    .mapToInt(ProductOption::getQuantity)
+                                    .sum();
+                            CompletableFuture<Void> future = new CompletableFuture<>();
+                            db.collection("products")
+                                    .document(productId)
+                                    .update("stockQuantity", newQuantity)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d("ProductRepository", "Update stockQuantity success: " + productId);
+                                        future.complete(null);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("ProductRepository", "Update stockQuantity failed: " + e.getMessage());
+                                        future.completeExceptionally(e);
+                                    });
+                            return future;
+                        }
+                    }
+                    return CompletableFuture.completedFuture(null);
+                });
     }
 
     private int findOptionIndex(List<ProductOption> options, ProductOption option) {

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,8 +25,11 @@ import java.util.List;
 public class VoucherActivity extends AppCompatActivity {
     private RecyclerView recyclerViewAllVouchers;
     private Button btnMyVoucher;
+    private TextView tvNoVoucher;
     private ListVoucherAdapter listVoucherAdapter;
     private VoucherUseCase voucherUseCase = new VoucherUseCase();
+    private androidx.appcompat.widget.SearchView search_view;
+    private String search = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,7 @@ public class VoucherActivity extends AppCompatActivity {
         setContentView(R.layout.activity_voucher);
 
         initView();
-        getVouchers();
+        getVouchers(search);
     }
 
     private void initView() {
@@ -50,14 +55,24 @@ public class VoucherActivity extends AppCompatActivity {
 
         btnMyVoucher = findViewById(R.id.btnMyVoucher);
         recyclerViewAllVouchers = findViewById(R.id.recyclerViewAllVouchers);
+        search_view = findViewById(R.id.search_view);
+        tvNoVoucher = findViewById(R.id.tvNoVoucher);
+
+        search_view.setOnSearchClickListener(v -> searchAction());
     }
 
-    private void getVouchers() {
-        voucherUseCase.getAllActiveVouchers()
+    private void searchAction() {
+        search = search_view.getQuery().toString();
+        getVouchers(search);
+    }
+
+    private void getVouchers(String search) {
+        voucherUseCase.getAllActiveVouchers(search)
                 .thenAccept(r -> {
                     if (r.isRight()) {
                         List<VoucherModel> vouchers = r.getRight();
                         runOnUiThread(() -> {
+                            tvNoVoucher.setVisibility(vouchers.isEmpty() ? android.view.View.VISIBLE : android.view.View.GONE);
                             recyclerViewAllVouchers.setLayoutManager(new LinearLayoutManager(this));
                             listVoucherAdapter = new ListVoucherAdapter(vouchers, this);
                             recyclerViewAllVouchers.setAdapter(listVoucherAdapter);

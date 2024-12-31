@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class VoucherRepositoryImpl implements VoucherRepository {
     private final FirebaseFirestore db;
@@ -81,18 +82,23 @@ public class VoucherRepositoryImpl implements VoucherRepository {
     }
 
     @Override
-    public CompletableFuture<Either<Failure, List<VoucherModel>>> getAllActiveVouchers() {
+    public CompletableFuture<Either<Failure, List<VoucherModel>>> getAllActiveVouchers(String search) {
         CompletableFuture<Either<Failure, List<VoucherModel>>> future = new CompletableFuture<>();
         List<VoucherModel> voucherList = new ArrayList<>();
         db.collection("vouchers")
                 .whereEqualTo("hidden", false)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for(DocumentSnapshot document : queryDocumentSnapshots) {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
                         VoucherModel voucher = document.toObject(VoucherModel.class);
                         voucherList.add(voucher);
                     }
-                    future.complete(Either.right(voucherList));
+
+                    List<VoucherModel> filteredVoucherList = voucherList.stream()
+                            .filter(voucher -> search == null || search.isEmpty() ||
+                                    voucher.getName().toLowerCase().contains(search.toLowerCase()))
+                            .collect(Collectors.toList());
+                    future.complete(Either.right(filteredVoucherList));
                 });
         return future;
     }

@@ -101,8 +101,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                         cartQuantity
                 ).thenAccept(r -> {
                     if (r.isRight()) {
-                        cartQuantity++;
-                        counterModel.updateQuantity("cart");
                         Toast.makeText(context, "Thêm sản phẩm vào giỏ thành công", Toast.LENGTH_SHORT).show();
                     }
                     else {

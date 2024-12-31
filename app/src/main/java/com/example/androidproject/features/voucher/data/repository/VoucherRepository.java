@@ -20,5 +20,5 @@ public interface VoucherRepository {
 
     CompletableFuture<Either<Failure, String>> updateVoucherHidden(String id, boolean hidden);
 
-    CompletableFuture<Either<Failure, List<VoucherModel>>> getAllActiveVouchers();
+    CompletableFuture<Either<Failure, List<VoucherModel>>> getAllActiveVouchers(String search);
 }

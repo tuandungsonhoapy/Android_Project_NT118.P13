@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
+import com.example.androidproject.core.utils.counter.CounterModel;
 import com.example.androidproject.features.cart.data.entity.ProductsOnCart;
 import com.example.androidproject.features.cart.data.model.CartModel;
 import com.example.androidproject.features.product.data.entity.ProductOption;
@@ -29,7 +30,7 @@ public class CartRepositoryImpl implements CartRepository{
         this.productRepository = productRepository;
     }
     private String userId;
-
+    private CounterModel counterModel = new CounterModel();
     @Override
     public CompletableFuture<Either<Failure,String>> addProductToCart(
                                                             String productId,
@@ -62,7 +63,6 @@ public class CartRepositoryImpl implements CartRepository{
                 }
 
                if (!productExist) {
-                     Log.d("CartRepository", "addProductToCart: " + 3);
                    productRepository.getDetailProductById(productId)
                            .thenAccept(productResult -> {
                                if (productResult.isRight()) {
@@ -80,7 +80,6 @@ public class CartRepositoryImpl implements CartRepository{
                            });
                }
            } else {
-               Log.d("CartRepository", "addProductToCart: " + 4);
                productRepository.getDetailProductById(productId)
                        .thenAccept(productResult -> {
                            if (productResult.isRight()) {
@@ -91,7 +90,8 @@ public class CartRepositoryImpl implements CartRepository{
                                        option,
                                        quantity
                                );
-                                 future.complete(Either.right("Success"));
+                               counterModel.updateQuantity("cart");
+                               future.complete(Either.right("Success"));
                            } else {
                                future.complete(Either.left(new Failure("Product not found")));
                            }
@@ -193,12 +193,13 @@ public class CartRepositoryImpl implements CartRepository{
                 .whereEqualTo("userId", userId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    Log.d("CartRepository", "deleteCart: " + queryDocumentSnapshots.getDocuments().size());
                     for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                        db.collection("carts").document(document.getId()).delete();
+                        db.collection("carts")
+                                .document(document.getId())
+                                .update("products", new ArrayList<>())
+                                .addOnSuccessListener(unused -> future.complete(Either.right("Success")));
                     }
                 });
-        future.complete(Either.right("Success"));
         return future;
     }
 

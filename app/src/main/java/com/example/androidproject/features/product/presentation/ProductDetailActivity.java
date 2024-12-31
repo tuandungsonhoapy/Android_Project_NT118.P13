@@ -122,7 +122,6 @@ public class ProductDetailActivity extends AppCompatActivity implements ProductD
                         cartQuantity
                 ).thenAccept(r -> {
                     if (r.isRight()) {
-                        counterModel.updateQuantity("cart");
                         tvquantity.setText("0");
                         Toast.makeText(this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
                     } else {

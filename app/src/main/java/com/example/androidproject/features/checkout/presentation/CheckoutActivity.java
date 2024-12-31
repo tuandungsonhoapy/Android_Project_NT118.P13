@@ -2,6 +2,7 @@ package com.example.androidproject.features.checkout.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -98,10 +99,12 @@ public class CheckoutActivity extends AppCompatActivity {
                             .thenAccept(r -> {
                                 if(r.isRight()) {
                                     cartUseCase.deleteCart(userId).thenAccept(r1 -> {
+                                        Log.d("CheckoutActivity", "delete cart: " + r1);
                                         if (r1.isRight()) {
                                             productUseCase.updateProductQuantity(productsOnCart)
                                                             .thenAccept(r2 -> {
                                                                 if(r2.isRight()) {
+                                                                    Log.d("CheckoutActivity", "update product quantity: " + r2);
                                                                     counterModel.updateQuantity("checkout");
                                                                     paymentSuccessLayout.setVisibility(View.VISIBLE);
                                                                     btnPayment.setVisibility(View.GONE);
