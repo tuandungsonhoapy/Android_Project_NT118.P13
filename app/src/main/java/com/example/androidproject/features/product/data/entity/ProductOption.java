@@ -88,4 +88,24 @@ public class ProductOption implements Parcelable {
         parcel.writeString(rom);
         parcel.writeInt(quantity);
     }
+
+    @Override
+    public String toString() {
+        return chip + " /" + ram + " /" + rom;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductOption that = (ProductOption) o;
+        return chip.equals(that.chip) &&
+                ram.equals(that.ram) &&
+                rom.equals(that.rom);
+    }
+
+    @Override
+    public int hashCode() {
+        return chip.hashCode() + ram.hashCode() + rom.hashCode();
+    }
 }

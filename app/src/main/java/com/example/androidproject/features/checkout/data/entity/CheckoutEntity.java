@@ -17,11 +17,13 @@ public class CheckoutEntity {
     private List<ProductsOnCart> products;
     private String fullAddress;
     private double totalPrice;
+    private String voucherId;
+    private double oldTotalPrice;
 
     public CheckoutEntity() {
     }
 
-    public CheckoutEntity(String userId, String addressId,List<ProductsOnCart> products, String fullAddress, double totalPrice) {
+    public CheckoutEntity(String userId, String addressId,List<ProductsOnCart> products, String fullAddress, double totalPrice, String voucherId, double oldTotalPrice) {
         this.userId = userId;
         this.addressId = addressId;
         this.note = null;
@@ -31,9 +33,11 @@ public class CheckoutEntity {
         this.products = products;
         this.fullAddress = fullAddress;
         this.totalPrice = totalPrice;
+        this.voucherId = voucherId;
+        this.oldTotalPrice = oldTotalPrice;
     }
 
-    public CheckoutEntity(String userId, String addressId, String note,List<ProductsOnCart> products, String fullAddress, double totalPrice) {
+    public CheckoutEntity(String userId, String addressId, String note,List<ProductsOnCart> products, String fullAddress, double totalPrice, String voucherId, double oldTotalPrice) {
         this.userId = userId;
         this.addressId = addressId;
         this.note = note;
@@ -85,6 +89,14 @@ public class CheckoutEntity {
         return totalPrice;
     }
 
+    public String getVoucherId() {
+        return voucherId;
+    }
+
+    public double getOldTotalPrice() {
+        return oldTotalPrice;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -123,5 +135,13 @@ public class CheckoutEntity {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public void setVoucherId(String voucherId) {
+        this.voucherId = voucherId;
+    }
+
+    public void setOldTotalPrice(double oldTotalPrice) {
+        this.oldTotalPrice = oldTotalPrice;
     }
 }

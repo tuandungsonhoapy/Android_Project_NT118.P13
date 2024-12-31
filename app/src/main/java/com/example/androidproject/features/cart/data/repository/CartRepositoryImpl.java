@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
+import com.example.androidproject.core.utils.counter.CounterModel;
 import com.example.androidproject.features.cart.data.entity.ProductsOnCart;
 import com.example.androidproject.features.cart.data.model.CartModel;
 import com.example.androidproject.features.product.data.entity.ProductOption;
@@ -29,7 +30,7 @@ public class CartRepositoryImpl implements CartRepository{
         this.productRepository = productRepository;
     }
     private String userId;
-
+    private CounterModel counterModel = new CounterModel();
     @Override
     public CompletableFuture<Either<Failure,String>> addProductToCart(
                                                             String productId,
@@ -43,20 +44,25 @@ public class CartRepositoryImpl implements CartRepository{
            if(r.isRight()) {
                 CartModel cart = r.getRight();
                 List<ProductsOnCart> products = cart.getProducts();
+                boolean productExist = false;
 
-                boolean isExist = false;
-                for (ProductsOnCart product : products) {
-                    if (product.getProductId().equals(productId)) {
-                        product.setQuantity(product.getQuantity() + (int) productQuantity);
+                for (ProductsOnCart product : new ArrayList<>(products)) {
+                    if(
+                            product.getProductId().equals(productId)
+                            && (option == null || product.getProductOptions() == null || product.getProductOptions().equals(option))
+                    ) {
+                        product.setQuantity(product.getQuantity() + productQuantity);
+                        productExist = true;
                         if (product.getQuantity() <= 0) {
                             products.remove(product);
                         }
-                        isExist = true;
-                        break;
+                        updateCart(cart, products);
+                        future.complete(Either.right("Success"));
+                        return;
                     }
                 }
 
-               if (!isExist) {
+               if (!productExist) {
                    productRepository.getDetailProductById(productId)
                            .thenAccept(productResult -> {
                                if (productResult.isRight()) {
@@ -67,6 +73,7 @@ public class CartRepositoryImpl implements CartRepository{
                                    );
                                    products.add(newProduct);
                                    updateCart(cart, products);
+                                      future.complete(Either.right("Success"));
                                } else {
                                    future.complete(Either.left(new Failure("Product not found")));
                                }
@@ -83,6 +90,8 @@ public class CartRepositoryImpl implements CartRepository{
                                        option,
                                        quantity
                                );
+                               counterModel.updateQuantity("cart");
+                               future.complete(Either.right("Success"));
                            } else {
                                future.complete(Either.left(new Failure("Product not found")));
                            }
@@ -184,12 +193,13 @@ public class CartRepositoryImpl implements CartRepository{
                 .whereEqualTo("userId", userId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    Log.d("CartRepository", "deleteCart: " + queryDocumentSnapshots.getDocuments().size());
                     for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                        db.collection("carts").document(document.getId()).delete();
+                        db.collection("carts")
+                                .document(document.getId())
+                                .update("products", new ArrayList<>())
+                                .addOnSuccessListener(unused -> future.complete(Either.right("Success")));
                     }
                 });
-        future.complete(Either.right("Success"));
         return future;
     }
 
@@ -240,4 +250,5 @@ public class CartRepositoryImpl implements CartRepository{
         newProduct.setQuantity(quantity);
         return newProduct;
     }
+
 }

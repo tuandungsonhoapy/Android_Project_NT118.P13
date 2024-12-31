@@ -51,8 +51,6 @@ public class AddProductOptionActivity extends AppCompatActivity {
         String productId = getIntent().getStringExtra("product_id");
         AtomicInteger totalQuantity = new AtomicInteger(getIntent().getIntExtra("total_quantity", 0));
 
-        Log.d("TotalQuantity", "Product ID: " + totalQuantity.get());
-
         btnAddOption.setOnClickListener(v -> {
             String chip = etChip.getText().toString();
             String ram = etRam.getText().toString();

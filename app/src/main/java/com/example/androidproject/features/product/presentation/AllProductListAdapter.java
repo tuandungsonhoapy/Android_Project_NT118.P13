@@ -89,6 +89,7 @@ public class AllProductListAdapter extends RecyclerView.Adapter<AllProductListAd
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
+            intent.putExtra("productId", product.getId());
             context.startActivity(intent);
         });
     }

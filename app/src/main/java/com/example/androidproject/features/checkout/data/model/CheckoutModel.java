@@ -10,12 +10,12 @@ public class CheckoutModel extends CheckoutEntity {
     public CheckoutModel() {
     }
 
-    public CheckoutModel(String userId, String addressId, List<ProductsOnCart> products, String fullAddress, double totalPrice) {
-        super(userId, addressId, products, fullAddress, totalPrice);
+    public CheckoutModel(String userId, String addressId, List<ProductsOnCart> products, String fullAddress, double totalPrice, String voucherId, double oldTotalPrice) {
+        super(userId, addressId, products, fullAddress, totalPrice, voucherId, oldTotalPrice);
     }
 
-    public CheckoutModel(String userId, String addressId, String note, List<ProductsOnCart> products, String fullAddress, double totalPrice) {
-        super(userId, addressId, note, products, fullAddress, totalPrice);
+    public CheckoutModel(String userId, String addressId, String note, List<ProductsOnCart> products, String fullAddress, double totalPrice, String voucherId, double oldTotalPrice) {
+        super(userId, addressId, note, products, fullAddress, totalPrice, voucherId, oldTotalPrice);
     }
 
     public String getId() {
@@ -98,6 +98,8 @@ public class CheckoutModel extends CheckoutEntity {
                     checkoutEntity.setProducts(item.getProducts());
                     checkoutEntity.setFullAddress(item.getFullAddress());
                     checkoutEntity.setTotalPrice(item.getTotalPrice());
+                    checkoutEntity.setVoucherId(item.getVoucherId());
+                    checkoutEntity.setOldTotalPrice(item.getOldTotalPrice());
                     return checkoutEntity;
                 })
                 .collect(Collectors.toList());
@@ -114,6 +116,8 @@ public class CheckoutModel extends CheckoutEntity {
                 ", products=" + super.getProducts() +
                 ", fullAddress='" + super.getFullAddress() + '\'' +
                 ", totalPrice=" + super.getTotalPrice() +
+                ", voucherId='" + super.getVoucherId() + '\'' +
+                ", oldTotalPrice=" + super.getOldTotalPrice() +
                 '}';
     }
 }
