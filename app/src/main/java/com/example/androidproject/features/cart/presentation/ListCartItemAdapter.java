@@ -1,6 +1,7 @@
 package com.example.androidproject.features.cart.presentation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.example.androidproject.features.cart.data.entity.ProductsOnCart;
 import com.example.androidproject.features.cart.data.model.CartModel;
 import com.example.androidproject.features.cart.usecase.CartUseCase;
 import com.example.androidproject.features.order.data.ProductDataForOrderModel;
+import com.example.androidproject.features.product.presentation.ProductDetailActivity;
 
 import java.util.List;
 
@@ -47,6 +49,12 @@ public class ListCartItemAdapter extends RecyclerView.Adapter<ListCartItemAdapte
         holder.tvItemQuantity.setText(String.valueOf(product.getQuantity()));
         holder.tvItemPrice.setText(MoneyFomat.format(product.getProductPrice()));
         Glide.with(context).load(product.getProductImage()).into(holder.ivItemImage);
+
+        holder.ivItemImage.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProductDetailActivity.class);
+            intent.putExtra("productId", product.getProductId());
+            context.startActivity(intent);
+        });
 
         holder.ivPlus.setOnClickListener(v -> {
             cartUseCase.updateCartQuantity(product.getProductId(), 1)

@@ -34,7 +34,6 @@ public class UserRepositoryimpl implements UserRepository {
                     .thenAccept(r -> {
                         List<String> vouchers = r.getRight().getVouchers();
                         if(vouchers.contains(voucherId)) {
-                            Log.d("Voucher", "Voucher đã có");
                             future.complete(Either.left(new Failure("Voucher đã có")));
                         } else {
                             vouchers.add(voucherId);
@@ -43,7 +42,6 @@ public class UserRepositoryimpl implements UserRepository {
                                     .update("vouchers", vouchers)
                                     .addOnSuccessListener(aVoid -> future.complete(Either.right("Thêm voucher thành công")))
                                     .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
-                            Log.d("Voucher", "Thêm voucher thành công");
                         }
                     });
         }

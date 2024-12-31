@@ -53,9 +53,6 @@ public class ListVoucherAdapter extends RecyclerView.Adapter<ListVoucherAdapter.
                         if(r.isRight()) {
                             allVouchers.remove(position);
                             notifyDataSetChanged();
-                            Log.d("Voucher", "Xóa voucher thành công");
-                        } else {
-                            Log.d("Voucher", "Xóa voucher thất bại");
                         }
                     });
         });
