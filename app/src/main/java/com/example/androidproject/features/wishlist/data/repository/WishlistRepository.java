@@ -19,13 +19,13 @@ public class WishlistRepository {
         this.firestore = FirebaseFirestore.getInstance();
     }
 
-    public CompletableFuture<Either<Failure, List<String>>> getWishlistIds() {
+    public CompletableFuture<Either<Failure, List<String>>> getWishlist() {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        return getWishlistIds(uid);
+        return getWishlist(uid);
     }
 
-    public CompletableFuture<Either<Failure, List<String>>> getWishlistIds(String userId) {
+    public CompletableFuture<Either<Failure, List<String>>> getWishlist(String userId) {
         CompletableFuture<Either<Failure, List<String>>> future = new CompletableFuture<>();
 
         firestore.collection("users")

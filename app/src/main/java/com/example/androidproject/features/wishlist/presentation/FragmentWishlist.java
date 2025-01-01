@@ -31,7 +31,7 @@ public class FragmentWishlist extends Fragment {
     //others
     private Bundle userDataBundle;
     private List<ProductEntity> wishlistItems;
-    private List<String> wishlistIds;
+    private List<String> wishlist;
     private WishlistAdapter wishlistAdapter;
     private WishlistRepository wishlistRepository;
 
@@ -71,12 +71,12 @@ public class FragmentWishlist extends Fragment {
     private void loadWishlist() {
         String userId = userDataBundle.getString("uid");
 
-        wishlistRepository.getWishlistIds(userId)
+        wishlistRepository.getWishlist(userId)
                 .thenAccept(either -> {
                     if (either.isRight()) {
-                        wishlistIds = either.getRight();
+                        wishlist = either.getRight();
 
-                        if (wishlistIds.isEmpty()) {
+                        if (wishlist.isEmpty()) {
                             showEmptyWishlist();
                         } else {
                             fetchProductDetails();
@@ -92,7 +92,7 @@ public class FragmentWishlist extends Fragment {
     }
 
     private void fetchProductDetails() {
-        wishlistRepository.getProductsByIds(wishlistIds)
+        wishlistRepository.getProductsByIds(wishlist)
                 .thenAccept(either -> {
                     if (either.isRight()) {
                         List<ProductEntity> products = either.getRight();
@@ -127,7 +127,7 @@ public class FragmentWishlist extends Fragment {
         llEmptyWishlist.setVisibility(View.GONE);
 
         if (wishlistAdapter == null) {
-            wishlistAdapter = new WishlistAdapter(getContext(), wishlistItems, this::onAddToCart, this::onAddToWishlist);
+            wishlistAdapter = new WishlistAdapter(getContext(), wishlistItems, this::onAddToCart, this::onRemoveFromWishlist);
             recyclerView.setAdapter(wishlistAdapter);
         } else {
             wishlistAdapter.notifyDataSetChanged();
@@ -138,20 +138,26 @@ public class FragmentWishlist extends Fragment {
         Toast.makeText(getContext(), item.getId(), Toast.LENGTH_SHORT).show();
     }
 
-    private void onAddToWishlist(String productId) {
-        if (wishlistIds.contains(productId)) {
-            wishlistIds.remove(productId);
-        } else {
-            wishlistIds.add(productId);
+    //only remove
+    @SuppressLint("NotifyDataSetChanged")
+    private void onRemoveFromWishlist(String productId) {
+        //remove id and detail
+        wishlist.remove(productId);
+
+        for (int i = 0; i < wishlistItems.size(); i++) {
+            if (wishlistItems.get(i).getId().equals(productId)) {
+                wishlistItems.remove(i);
+                break;
+            }
         }
 
         String userId = userDataBundle.getString("uid");
 
-        wishlistRepository.updateWishlist(userId, wishlistIds)
+        wishlistRepository.updateWishlist(userId, wishlist)
                 .thenAccept(either -> {
                     if (either.isRight()) {
-                        loadWishlist();
-                        Toast.makeText(getContext(), "Wishlist updated", Toast.LENGTH_SHORT).show();
+                        wishlistAdapter.notifyDataSetChanged();
+                        Toast.makeText(getContext(), "Product removed from Wishlist", Toast.LENGTH_SHORT).show();
                     } else {
                         showError(either.getLeft());
                     }

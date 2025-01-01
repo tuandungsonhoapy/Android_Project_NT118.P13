@@ -1,5 +1,6 @@
 package com.example.androidproject.features.product.presentation;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -95,9 +96,7 @@ public class AllProductListAdapter extends RecyclerView.Adapter<AllProductListAd
                 });
             });
         });
-        holder.heartIcon.setOnClickListener(v -> {
-            toggleWishlist(holder, product.getId());
-        });
+        holder.heartIcon.setOnClickListener(v -> toggleWishlist(holder, product.getId()));
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
@@ -121,7 +120,9 @@ public class AllProductListAdapter extends RecyclerView.Adapter<AllProductListAd
             wishlist.remove(productId);
             Toast.makeText(context, "Removed from Wishlist", Toast.LENGTH_SHORT).show();
         } else {
-            wishlist.add(productId);
+            if (wishlist != null) {
+                wishlist.add(productId);
+            }
             Toast.makeText(context, "Added to Wishlist", Toast.LENGTH_SHORT).show();
         }
 
@@ -141,11 +142,13 @@ public class AllProductListAdapter extends RecyclerView.Adapter<AllProductListAd
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     private void fetchWishlist() {
-        wishlistRepository.getWishlistIds()
+        wishlistRepository.getWishlist()
                 .thenAccept(either -> {
                     if (either.isRight()) {
                         wishlist = either.getRight();
+                        notifyDataSetChanged();
                     } else {
                         showError(either.getLeft());
                     }
