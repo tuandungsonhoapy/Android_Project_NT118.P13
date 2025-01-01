@@ -7,14 +7,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.features.checkout.data.model.CheckoutModel;
+import com.example.androidproject.features.checkout.usecase.CheckoutUseCase;
 import com.example.androidproject.features.order.usecase.OrderUseCase;
 
 /**
@@ -31,9 +35,11 @@ public class AdminDashboardFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private TextView tvOrderToday, tvOrderOnHold;
     private ImageView btnGoToShop;
     private RecyclerView rvAdminDashboardOrders;
     private OrderUseCase orderUseCase = new OrderUseCase();
+    private CheckoutUseCase checkoutUseCase = new CheckoutUseCase();
     public AdminDashboardFragment() {
         // Required empty public constructor
     }
@@ -72,15 +78,61 @@ public class AdminDashboardFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_dashboard, container, false);
         btnGoToShop = view.findViewById(R.id.ivShop);
 
+        tvOrderToday = view.findViewById(R.id.tvOrderToday);
+        tvOrderOnHold = view.findViewById(R.id.tvOrderOnHold);
+
         btnGoToShop.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         });
 
         rvAdminDashboardOrders = view.findViewById(R.id.rvAdminOrder);
-        rvAdminDashboardOrders.setAdapter(new AdminDashboardOrderAdapter(orderUseCase.getAllOrders(), getContext()));
         rvAdminDashboardOrders.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        getCheckoutList();
+        getNumberOrderToday();
+        getNumberCheckoutByStatus("PENDING");
+
         return view;
+    }
+
+    private void getCheckoutList() {
+        checkoutUseCase.getLatestCheckouts(6)
+                .thenAccept(r -> {
+                    Log.d("Checkout", "get checkout list success");
+                    if (r.isRight()) {
+                        CheckoutModel checkoutModel = r.getRight().get(0);
+                        Log.d("Checkout", checkoutModel.getId());
+                        rvAdminDashboardOrders.setAdapter(new AdminDashboardOrderAdapter(r.getRight(), getContext()));
+                    }
+                })
+                .exceptionally(e -> {
+                    Log.d("Checkout", "fail to get checkout list");
+                    return null;
+                });
+    }
+
+    private void getNumberOrderToday() {
+        checkoutUseCase.getNumberCheckoutToday()
+                .thenAccept(r -> {
+                    if (r.isRight()) {
+                        tvOrderToday.setText(String.valueOf(r.getRight()));
+                    }
+                })
+                .exceptionally(e -> {
+                    return null;
+                });
+    }
+
+    private void getNumberCheckoutByStatus(String status) {
+        checkoutUseCase.getCheckoutListByStatus(status)
+                .thenAccept(r -> {
+                    if (r.isRight()) {
+                        tvOrderOnHold.setText(String.valueOf(r.getRight().size()));
+                    }
+                })
+                .exceptionally(e -> {
+                    return null;
+                });
     }
 }

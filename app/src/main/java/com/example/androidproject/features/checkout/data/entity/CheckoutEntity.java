@@ -1,6 +1,5 @@
 package com.example.androidproject.features.checkout.data.entity;
 
-import com.example.androidproject.features.address.data.entity.AddressEntity;
 import com.example.androidproject.features.cart.data.entity.ProductsOnCart;
 import com.google.firebase.Timestamp;
 
