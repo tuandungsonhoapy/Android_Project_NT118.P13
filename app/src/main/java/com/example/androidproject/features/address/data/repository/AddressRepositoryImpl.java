@@ -154,4 +154,27 @@ public class AddressRepositoryImpl implements AddressRepository {
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         return future;
     }
+
+    // update users collection address
+    public CompletableFuture<Either<Failure, String>> updateUserAddress(String addressId, String fullAddress) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getCurrentUser().getUid();
+
+        Map<String, Object> userUpdateData = new HashMap<>();
+        userUpdateData.put("addressId", addressId);
+        userUpdateData.put("fullAddress", fullAddress);
+
+        db.collection("users").document(userId)
+                .update(userUpdateData)
+                .addOnSuccessListener(aVoid -> {
+                    future.complete(Either.right("Address updated successfully"));
+                })
+                .addOnFailureListener(e -> {
+                    future.complete(Either.left(new Failure(e.getMessage())));
+                });
+
+        return future;
+    }
 }

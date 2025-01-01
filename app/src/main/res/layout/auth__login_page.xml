@@ -50,7 +50,7 @@
         app:srcCompat="@drawable/logo_techno_textbelow" />
 
     <LinearLayout
-        android:id="@+id/ll_title"
+        android:id="@+id/llTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -84,7 +84,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_title">
+        app:layout_constraintTop_toBottomOf="@+id/llTitle">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

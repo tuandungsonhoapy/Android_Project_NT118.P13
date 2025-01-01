@@ -6,6 +6,7 @@ public class UserPrefEntity {
     private Integer tier;
     private Long totalSpent;
     private String addressId;
+    private String fullAddress;
     private String firstName;
     private String lastName;
     private String gender;
@@ -13,12 +14,13 @@ public class UserPrefEntity {
     private String phone;
 
 
-    public UserPrefEntity(String id, Integer role, Integer tier, Long totalSpent, String addressId, String firstName, String lastName, String gender, String email, String phone) {
+    public UserPrefEntity(String id, Integer role, Integer tier, Long totalSpent, String addressId, String fullAddress, String firstName, String lastName, String gender, String email, String phone) {
         this.id = id;
         this.role = role;
         this.tier = tier;
         this.totalSpent = totalSpent;
         this.addressId = addressId;
+        this.fullAddress = fullAddress;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -64,6 +66,14 @@ public class UserPrefEntity {
 
     public void setAddressId(String addressId) {
         this.addressId = addressId;
+    }
+
+    public String getFullAddress() {
+        return fullAddress;
+    }
+
+    public void setFullAddress(String fullAddress) {
+        this.fullAddress = fullAddress;
     }
 
     public String getFirstName() {

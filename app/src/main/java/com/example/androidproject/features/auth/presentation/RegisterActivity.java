@@ -22,7 +22,6 @@ import com.example.androidproject.features.auth.data.repository.AuthRepository;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -109,6 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
                         UserEntity userEntity = new UserEntity(id, role, tier, totalSpent, addressId, fullAddress, firstName, lastName, gender, email, phone, vouchers, wishlist);
 
                         saveAccountInfo(email, password);
+                        userPreferences.saveUser(userEntity);
 
                         return authRepository.saveUserToFirestore(firebaseUser.getUid(), userEntity);
                     })
@@ -126,6 +126,7 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             userPreferences.saveAccount("", "", false);
         }
+
     }
 
     private String getSelectedGender() {
