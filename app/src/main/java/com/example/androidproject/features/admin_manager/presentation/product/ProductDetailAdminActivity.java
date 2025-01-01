@@ -72,7 +72,6 @@ public class ProductDetailAdminActivity extends AppCompatActivity {
         tvProductStatus.setText(bundle.getString("product_status"));
         productOptions = getIntent().getExtras().getParcelableArrayList("product_options");
 
-        Log.d("ProductDetailAdminActivity", "Product options: " + productOptions.size());
 
         List<String> images = (List<String>) bundle.get("product_images");
 

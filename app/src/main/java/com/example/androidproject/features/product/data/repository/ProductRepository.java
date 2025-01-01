@@ -3,23 +3,35 @@ package com.example.androidproject.features.product.data.repository;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.brand.data.entity.BrandEntity;
+import com.example.androidproject.features.brand.data.model.BrandModel;
+import com.example.androidproject.features.cart.data.entity.ProductsOnCart;
 import com.example.androidproject.features.category.data.model.CategoryModel;
+import com.example.androidproject.features.product.data.entity.ProductOption;
 import com.example.androidproject.features.product.data.model.ProductModel;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
+import com.example.androidproject.features.product.presentation.ProductAdapter;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ProductRepository implements IProductRepository{
     private final FirebaseFirestore db;
@@ -68,7 +80,6 @@ public class ProductRepository implements IProductRepository{
 
         query.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    Log.d("FIREBASE_DEBUG", "Query succeeded, documents count: " + queryDocumentSnapshots.size());
                     if(queryDocumentSnapshots.isEmpty()) {
                         future.complete(Either.right(Collections.emptyList()));
                     } else {
@@ -77,7 +88,6 @@ public class ProductRepository implements IProductRepository{
 
                         for (DocumentSnapshot document : queryDocumentSnapshots) {
                             ProductModelFB product = document.toObject(ProductModelFB.class);
-                            Log.d("FIREBASE_DEBUG_REPO", "Product ID: " + product.getId());
                             productList.add(product);
                         }
 
@@ -197,5 +207,180 @@ public class ProductRepository implements IProductRepository{
                 })
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         return future;
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, List<ProductModelFB>>> getProductsAndMapBrands() {
+        CompletableFuture<Either<Failure, List<ProductModelFB>>> future = new CompletableFuture<>();
+        Set<String> brandIds = new HashSet<>();
+        List<ProductModelFB> productList = new ArrayList<>();
+
+        db.collection("products")
+                .orderBy("stockQuantity", Query.Direction.DESCENDING)
+                .limit(10)
+                .get()
+                .addOnSuccessListener(productSnapshots -> {
+                    for (QueryDocumentSnapshot document : productSnapshots) {
+                        ProductModelFB product = document.toObject(ProductModelFB.class);
+                        productList.add(product);
+                        if (product.getBrandId() != null) {
+                            brandIds.add(product.getBrandId());
+                        }
+                    }
+
+                    db.collection("brands")
+                            .whereIn(FieldPath.documentId(), new ArrayList<>(brandIds))
+                            .get()
+                            .addOnSuccessListener(brandSnapshots -> {
+                                Map<String, BrandModel> brandMap = new HashMap<>();
+                                for (QueryDocumentSnapshot brandDoc : brandSnapshots) {
+                                    BrandModel brand = brandDoc.toObject(BrandModel.class);
+                                    brandMap.put(brandDoc.getId(), brand);
+                                }
+
+                                for (ProductModelFB product : productList) {
+                                    product.setBrand(brandMap.get(product.getBrandId()));
+                                }
+                                future.complete(Either.right(productList));
+                            });
+                });
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, String>> updateProductQuantity(List<ProductsOnCart> productsOnCarts) {
+        CompletableFuture<Either<Failure, String>> resultFuture = CompletableFuture.completedFuture(Either.right("Success"));
+        for(ProductsOnCart productsOnCart: productsOnCarts) {
+            if (productsOnCart.getProductOptions() == null) {
+                resultFuture = resultFuture.thenCompose(r -> {
+                    if (r.isRight()) {
+                        return updateStockQuantityWithoutOption(productsOnCart.getQuantity(), productsOnCart.getProductId());
+                    } else {
+                        return CompletableFuture.completedFuture(Either.left(r.getLeft()));
+                    }
+                });
+            } else {
+                resultFuture = resultFuture.thenCompose(previousResult -> {
+                    if (previousResult.isLeft()) {
+                        return CompletableFuture.completedFuture(previousResult);
+                    }
+                    return updateStockQuantityWithOption(productsOnCart.getQuantity(), productsOnCart.getProductId(), productsOnCart.getProductOptions());
+                });;
+            }
+        }
+
+        return resultFuture.thenCompose(r -> {
+            if (r.isLeft()) {
+                return CompletableFuture.completedFuture(r);
+            }
+
+            List<CompletableFuture<Void>> updateStockFutures = productsOnCarts.stream()
+                    .map(productsOnCart -> updateStockQuantityProductHasOption(productsOnCart.getProductId()))
+                    .collect(Collectors.toList());
+
+            return CompletableFuture.allOf(updateStockFutures.toArray(new CompletableFuture[0]))
+                    .thenApply(v -> Either.right("Success"));
+        });
+    }
+
+    private CompletableFuture<Either<Failure, String>> updateStockQuantityWithoutOption(int quantity, String productId) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+        getDetailProductById(productId)
+                .thenAccept(r -> {
+                    if(r.isRight()) {
+                        ProductModelFB product = r.getRight();
+                        int newQuantity = product.getStockQuantity() - quantity;
+                        if(newQuantity < 0) {
+                            future.complete(Either.left(new Failure("Số lượng không đủ")));
+                            return;
+                        }
+
+                        db.collection("products")
+                                .document(productId)
+                                .update("stockQuantity", newQuantity)
+                                .addOnSuccessListener(aVoid -> {
+                                    future.complete(Either.right("Success"));
+                                })
+                                .addOnFailureListener(e -> {
+                                    future.complete(Either.left(new Failure(e.getMessage())));
+                                });
+                    } else {
+                        future.complete(Either.left(r.getLeft()));
+                    }
+                });
+        return future;
+    }
+
+    private CompletableFuture<Either<Failure,String>> updateStockQuantityWithOption(int optionQuantity, String productId, ProductOption option) {
+        return getDetailProductById(productId)
+                .thenCompose(r -> {
+                   if(r.isRight()) {
+                          ProductModelFB product = r.getRight();
+                          int index = findOptionIndex(product.getOptions(), option);
+                          if(index == -1) {
+                              return CompletableFuture.completedFuture(Either.left(new Failure("Không tìm thấy option")));
+                          }
+
+                          ProductOption productOption = product.getOptions().get(index);
+                          int newOpionQuantity = productOption.getQuantity() - optionQuantity;
+                          if(newOpionQuantity < 0) {
+                              return CompletableFuture.completedFuture(Either.left(new Failure("Số lượng không đủ")));
+                          }
+                          productOption.setQuantity(newOpionQuantity);
+                          product.getOptions().set(index, productOption);
+
+                          CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+                          db.collection("products")
+                                 .document(productId)
+                                 .update(
+                                         "options", product.getOptions()
+                                 ).addOnSuccessListener(aVoid -> {
+                                      future.complete(Either.right("Success"));
+                                 }).addOnFailureListener(e -> {
+                                      future.complete(Either.left(new Failure(e.getMessage())));
+                                 });
+                            return future;
+                     } else {
+                       return CompletableFuture.completedFuture(Either.left(r.getLeft()));
+                   }
+                });
+    }
+
+    private CompletableFuture<Void> updateStockQuantityProductHasOption(String productId) {
+        return getDetailProductById(productId)
+                .thenCompose(r -> {
+                    if(r.isRight()) {
+                        ProductModelFB product = r.getRight();
+                        if(product.getOptions() != null) {
+                            int newQuantity = product.getOptions().stream()
+                                    .mapToInt(ProductOption::getQuantity)
+                                    .sum();
+                            CompletableFuture<Void> future = new CompletableFuture<>();
+                            db.collection("products")
+                                    .document(productId)
+                                    .update("stockQuantity", newQuantity)
+                                    .addOnSuccessListener(aVoid -> {
+                                        future.complete(null);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        future.completeExceptionally(e);
+                                    });
+                            return future;
+                        }
+                    }
+                    return CompletableFuture.completedFuture(null);
+                });
+    }
+
+    private int findOptionIndex(List<ProductOption> options, ProductOption option) {
+        for(int i = 0; i < options.size(); i++) {
+            ProductOption productOption = options.get(i);
+            if(productOption.getChip().equals(option.getChip())
+                    && productOption.getRam().equals(option.getRam())
+                    && productOption.getRom().equals(option.getRom())) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

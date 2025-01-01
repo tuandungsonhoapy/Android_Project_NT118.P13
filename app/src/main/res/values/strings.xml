@@ -81,5 +81,30 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="btn_back_to_admin_mng_menu">Trở lại menu quản lý</string>
+    <string name="tb_account_info">Thông tin tài khoản</string>
+    <string name="btn_back_to_menu">Trở lại menu</string>
+    <string name="btn_edit">Sửa</string>
+    <string name="iv_user_image">User\'s Image</string>
+    <string name="tv_df_user">Techno User</string>
+    <string name="tv_df_gender">Khác</string>
+    <string name="tv_user_detail">Chi tiết</string>
+    <string name="tv_df_tier">Normal Technie</string>
+    <string name="tv_df_user_id">user000001</string>
+    <string name="tv_user_id_title">ID người dùng</string>
+    <string name="tv_user_address_title">Địa chỉ</string>
+    <string name="tv_empty">Trống</string>
+    <string name="tv_user_email_title">Email</string>
+    <string name="tv_user_phone_title">Số điện thoại</string>
+    <string name="tv_total_spent">Số tiền đã tiêu</string>
+    <string name="btn_save">Lưu</string>
+    <string name="btn_to_store">Tiếp tục mua sắm</string>
+    <string name="tv_title_wishlist">Sản phẩm yêu thích</string>
+    <string name="tv_techno_store">Techno Store</string>
+    <string name="des_empty_wishlist">Không có sản phẩm yêu thích</string>
+    <string name="tv_empty_wishlist_1">Wishlist trống trơn</string>
+    <string name="tv_empty_wishlist_2">Đến trang sản phẩm để lựa chọn\ncác sản phẩm ưng ý nha!</string>
+    <string name="tv_product">Sản phẩm</string>
+    <string name="tv_brand">Nhãn hàng</string>
+    <string name="tv_df_price">100.000 đ</string>
 
 </resources>

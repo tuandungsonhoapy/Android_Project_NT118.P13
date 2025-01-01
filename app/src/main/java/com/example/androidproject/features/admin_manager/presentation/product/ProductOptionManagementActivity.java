@@ -86,7 +86,6 @@ public class ProductOptionManagementActivity extends AppCompatActivity {
                             if (updatedOptions != null) {
                                 // Cập nhật adapter hoặc xử lý dữ liệu như bạn muốn
                                 adapter.setProductOptionList(updatedOptions);
-                                Log.d("UpdatedOptions", "Options updated: " + updatedOptions.size());
 //                                Intent backIntent = new Intent();
 //                                resultBundle.putParcelableArrayList("product_options", new ArrayList<>(updatedOptions));
 //                                backIntent.putExtras(resultBundle);

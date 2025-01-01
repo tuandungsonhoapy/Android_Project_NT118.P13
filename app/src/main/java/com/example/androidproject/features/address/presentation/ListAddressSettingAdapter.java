@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.features.address.data.model.AddressModel;
 import com.example.androidproject.features.address.usecase.AddressUsecase;
 
@@ -25,10 +26,12 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
     private Context context;
     private OnItemClickListener onItemClickListener;
     private AddressUsecase addressUsecase = new AddressUsecase();
+    UserPreferences userPreferences;
 
     public ListAddressSettingAdapter(Context context, List<AddressModel> addresses) {
         this.context = context;
         this.addresses = addresses;
+        userPreferences = new UserPreferences(context);
     }
 
     public interface OnItemClickListener {
@@ -72,7 +75,9 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
 
         holder.rbDefault.setChecked(address.getIsDefault());
         holder.rbDefault.setOnClickListener(v -> {
-            addressUsecase.updateAddressDefault(address.getId())
+            String addressId = address.getId();
+            String fullAddress = address.getFullAddress();
+            addressUsecase.updateAddressDefault(addressId, fullAddress)
                     .thenAccept(r -> {
                         if (r.isRight()) {
                             for (AddressModel a : addresses) {
@@ -80,6 +85,9 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
                             }
 
                             ((Activity) context).runOnUiThread(() -> notifyDataSetChanged());
+
+                            userPreferences.setUserDataByKey(UserPreferences.KEY_ADDRESS_ID, addressId);
+                            userPreferences.setUserDataByKey(UserPreferences.KEY_FULL_ADDRESS, fullAddress);
                             Toast.makeText(context, "Đặt làm địa chỉ mặc định thành công", Toast.LENGTH_SHORT).show();
                         }
                     });

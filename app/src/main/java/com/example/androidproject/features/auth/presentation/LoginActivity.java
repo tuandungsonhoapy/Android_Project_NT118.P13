@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.core.credential.FirebaseHelper;
 import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.core.utils.NavigationUtils;
 import com.example.androidproject.features.auth.data.repository.AuthRepository;
@@ -102,7 +103,18 @@ public class LoginActivity extends AppCompatActivity {
             loginFuture.thenAccept(user -> {
                 if (user != null) {
                     saveAccountInfo(email, password);
-                    NavigationUtils.navigateTo(LoginActivity.this, MainActivity.class);
+                    userPreferences.setUserDataByKey(UserPreferences.KEY_DOC_ID, user.getUid());
+                    //NavigationUtils.navigateTo(LoginActivity.this, MainActivity.class);
+                    FirebaseHelper firebaseHelper = new FirebaseHelper(LoginActivity.this);
+                    firebaseHelper.findDocumentDataByUid().thenAccept(userEntity -> {
+                        firebaseHelper.saveUserData(userEntity);
+
+                        NavigationUtils.navigateTo(LoginActivity.this, MainActivity.class);
+                    }).exceptionally(ex -> {
+                        Log.w(TAG, "Error retrieving user data", ex);
+                        Toast.makeText(LoginActivity.this, "Failed to load user data.", Toast.LENGTH_SHORT).show();
+                        return null;
+                    });
                 }
             }).exceptionally(ex -> {
                 Log.w(TAG, "signInWithEmail:failure", ex);

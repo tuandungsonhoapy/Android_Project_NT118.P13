@@ -28,6 +28,7 @@ import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.usecase.CategoryUseCase;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
 import com.example.androidproject.features.product.usecase.ProductUseCase;
+import com.example.androidproject.features.wishlist.data.repository.WishlistRepository;
 
 import java.util.ArrayList;
 import java.util.List;

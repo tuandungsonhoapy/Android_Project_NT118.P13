@@ -3,10 +3,16 @@ package com.example.androidproject.features.voucher.presentation;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -15,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.features.auth.usecase.UserUseCase;
 import com.example.androidproject.features.voucher.data.model.VoucherModel;
 import com.example.androidproject.features.voucher.usecase.VoucherUseCase;
 
@@ -22,15 +29,20 @@ import java.util.List;
 
 public class VoucherActivity extends AppCompatActivity {
     private RecyclerView recyclerViewAllVouchers;
-    private Button btnMyVoucher;
+    private TextView tvNoVoucher;
     private ListVoucherAdapter listVoucherAdapter;
     private VoucherUseCase voucherUseCase = new VoucherUseCase();
+    private ImageView img_search;
+    private EditText edt_search;
+    private String voucherId = null;
+    private UserUseCase userUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_voucher);
+        userUseCase = new UserUseCase(this);
 
         initView();
         getVouchers();
@@ -48,21 +60,72 @@ public class VoucherActivity extends AppCompatActivity {
             return insets;
         });
 
-        btnMyVoucher = findViewById(R.id.btnMyVoucher);
         recyclerViewAllVouchers = findViewById(R.id.recyclerViewAllVouchers);
+        tvNoVoucher = findViewById(R.id.tvNoVoucher);
+        img_search = findViewById(R.id.img_search);
+        edt_search = findViewById(R.id.edt_search);
+
+        img_search.setOnClickListener(v -> {
+            String search = edt_search.getText().toString();
+            if (search.isEmpty()) {
+                Toast.makeText(this, "Hãy nhập mã voucher để thêm", Toast.LENGTH_SHORT).show();
+            } else {
+                voucherId = search;
+                addVoucher();
+                edt_search.setText("");
+            }
+        });
+    }
+
+    private void addVoucher() {
+        userUseCase.addVoucher(voucherId)
+                .thenAccept(r -> {
+                    if (r.isRight()) {
+                        runOnUiThread(() -> {
+                            getVouchers();
+                            Toast.makeText(this, r.getRight(), Toast.LENGTH_SHORT).show();
+                        });
+                    } else {
+                        Toast.makeText(this, r.getLeft().getErrorMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void getVouchers() {
-        voucherUseCase.getAllActiveVouchers()
-                .thenAccept(r -> {
-                    if (r.isRight()) {
-                        List<VoucherModel> vouchers = r.getRight();
-                        runOnUiThread(() -> {
-                            recyclerViewAllVouchers.setLayoutManager(new LinearLayoutManager(this));
-                            listVoucherAdapter = new ListVoucherAdapter(vouchers, this);
-                            recyclerViewAllVouchers.setAdapter(listVoucherAdapter);
-                        });
-                    }
+        userUseCase.getAllUserVouchers()
+                .thenCompose(r -> {
+                   if(r.isRight()) {
+                       List<String> voucherIds = r.getRight().getVouchers();
+                       voucherUseCase.getAllActiveVouchers(voucherIds)
+                               .thenAccept(r1 -> {
+                                      if (r1.isRight()) {
+                                        runOnUiThread(() -> {
+                                             if(r1.getRight().size() > 0) {
+                                                 tvNoVoucher.setText("Danh sách voucher");
+                                                 listVoucherAdapter = new ListVoucherAdapter(r1.getRight(), this);
+                                                 recyclerViewAllVouchers.setLayoutManager(new LinearLayoutManager(this));
+                                                 recyclerViewAllVouchers.setAdapter(listVoucherAdapter);
+                                             } else {
+                                                    tvNoVoucher.setText("Không có voucher nào");
+                                                    recyclerViewAllVouchers.setVisibility(View.GONE);
+                                             }
+                                        });
+                                      } else {
+                                        runOnUiThread(() -> {
+                                            tvNoVoucher.setText("Không có voucher nào");
+                                             recyclerViewAllVouchers.setVisibility(View.GONE);
+                                            Toast.makeText(this, "Không có voucher nào", Toast.LENGTH_SHORT).show();
+                                        });
+                                      }
+                               });
+                   } else {
+                          runOnUiThread(() -> {
+                            tvNoVoucher.setVisibility(View.VISIBLE);
+                            recyclerViewAllVouchers.setVisibility(View.GONE);
+                            Toast.makeText(this, "Không có voucher nào", Toast.LENGTH_SHORT).show();
+                          });
+                   }
+                     return null;
                 });
     }
 

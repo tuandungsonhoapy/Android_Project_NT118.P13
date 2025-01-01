@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.brand.data.model.BrandModel;
+import com.example.androidproject.features.product.data.model.ProductModelFB;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -158,4 +159,5 @@ public class BrandRepositoryImpl implements BrandRepository{
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         return future;
     }
+
 }
