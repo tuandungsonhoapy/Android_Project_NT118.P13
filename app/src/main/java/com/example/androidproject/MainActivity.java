@@ -16,7 +16,7 @@ import com.example.androidproject.databinding.ActivityMainBinding;
 
 import com.example.androidproject.features.home.presentation.HomeFragment;
 import com.example.androidproject.features.setting.presentation.SettingFragment;
-import com.example.androidproject.features.wishlist.FragmentWishlist;
+import com.example.androidproject.features.wishlist.presentation.FragmentWishlist;
 import com.example.androidproject.features.store.presentation.StoreFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Bundle createUserDataBundle() {
         Bundle bundle = new Bundle();
+        bundle.putString("uid", (String) userPreferences.getUserDataByKey(UserPreferences.KEY_DOC_ID));
         bundle.putString("name", (String) userPreferences.getUserDataByKey(UserPreferences.KEY_FIRST_NAME));
         bundle.putString("email", (String) userPreferences.getUserDataByKey(UserPreferences.KEY_EMAIL));
         bundle.putBoolean("isAdmin", userPreferences.isAdmin());

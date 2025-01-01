@@ -2,8 +2,6 @@ package com.example.androidproject.features.product.presentation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +21,6 @@ import com.example.androidproject.features.cart.usecase.CartUseCase;
 import com.example.androidproject.features.product.data.entity.ProductOption;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
@@ -56,11 +53,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.productName.setText(product.getName());
         holder.productPrice.setText(ConvertFormat.formatPriceToVND(product.getPrice()));
         holder.productBrand.setText(product.getBrand().getName());
+
         if (true) {
-            holder.productFavorite.setImageResource(R.drawable.favorite_heart);
-            holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.pink));
+            holder.productFavorite.setImageResource(R.drawable.ic_wishlist_on);
+            holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.primary));
         } else {
-            holder.productFavorite.setImageResource(R.drawable.unfavorite_heart);
+            holder.productFavorite.setImageResource(R.drawable.ic_wishlist_off);
             holder.productFavorite.setColorFilter(ContextCompat.getColor(context, R.color.grey));
         }
 
@@ -128,7 +126,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productName = itemView.findViewById(R.id.productName);
             productPrice = itemView.findViewById(R.id.productPrice);
             productBrand = itemView.findViewById(R.id.productBrand);
-            productFavorite = itemView.findViewById(R.id.heartIcon);
+            productFavorite = itemView.findViewById(R.id.btnWishlist);
             addToCartIcon = itemView.findViewById(R.id.addToCartIcon);
         }
     }

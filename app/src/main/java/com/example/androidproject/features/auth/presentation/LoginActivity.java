@@ -103,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
             loginFuture.thenAccept(user -> {
                 if (user != null) {
                     saveAccountInfo(email, password);
+                    userPreferences.setUserDataByKey(UserPreferences.KEY_DOC_ID, user.getUid());
                     //NavigationUtils.navigateTo(LoginActivity.this, MainActivity.class);
                     FirebaseHelper firebaseHelper = new FirebaseHelper(LoginActivity.this);
                     firebaseHelper.findDocumentDataByUid().thenAccept(userEntity -> {

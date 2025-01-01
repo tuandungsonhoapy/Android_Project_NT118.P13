@@ -1,6 +1,6 @@
-package com.example.androidproject.features.wishlist;
+package com.example.androidproject.features.wishlist.data.entity;
 
-public class Wishlist {
+public class WishlistEntity {
     private int productImage;         // Tài nguyên hình ảnh của sản phẩm (drawable resource ID)
     private String productName;        // Tên sản phẩm
     private String productBrand;       // Thương hiệu sản phẩm
@@ -74,7 +74,7 @@ public class Wishlist {
         this.wishlistAddButton = wishlistAddButton;
     }
 
-    public Wishlist(int productImage, String productName, String productBrand, String productPrice, int icon, String saleTag, int addToCartButton, int wishlistAddButton) {
+    public WishlistEntity(int productImage, String productName, String productBrand, String productPrice, int icon, String saleTag, int addToCartButton, int wishlistAddButton) {
         this.productImage = productImage;
         this.productName = productName;
         this.productBrand = productBrand;

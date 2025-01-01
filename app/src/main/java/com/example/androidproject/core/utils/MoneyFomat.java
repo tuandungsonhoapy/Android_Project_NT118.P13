@@ -21,4 +21,9 @@ public class MoneyFomat {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         return numberFormat.format(amount);
     }
+
+    public static String formatToCurrency(double amount) {
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return numberFormat.format(amount);
+    }
 }

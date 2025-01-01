@@ -109,6 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                         saveAccountInfo(email, password);
                         userPreferences.saveUser(userEntity);
+                        userPreferences.setUserDataByKey(UserPreferences.KEY_DOC_ID, firebaseUser.getUid());
 
                         return authRepository.saveUserToFirestore(firebaseUser.getUid(), userEntity);
                     })
