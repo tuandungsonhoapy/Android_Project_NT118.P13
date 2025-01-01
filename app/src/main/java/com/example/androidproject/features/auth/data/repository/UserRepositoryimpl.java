@@ -61,8 +61,6 @@ public class UserRepositoryimpl implements UserRepository {
                         UserEntity userEntity = r.toObject(UserEntity.class);
                         future.complete(Either.right(userEntity));
                     });
-        } else {
-            future.complete(Either.left(new Failure("User not found")));
         }
         return future;
     }
@@ -87,6 +85,38 @@ public class UserRepositoryimpl implements UserRepository {
                             future.complete(Either.left(new Failure("Voucher không tồn tại")));
                         }
                     });
+        }
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, Double>> updateTotalSpent(double spent) {
+        CompletableFuture<Either<Failure, Double>> future = new CompletableFuture<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+        if(uid != null) {
+            double totalSpent = Double.parseDouble(userPreferences.getUserDataByKey(UserPreferences.KEY_TOTAL_SPENT).toString());
+            double updatedTotalSpent = totalSpent + spent;
+            db.collection("users")
+                    .document(uid)
+                    .update("totalSpent", updatedTotalSpent)
+                    .addOnSuccessListener(aVoid -> {
+                        future.complete(Either.right(updatedTotalSpent));
+                    })
+                    .addOnFailureListener(e -> {
+                        future.complete(Either.left(new Failure(e.getMessage())));
+                    });
+        }
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, String>> updateUserTier() {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+        if(uid != null) {
+
         }
         return future;
     }
