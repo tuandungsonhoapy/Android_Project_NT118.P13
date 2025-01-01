@@ -11,17 +11,25 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.features.checkout.data.model.CheckoutModel;
 import com.example.androidproject.features.order.data.OrderModel;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class OrderHistoryListAdapter extends RecyclerView.Adapter<OrderHistoryListAdapter.OrderHistoryListViewHolder> {
     private Context context;
-    private List<OrderModel> orderList;
+    private List<CheckoutModel> orderList;
 
-    public OrderHistoryListAdapter(Context context, List<OrderModel> orderList) {
+    public OrderHistoryListAdapter(Context context, List<CheckoutModel> orderList) {
         this.context = context;
         this.orderList = orderList;
+    }
+
+    public void setOrderList(List<CheckoutModel> orderList) {
+        this.orderList = orderList;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -33,20 +41,27 @@ public class OrderHistoryListAdapter extends RecyclerView.Adapter<OrderHistoryLi
 
     @Override
     public void onBindViewHolder(@NonNull OrderHistoryListViewHolder holder, int position) {
-        OrderModel order = orderList.get(position);
+        CheckoutModel order = orderList.get(position);
         holder.tvOrderId.setText(order.getId());
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        String formattedDate = dateFormat.format(order.getCreatedAt().toDate());
+
+        holder.tvOrderDateExport.setText(formattedDate);
+        holder.textView_date_receive.setText(formattedDate);
+        holder.tvAddress.setText(order.getFullAddress());
+
         String orderStatus = order.getStatus();
-        if (orderStatus.equals("pending")) {
+        if (orderStatus.equals("PENDING")) {
             holder.tvOrderStatus.setText("Đang xử lỹ");
             holder.tvOrderStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.pending_order_status));
-        } else if (orderStatus.equals("on_delivery")) {
+        } else if (orderStatus.equals("INTRANSIT")) {
             holder.tvOrderStatus.setText("Đang giao");
             holder.tvOrderStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.delivery_order_status));
-        } else if (orderStatus.equals("completed")) {
+        } else if (orderStatus.equals("SUCCESS")) {
             holder.tvOrderStatus.setText("Thành công");
             holder.tvOrderStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.succes_order_status));
-        } else if (orderStatus.equals("rejected")) {
+        } else if (orderStatus.equals("FAILED")) {
             holder.tvOrderStatus.setText("Thất bại");
             holder.tvOrderStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.reject_order_status));
         }
@@ -62,7 +77,7 @@ public class OrderHistoryListAdapter extends RecyclerView.Adapter<OrderHistoryLi
     }
 
     public static class OrderHistoryListViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvOrderId, tvOrderStatus, tvOrderDateExport;
+        private TextView tvOrderId, tvOrderStatus, tvOrderDateExport, textView_date_receive, tvAddress;
 
         public OrderHistoryListViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,6 +85,8 @@ public class OrderHistoryListAdapter extends RecyclerView.Adapter<OrderHistoryLi
             tvOrderId = itemView.findViewById(R.id.textView_order_id);
             tvOrderStatus = itemView.findViewById(R.id.tvOrderStatus);
             tvOrderDateExport = itemView.findViewById(R.id.textView_date_export);
+            textView_date_receive = itemView.findViewById(R.id.textView_date_receive);
+            tvAddress = itemView.findViewById(R.id.textView20_address);
         }
     }
 }
