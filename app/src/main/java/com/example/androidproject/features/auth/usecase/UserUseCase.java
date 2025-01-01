@@ -72,4 +72,15 @@ public class UserUseCase {
                     }
                 });
     }
+
+    public CompletableFuture<Either<Failure, String>> updateUserTier() {
+        return userRepository.updateUserTier()
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
 }

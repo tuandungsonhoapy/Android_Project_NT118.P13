@@ -151,10 +151,12 @@ public class CheckoutActivity extends AppCompatActivity {
         counterModel.getQuantity("checkout").addOnSuccessListener(quantity -> {
             checkoutQuantity = quantity;
             totalPrice = MoneyFomat.parseMoney(tvNewTotalPrice.getText().toString().replace("đ", ""));
+            totalPriceWithoutVoucher = totalPriceWithoutVoucher > 0 ? MoneyFomat.parseMoney(tvTotalPrice.getText().toString().replace("đ", "")) : 0;
             CheckoutModel checkoutModel = createCheckoutModel(userId);
             makePayment(checkoutModel, userId);
         });
     }
+
     private CheckoutModel createCheckoutModel(String userId) {
         return new CheckoutModel(
                 userId,
@@ -199,8 +201,7 @@ public class CheckoutActivity extends AppCompatActivity {
                     if(r3.isRight()) {
                         updateUIAfterPayment();
                         getIntent().addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        return CompletableFuture.completedFuture(null);
-//                        return userUseCase.updateUserTier(r3);
+                        return userUseCase.updateUserTier();
                     } else {
                         Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
                         throw new RuntimeException("Đặt hàng thất bại");
@@ -277,6 +278,7 @@ public class CheckoutActivity extends AppCompatActivity {
                             selectedVoucherId = null;
                             Toast.makeText(this, "Yêu cầu đơn hàng tối thiểu " + voucherModel.getMinimalTotal() + "đ", Toast.LENGTH_SHORT).show();
                         } else {
+                            selectedVoucherId = voucherModel.getId();
                             llTotalPrice.setVisibility(View.VISIBLE);
                             llDecreasePrice.setVisibility(View.VISIBLE);
                             llNewTotalPrice.setVisibility(View.VISIBLE);

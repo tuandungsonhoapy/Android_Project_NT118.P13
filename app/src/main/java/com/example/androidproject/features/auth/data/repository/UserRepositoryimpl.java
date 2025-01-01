@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
+import com.example.androidproject.core.utils.UserTierUtils;
 import com.example.androidproject.features.auth.data.entity.UserEntity;
 import com.example.androidproject.features.voucher.data.model.VoucherModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -116,7 +117,17 @@ public class UserRepositoryimpl implements UserRepository {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String uid = auth.getCurrentUser().getUid();
         if(uid != null) {
-
+            long totalSpent = Long.parseLong(userPreferences.getUserDataByKey(UserPreferences.KEY_TOTAL_SPENT).toString());
+            int tier = UserTierUtils.getTierFromAmount(totalSpent);
+            db.collection("users")
+                    .document(uid)
+                    .update("tier", tier)
+                    .addOnSuccessListener(aVoid -> {
+                        future.complete(Either.right("Success"));
+                    })
+                    .addOnFailureListener(e -> {
+                        future.complete(Either.left(new Failure(e.getMessage())));
+                    });
         }
         return future;
     }
