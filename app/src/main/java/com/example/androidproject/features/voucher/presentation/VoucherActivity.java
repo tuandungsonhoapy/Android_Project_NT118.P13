@@ -105,6 +105,7 @@ public class VoucherActivity extends AppCompatActivity {
                                                  listVoucherAdapter = new ListVoucherAdapter(r1.getRight(), this);
                                                  recyclerViewAllVouchers.setLayoutManager(new LinearLayoutManager(this));
                                                  recyclerViewAllVouchers.setAdapter(listVoucherAdapter);
+                                                 listVoucherAdapter.notifyDataSetChanged();
                                              } else {
                                                     tvNoVoucher.setText("Không có voucher nào");
                                                     recyclerViewAllVouchers.setVisibility(View.GONE);

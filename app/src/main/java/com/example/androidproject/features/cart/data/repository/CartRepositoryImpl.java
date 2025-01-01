@@ -203,6 +203,34 @@ public class CartRepositoryImpl implements CartRepository{
         return future;
     }
 
+    @Override
+    public CompletableFuture<Either<Failure, String>> removeProductFromCart(String productId, ProductOption option) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        userId = auth.getCurrentUser().getUid();
+        getCartByUserId(userId).thenAccept(r -> {
+            if(r.isRight()) {
+                CartModel cart = r.getRight();
+                List<ProductsOnCart> products = cart.getProducts();
+                for (ProductsOnCart product : new ArrayList<>(products)) {
+                    if(
+                            product.getProductId().equals(productId)
+                            && (option == null || product.getProductOptions() == null || product.getProductOptions().equals(option))
+                    ) {
+                        products.remove(product);
+                        updateCart(cart, products);
+                        future.complete(Either.right("Success"));
+                        return;
+                    }
+                }
+                future.complete(Either.left(new Failure("Product not found")));
+            } else {
+                future.complete(Either.left(new Failure("Cart not found")));
+            }
+        });
+        return future;
+    }
+
     private void createCart(
                         String userId,
                         ProductModelFB product,

@@ -85,4 +85,15 @@ public class CartUseCase {
                     }
                 });
     }
+
+    public CompletableFuture<Either<Failure, String>> removeProductFromCart(String productId, ProductOption option) {
+        return cartRepository.removeProductFromCart(productId, option)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
 }

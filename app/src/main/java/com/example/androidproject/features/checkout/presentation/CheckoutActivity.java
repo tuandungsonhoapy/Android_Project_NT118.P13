@@ -64,12 +64,14 @@ public class CheckoutActivity extends AppCompatActivity {
     private VoucherUseCase voucherUseCase = new VoucherUseCase();
     private double totalPrice;
     private double totalPriceWithoutVoucher;
+    private UserPreferences userPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
         userUseCase = new UserUseCase(this);
+        userPreferences = new UserPreferences(this);
 
         initView();
         updateUI();
@@ -113,7 +115,7 @@ public class CheckoutActivity extends AppCompatActivity {
                             }
                         });
     }
-
+                
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -194,8 +196,8 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private void setupUserAddress() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        String userName = auth.getCurrentUser().getDisplayName();
         String userEmail = auth.getCurrentUser().getEmail();
+        String userName = userPreferences.getUserDataByKey(UserPreferences.KEY_FIRST_NAME) + " " + userPreferences.getUserDataByKey(UserPreferences.KEY_LAST_NAME);
 
         tvUserInformation.setText(userName + " - " + userEmail);
         addressUsecase.getDefaultAddress()
