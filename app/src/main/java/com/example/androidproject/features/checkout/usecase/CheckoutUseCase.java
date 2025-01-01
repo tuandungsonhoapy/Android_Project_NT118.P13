@@ -29,4 +29,59 @@ public class CheckoutUseCase {
                     }
                 });
     }
+
+    public CompletableFuture<Either<Failure, List<CheckoutModel>>> getCheckoutList(String userId) {
+        return checkoutRepository.getCheckoutList(userId)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, List<CheckoutModel>>> getLatestCheckouts(int limit) {
+        return checkoutRepository.getLatestCheckouts(limit)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, Integer>> getNumberCheckoutToday() {
+        return checkoutRepository.getNumberCheckoutToday()
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, List<CheckoutModel>>> getCheckoutListByStatus(String status) {
+        return checkoutRepository.getCheckoutListByStatus(status)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, List<CheckoutModel>>> getCheckoutListByStatusAndUserId(String status, String userId) {
+        return checkoutRepository.getCheckoutListByStatusAndUserId(status, userId)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
 }

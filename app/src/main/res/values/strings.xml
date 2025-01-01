@@ -97,5 +97,14 @@
     <string name="tv_user_phone_title">Số điện thoại</string>
     <string name="tv_total_spent">Số tiền đã tiêu</string>
     <string name="btn_save">Lưu</string>
+    <string name="btn_to_store">Tiếp tục mua sắm</string>
+    <string name="tv_title_wishlist">Sản phẩm yêu thích</string>
+    <string name="tv_techno_store">Techno Store</string>
+    <string name="des_empty_wishlist">Không có sản phẩm yêu thích</string>
+    <string name="tv_empty_wishlist_1">Wishlist trống trơn</string>
+    <string name="tv_empty_wishlist_2">Đến trang sản phẩm để lựa chọn\ncác sản phẩm ưng ý nha!</string>
+    <string name="tv_product">Sản phẩm</string>
+    <string name="tv_brand">Nhãn hàng</string>
+    <string name="tv_df_price">100.000 đ</string>
 
 </resources>

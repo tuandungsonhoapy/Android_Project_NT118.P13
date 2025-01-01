@@ -20,14 +20,14 @@
             android:padding="10dp"/>
 
         <ImageView
-            android:id="@+id/heartIcon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:id="@+id/btnWishlist"
+            android:layout_width="@dimen/_32dp"
+            android:layout_height="@dimen/_32dp"
             android:layout_gravity="end|top"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:padding="4dp"
-            android:src="@drawable/unfavorite_heart"
+            android:padding="8dp"
+            android:src="@drawable/ic_wishlist_off"
             android:background="@drawable/circle_border"
             app:tint="@color/grey"/>
 

@@ -11,4 +11,10 @@ public class Failure {
     public String getErrorMessage() {
         return message;
     }
+
+    public static class DatabaseFailure extends Failure {
+        public DatabaseFailure(String message) {
+            super(message);
+        }
+    }
 }
