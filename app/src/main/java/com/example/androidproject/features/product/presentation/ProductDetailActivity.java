@@ -128,7 +128,6 @@ public class ProductDetailActivity extends AppCompatActivity implements ProductD
                         Toast.makeText(this, "Thêm vào giỏ hàng thất bại", Toast.LENGTH_SHORT).show();
                     }
                 });
-                Toast.makeText(this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
             });
         });
     }

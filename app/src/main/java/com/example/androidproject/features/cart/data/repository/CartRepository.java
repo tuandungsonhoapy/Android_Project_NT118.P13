@@ -20,4 +20,6 @@ public interface CartRepository {
     public CompletableFuture<Either<Failure, String>> updateCartQuantity(String productId, int productQuantity);
 
     public CompletableFuture<Either<Failure, String>> deleteCart(String userId);
+
+    public CompletableFuture<Either<Failure, String>> removeProductFromCart(String productId, ProductOption option);
 }

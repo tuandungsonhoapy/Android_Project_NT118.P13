@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,6 +92,21 @@ public class ListCartItemAdapter extends RecyclerView.Adapter<ListCartItemAdapte
                         }
                     });
         });
+
+        holder.btnRemove.setOnClickListener(v -> {
+            cartUseCase.removeProductFromCart(product.getProductId(), product.getProductOptions())
+                    .thenAccept(r -> {
+                        if(r.isRight()) {
+                            int index = holder.getAdapterPosition();
+                            products.remove(product);
+                            notifyItemRemoved(index);
+                            ((CartActivity) context).updateUI();
+                            Toast.makeText(context, "Sản phẩm đã bị xóa khỏi giỏ hàng", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Xóa sản phẩm thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        });
     }
 
     @Override
@@ -105,6 +121,7 @@ public class ListCartItemAdapter extends RecyclerView.Adapter<ListCartItemAdapte
         ImageView ivMinus;
         TextView tvItemQuantity;
         TextView tvItemPrice;
+        Button btnRemove;
 
         public ListCartItemAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -115,6 +132,7 @@ public class ListCartItemAdapter extends RecyclerView.Adapter<ListCartItemAdapte
             ivMinus = itemView.findViewById(R.id.ivMinus);
             tvItemQuantity =itemView.findViewById(R.id.tvItemQuantity);
             tvItemPrice =itemView.findViewById(R.id.tvItemPrice);
+            btnRemove = itemView.findViewById(R.id.btnRemove);
         }
     }
 }

@@ -39,6 +39,7 @@ import com.example.androidproject.features.voucher.usecase.VoucherUseCase;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class CheckoutActivity extends AppCompatActivity {
@@ -64,12 +65,14 @@ public class CheckoutActivity extends AppCompatActivity {
     private VoucherUseCase voucherUseCase = new VoucherUseCase();
     private double totalPrice;
     private double totalPriceWithoutVoucher;
+    private UserPreferences userPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
         userUseCase = new UserUseCase(this);
+        userPreferences = new UserPreferences(this);
 
         initView();
         updateUI();
@@ -113,7 +116,7 @@ public class CheckoutActivity extends AppCompatActivity {
                             }
                         });
     }
-
+                
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -148,54 +151,68 @@ public class CheckoutActivity extends AppCompatActivity {
         counterModel.getQuantity("checkout").addOnSuccessListener(quantity -> {
             checkoutQuantity = quantity;
             totalPrice = MoneyFomat.parseMoney(tvNewTotalPrice.getText().toString().replace("đ", ""));
-
-            CheckoutModel checkoutModel = new CheckoutModel(
-                    userId,
-                    addressId,
-                    etNote.getText().toString(),
-                    productsOnCart,
-                    fullAddress,
-                    totalPrice,
-                    selectedVoucherId,
-                    totalPriceWithoutVoucher
-            );
-
-            checkoutUseCase.addCheckout(checkoutModel, checkoutQuantity)
-                    .thenAccept(r -> {
-                        if(r.isRight()) {
-                            cartUseCase.deleteCart(userId).thenAccept(r1 -> {
-                                if (r1.isRight()) {
-                                    productUseCase.updateProductQuantity(productsOnCart)
-                                            .thenAccept(r2 -> {
-                                                if(r2.isRight()) {
-                                                    counterModel.updateQuantity("checkout");
-                                                    paymentSuccessLayout.setVisibility(View.VISIBLE);
-                                                    btnPayment.setVisibility(View.GONE);
-                                                    rvCheckoutItem.setVisibility(View.GONE);
-                                                    llNewTotalPrice.setVisibility(View.GONE);
-                                                    btnContinueShopping.setVisibility(View.VISIBLE);
-                                                    llUserAddress.setVisibility(View.GONE);
-                                                    tvUserInformation.setVisibility(View.GONE);
-                                                    llNote.setVisibility(View.GONE);
-                                                    llTotalPrice.setVisibility(View.GONE);
-                                                    llApplyDiscount.setVisibility(View.GONE);
-                                                    getIntent().addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                                    Toast.makeText(this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                }
-                            });
-                        } else {
-                            Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            totalPriceWithoutVoucher = totalPriceWithoutVoucher > 0 ? MoneyFomat.parseMoney(tvTotalPrice.getText().toString().replace("đ", "")) : 0;
+            CheckoutModel checkoutModel = createCheckoutModel(userId);
+            makePayment(checkoutModel, userId);
         });
+    }
+
+    private CheckoutModel createCheckoutModel(String userId) {
+        return new CheckoutModel(
+                userId,
+                addressId,
+                etNote.getText().toString(),
+                productsOnCart,
+                fullAddress,
+                totalPrice,
+                selectedVoucherId,
+                totalPriceWithoutVoucher
+        );
+    }
+
+    private void makePayment(CheckoutModel checkoutModel, String userId) {
+        checkoutUseCase.addCheckout(checkoutModel, checkoutQuantity)
+                .thenCompose(r -> {
+                    if(r.isRight()) {
+                        return cartUseCase.deleteCart(userId);
+                    } else {
+                        Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
+                        throw new RuntimeException("Đặt hàng thất bại");
+                    }
+                })
+                .thenCompose(r1 -> {
+                    if(r1.isRight()) {
+                        return productUseCase.updateProductQuantity(productsOnCart);
+                    } else {
+                        Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
+                        throw new RuntimeException("Đặt hàng thất bại");
+                    }
+                })
+                .thenCompose(r2 -> {
+                    if(r2.isRight()) {
+                        counterModel.updateQuantity("checkout");
+                        return userUseCase.updateTotalSpent(totalPrice);
+                    } else {
+                        Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
+                        throw new RuntimeException("Đặt hàng thất bại");
+                    }
+                })
+                .thenCompose(r3 -> {
+                    if(r3.isRight()) {
+                        updateUIAfterPayment();
+                        getIntent().addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        return userUseCase.updateUserTier();
+                    } else {
+                        Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
+                        throw new RuntimeException("Đặt hàng thất bại");
+                    }
+                });
     }
 
     private void setupUserAddress() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        String userName = auth.getCurrentUser().getDisplayName();
         String userEmail = auth.getCurrentUser().getEmail();
+        String userName = userPreferences.getUserDataByKey(UserPreferences.KEY_FIRST_NAME) + " " + userPreferences.getUserDataByKey(UserPreferences.KEY_LAST_NAME);
 
         tvUserInformation.setText(userName + " - " + userEmail);
         addressUsecase.getDefaultAddress()
@@ -261,19 +278,22 @@ public class CheckoutActivity extends AppCompatActivity {
                             selectedVoucherId = null;
                             Toast.makeText(this, "Yêu cầu đơn hàng tối thiểu " + voucherModel.getMinimalTotal() + "đ", Toast.LENGTH_SHORT).show();
                         } else {
+                            selectedVoucherId = voucherModel.getId();
                             llTotalPrice.setVisibility(View.VISIBLE);
                             llDecreasePrice.setVisibility(View.VISIBLE);
                             llNewTotalPrice.setVisibility(View.VISIBLE);
                             if(voucherModel.getType().equals("percent")) {
+                                tvTotalPrice.setText(MoneyFomat.format(totalPriceWithoutVoucher) + "đ");
                                 tvDiscount.setText(voucherModel.getId());
-                                double discount = MoneyFomat.parseMoney(tvTotalPrice.getText().toString()) * voucherModel.getValue() / 100;
+                                double discount = totalPriceWithoutVoucher * voucherModel.getValue() / 100;
                                 tvDecreasePrice.setText(voucherModel.getValue() + "%");
                                 double newTotalPrice = MoneyFomat.parseMoney(tvTotalPrice.getText().toString()) - discount;
                                 tvNewTotalPrice.setText(MoneyFomat.format(newTotalPrice) + "đ");
                             } else if(voucherModel.getType().equals("minus")) {
+                                tvTotalPrice.setText(MoneyFomat.format(totalPriceWithoutVoucher) + "đ");
                                 tvDiscount.setText(voucherModel.getId());
                                 tvDecreasePrice.setText(MoneyFomat.format(voucherModel.getValue()) + "đ");
-                                double newTotalPrice = MoneyFomat.parseMoney(tvTotalPrice.getText().toString()) - voucherModel.getValue();
+                                double newTotalPrice = totalPriceWithoutVoucher - voucherModel.getValue();
                                 tvNewTotalPrice.setText(MoneyFomat.format(newTotalPrice) + "đ");
                             }
                         }
@@ -288,6 +308,20 @@ public class CheckoutActivity extends AppCompatActivity {
                         voucherIds = r.getRight().getVouchers();
                     }
                 });
+    }
+
+    private void updateUIAfterPayment(){
+        paymentSuccessLayout.setVisibility(View.VISIBLE);
+        btnPayment.setVisibility(View.GONE);
+        rvCheckoutItem.setVisibility(View.GONE);
+        llNewTotalPrice.setVisibility(View.GONE);
+        btnContinueShopping.setVisibility(View.VISIBLE);
+        llUserAddress.setVisibility(View.GONE);
+        tvUserInformation.setVisibility(View.GONE);
+        llNote.setVisibility(View.GONE);
+        llTotalPrice.setVisibility(View.GONE);
+        llApplyDiscount.setVisibility(View.GONE);
+        llDecreasePrice.setVisibility(View.GONE);
     }
 
     @Override

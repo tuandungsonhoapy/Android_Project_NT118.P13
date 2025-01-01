@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
+import com.example.androidproject.core.utils.UserTierUtils;
 import com.example.androidproject.features.auth.data.entity.UserEntity;
 import com.example.androidproject.features.voucher.data.model.VoucherModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,8 +62,6 @@ public class UserRepositoryimpl implements UserRepository {
                         UserEntity userEntity = r.toObject(UserEntity.class);
                         future.complete(Either.right(userEntity));
                     });
-        } else {
-            future.complete(Either.left(new Failure("User not found")));
         }
         return future;
     }
@@ -86,6 +85,48 @@ public class UserRepositoryimpl implements UserRepository {
                         } else {
                             future.complete(Either.left(new Failure("Voucher không tồn tại")));
                         }
+                    });
+        }
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, Double>> updateTotalSpent(double spent) {
+        CompletableFuture<Either<Failure, Double>> future = new CompletableFuture<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+        if(uid != null) {
+            double totalSpent = Double.parseDouble(userPreferences.getUserDataByKey(UserPreferences.KEY_TOTAL_SPENT).toString());
+            double updatedTotalSpent = totalSpent + spent;
+            db.collection("users")
+                    .document(uid)
+                    .update("totalSpent", updatedTotalSpent)
+                    .addOnSuccessListener(aVoid -> {
+                        future.complete(Either.right(updatedTotalSpent));
+                    })
+                    .addOnFailureListener(e -> {
+                        future.complete(Either.left(new Failure(e.getMessage())));
+                    });
+        }
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, String>> updateUserTier() {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+        if(uid != null) {
+            long totalSpent = Long.parseLong(userPreferences.getUserDataByKey(UserPreferences.KEY_TOTAL_SPENT).toString());
+            int tier = UserTierUtils.getTierFromAmount(totalSpent);
+            db.collection("users")
+                    .document(uid)
+                    .update("tier", tier)
+                    .addOnSuccessListener(aVoid -> {
+                        future.complete(Either.right("Success"));
+                    })
+                    .addOnFailureListener(e -> {
+                        future.complete(Either.left(new Failure(e.getMessage())));
                     });
         }
         return future;
