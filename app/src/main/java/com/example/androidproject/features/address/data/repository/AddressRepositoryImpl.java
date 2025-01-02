@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -208,6 +209,7 @@ public class AddressRepositoryImpl implements AddressRepository {
         Map<String, Object> userUpdateData = new HashMap<>();
         userUpdateData.put("addressId", addressId);
         userUpdateData.put("fullAddress", fullAddress);
+        userUpdateData.put("updatedAt", new Date());
 
         db.collection("users").document(userId)
                 .update(userUpdateData)

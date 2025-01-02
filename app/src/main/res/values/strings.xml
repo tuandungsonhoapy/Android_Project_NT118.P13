@@ -109,5 +109,7 @@
     <string name="txt_role">Quyền</string>
     <string name="txt_guest">Guest</string>
     <string name="txt_admin">Admin</string>
+    <string name="btn_add_admin">Tạo tài khoản</string>
+    <string name="tv_add_admin">Tạo tài khoản Admin</string>
 
 </resources>

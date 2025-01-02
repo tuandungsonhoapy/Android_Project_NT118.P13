@@ -7,6 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".features.admin_manager.presentation.user.UserManagerAdminActivity">
 
+    <ImageButton
+        android:id="@+id/btnAddAdmin"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginEnd="@dimen/_12dp"
+        android:layout_marginBottom="@dimen/_12dp"
+        android:background="@drawable/bg_circle"
+        android:elevation="4dp"
+        android:src="@android:drawable/ic_input_add"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_search_user_admin"

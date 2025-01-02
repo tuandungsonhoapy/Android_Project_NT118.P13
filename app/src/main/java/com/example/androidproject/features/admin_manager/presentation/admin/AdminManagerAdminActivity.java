@@ -1,12 +1,15 @@
-package com.example.androidproject.features.admin_manager.presentation.user;
+package com.example.androidproject.features.admin_manager.presentation.admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -26,13 +29,14 @@ import com.example.androidproject.features.auth.data.entity.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserManagerAdminActivity extends AdminBaseManagerLayout {
+public class AdminManagerAdminActivity extends AdminBaseManagerLayout {
     private List<UserEntity> allUsers;
     private List<UserEntity> filteredUsers;
     private UserManagerAdapter userManagerAdapter;
     private RecyclerView rvUserList;
     private EditText etSearch;
     private ImageView btnSearch, btnClear, ivEmpty;
+    private ImageButton btnAddAdmin;
 
     private UserRepository userRepository;
 
@@ -40,7 +44,7 @@ public class UserManagerAdminActivity extends AdminBaseManagerLayout {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setTitle("Quản lý tài khoản");
+        setTitle("Quản lý tài khoản admin");
 
         init();
     }
@@ -77,10 +81,16 @@ public class UserManagerAdminActivity extends AdminBaseManagerLayout {
         etSearch = findViewById(R.id.etSearch);
         btnSearch = findViewById(R.id.btnSearch);
         btnClear = findViewById(R.id.btnClear);
+        btnAddAdmin = findViewById(R.id.btnAddAdmin);
         ivEmpty = findViewById(R.id.ivEmpty);
 
         btnSearch.setOnClickListener(v -> searchUsers());
         btnClear.setOnClickListener(v -> clearSearch());
+        btnAddAdmin.setVisibility(View.VISIBLE);
+        btnAddAdmin.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddAdminAdminActivity.class);
+            startActivity(intent);
+        });
 
         etSearch.addTextChangedListener(setupSearchEdit());
     }
@@ -115,13 +125,13 @@ public class UserManagerAdminActivity extends AdminBaseManagerLayout {
     }
 
     private void loadUsers() {
-        userRepository.getAllUsers().thenAccept(result -> {
+        userRepository.getAllAdmins().thenAccept(result -> {
             if (result.isRight()) {
                 allUsers = result.getRight();
                 filteredUsers = new ArrayList<>(allUsers);
                 userManagerAdapter.updateUsers(filteredUsers);
             } else {
-                Toast.makeText(UserManagerAdminActivity.this, "Failed to load users: " + result.getLeft(), Toast.LENGTH_SHORT).show();
+                Log.e("this", "Failed to load users: " + result.getLeft().getErrorMessage());
             }
         });
     }
@@ -156,12 +166,15 @@ public class UserManagerAdminActivity extends AdminBaseManagerLayout {
         userManagerAdapter.updateUsers(filteredUsers);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }

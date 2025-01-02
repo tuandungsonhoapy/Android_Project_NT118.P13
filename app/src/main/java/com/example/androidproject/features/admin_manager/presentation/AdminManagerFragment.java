@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
-import com.example.androidproject.features.admin_manager.presentation.admin.AdminAdminManagerActivity;
+import com.example.androidproject.features.admin_manager.presentation.admin.AdminManagerAdminActivity;
 import com.example.androidproject.features.admin_manager.presentation.brand.AdminBrandManagerActivity;
 import com.example.androidproject.features.admin_manager.presentation.category.AdminCategoryManagerActivity;
 import com.example.androidproject.features.admin_manager.presentation.coupon.AdminCouponManager;
@@ -53,7 +53,7 @@ public class AdminManagerFragment extends Fragment {
 
         startActivityOnClick(view, R.id.item_order_manager, AdminOrderManagerActivity.class);
         startActivityOnClick(view, R.id.item_user_manager, UserManagerAdminActivity.class);
-        startActivityOnClick(view, R.id.item_admin_manager, AdminAdminManagerActivity.class);
+        startActivityOnClick(view, R.id.item_admin_manager, AdminManagerAdminActivity.class);
         startActivityOnClick(view, R.id.item_product_manager, AdminProductManagementActivity.class);
         startActivityOnClick(view, R.id.item_category_manager, AdminCategoryManagerActivity.class);
         startActivityOnClick(view, R.id.item_voucher_manager, AdminCouponManager.class);

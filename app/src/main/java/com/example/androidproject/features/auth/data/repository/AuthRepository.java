@@ -57,6 +57,33 @@ public class AuthRepository {
         return future;
     }
 
+
+    public CompletableFuture<FirebaseUser> addNewAccount(String adminA, String adminP, String email, String password) {
+        CompletableFuture<FirebaseUser> future = new CompletableFuture<>();
+
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser newUser = auth.getCurrentUser();
+
+                        auth.signOut();
+
+                        auth.signInWithEmailAndPassword(adminA, adminP)
+                                .addOnCompleteListener(loginTask -> {
+                                    if (loginTask.isSuccessful()) {
+                                        future.complete(newUser);
+                                    } else {
+                                        future.completeExceptionally(loginTask.getException());
+                                    }
+                                });
+                    } else {
+                        future.completeExceptionally(task.getException());
+                    }
+                });
+
+        return future;
+    }
+
     public CompletableFuture<Void> saveUserToFirestore(String uid, UserEntity userEntity) {
         CompletableFuture<Void> future = new CompletableFuture<>();
 

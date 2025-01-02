@@ -7,6 +7,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.Date;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -54,9 +56,10 @@ public class UserRepository {
                             UserEntity user = document.toObject(UserEntity.class);
                             admins.add(user);
                         });
+
                         future.complete(Either.right(admins));
                     } else {
-                        future.complete(Either.left(new Failure("Failed to get users")));
+                        future.complete(Either.left(new Failure(task.getException().getMessage())));
                     }
                 });
 
@@ -83,7 +86,8 @@ public class UserRepository {
                                             "lastName", user.getLastName(),
                                             "gender", user.getGender(),
                                             "email", user.getEmail(),
-                                            "phone", user.getPhone()
+                                            "phone", user.getPhone(),
+                                            "updatedAt", new Date()
                                     )
                                     .addOnCompleteListener(updateTask -> {
                                         if (updateTask.isSuccessful()) {
