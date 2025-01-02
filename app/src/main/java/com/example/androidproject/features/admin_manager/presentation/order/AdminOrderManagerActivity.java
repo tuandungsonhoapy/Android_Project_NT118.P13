@@ -39,6 +39,7 @@ public class AdminOrderManagerActivity extends AdminBaseManagerLayout {
     private Spinner spinner_order_status;
     private CheckoutUseCase checkoutUseCase = new CheckoutUseCase();
     private ListOrderItemAdminAdapter orderHistoryListAdapter;
+    private int currentPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,14 +73,19 @@ public class AdminOrderManagerActivity extends AdminBaseManagerLayout {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
+                    currentPosition = 0;
                     getAllCheckouts(); // Hiển thị tất cả các đơn hàng
                 } else if (position == 1) {
+                    currentPosition = 1;
                     getAllCheckoutsByStatus("PENDING"); // Hiển thị các đơn hàng đang xử lý
                 } else if (position == 2) {
+                    currentPosition = 2;
                     getAllCheckoutsByStatus("INTRANSIT"); // Hiển thị các đơn hàng đang giao
                 } else if (position == 3) {
+                    currentPosition = 3;
                     getAllCheckoutsByStatus("SUCCESS"); // Hiển thị các đơn hàng đã thành công
                 } else if (position == 4) {
+                    currentPosition = 4;
                     getAllCheckoutsByStatus("FAILED"); // Hiển thị các đơn hàng thất bại
                 }
             }
@@ -89,6 +95,8 @@ public class AdminOrderManagerActivity extends AdminBaseManagerLayout {
                 // Không làm gì cả
             }
         });
+
+        spinner_order_status.post(() -> spinner_order_status.setSelection(currentPosition));
     }
 
     @Override

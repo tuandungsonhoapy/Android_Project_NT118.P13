@@ -122,7 +122,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ProductD
                         cartQuantity
                 ).thenAccept(r -> {
                     if (r.isRight()) {
-                        tvquantity.setText("0");
+                        tvquantity.setText("1");
                         Toast.makeText(this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this, "Thêm vào giỏ hàng thất bại", Toast.LENGTH_SHORT).show();

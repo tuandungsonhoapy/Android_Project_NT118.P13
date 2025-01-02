@@ -1,12 +1,18 @@
 package com.example.androidproject.features.admin_manager.presentation.widgets;
 
+import static android.app.Activity.RESULT_OK;
+import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
+
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +33,7 @@ public class ListOrderItemAdminAdapter extends RecyclerView.Adapter<ListOrderIte
     private List<CheckoutModel> orderList;
     private Context context;
     private CheckoutModel checkoutModel;
+    private ActivityResultLauncher<Intent> detailOrderLauncher;
 
     public ListOrderItemAdminAdapter(List<CheckoutModel> orderList, Context context) {
         this.orderList = orderList;

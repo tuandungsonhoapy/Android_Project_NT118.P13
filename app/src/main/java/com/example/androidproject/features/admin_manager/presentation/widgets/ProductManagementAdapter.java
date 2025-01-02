@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
+import com.example.androidproject.core.utils.ConvertFormat;
 import com.example.androidproject.features.admin_manager.presentation.product.ProductDetailAdminActivity;
 import com.example.androidproject.features.product.data.entity.ProductEntity;
 import com.example.androidproject.features.product.data.model.ProductModel;
@@ -46,7 +47,7 @@ public class ProductManagementAdapter extends RecyclerView.Adapter<ProductManage
 
         holder.productName.setText(product.getName());
         holder.productID.setText(product.getId());
-        holder.productPrice.setText(product.getPrice() + " đ");
+        holder.productPrice.setText(ConvertFormat.formatPriceToVND(product.getPrice()));
         holder.productInventory.setText(product.getStockQuantity() + " máy");
         Glide.with(context)
                 .load(product.getImages().get(0))
@@ -59,7 +60,7 @@ public class ProductManagementAdapter extends RecyclerView.Adapter<ProductManage
             Bundle bundle = new Bundle();
             bundle.putString("product_id", product.getId());
             bundle.putString("product_name", product.getName());
-            bundle.putString("product_price", product.getPrice() + " đ");
+            bundle.putString("product_price", ConvertFormat.formatPriceToVND(product.getPrice()));
             bundle.putString("product_inventory", product.getStockQuantity() + " máy");
             bundle.putString("brand_name", product.getBrandId());
             bundle.putString("product_status", "Hiển thị");
