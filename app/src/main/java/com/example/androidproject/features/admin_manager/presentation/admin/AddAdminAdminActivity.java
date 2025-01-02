@@ -14,10 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
 import com.example.androidproject.core.credential.UserPreferences;
-import com.example.androidproject.core.utils.NavigationUtils;
 import com.example.androidproject.features.auth.data.entity.UserEntity;
 import com.example.androidproject.features.auth.data.repository.AuthRepository;
 import com.google.firebase.auth.FirebaseUser;
