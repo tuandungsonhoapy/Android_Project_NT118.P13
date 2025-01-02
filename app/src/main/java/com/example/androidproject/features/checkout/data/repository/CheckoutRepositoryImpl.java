@@ -45,6 +45,8 @@ public class CheckoutRepositoryImpl implements CheckoutRepository {
         checkout.put("products", checkoutModel.getProducts());
         checkout.put("fullAddress", checkoutModel.getFullAddress());
         checkout.put("totalPrice", checkoutModel.getTotalPrice());
+        checkout.put("oldTotalPrice", checkoutModel.getOldTotalPrice());
+        checkout.put("voucherId", checkoutModel.getVoucherId());
 
         db.collection("checkouts").document(checkoutModel.prefixCheckoutId(quantity)).set(checkout);
         future.complete(Either.right("Success"));

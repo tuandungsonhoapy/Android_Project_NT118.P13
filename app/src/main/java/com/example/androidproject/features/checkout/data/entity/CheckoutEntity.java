@@ -48,6 +48,8 @@ public class CheckoutEntity {
         this.products = products;
         this.fullAddress = fullAddress;
         this.totalPrice = totalPrice;
+        this.voucherId = voucherId;
+        this.oldTotalPrice = oldTotalPrice;
     }
 
     public UserEntity getUser() {

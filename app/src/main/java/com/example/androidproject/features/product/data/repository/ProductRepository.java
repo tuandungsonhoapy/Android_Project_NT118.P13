@@ -426,9 +426,6 @@ public class ProductRepository implements IProductRepository{
                                     .update("stockQuantity", newQuantity)
                                     .addOnSuccessListener(aVoid -> {
                                         future.complete(null);
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        future.completeExceptionally(e);
                                     });
                             return future;
                         }

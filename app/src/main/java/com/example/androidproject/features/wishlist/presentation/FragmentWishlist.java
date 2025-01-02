@@ -157,6 +157,9 @@ public class FragmentWishlist extends Fragment {
                 .thenAccept(either -> {
                     if (either.isRight()) {
                         wishlistAdapter.notifyDataSetChanged();
+                        if (wishlist.isEmpty()) {
+                            showEmptyWishlist();
+                        }
                         Toast.makeText(getContext(), "Product removed from Wishlist", Toast.LENGTH_SHORT).show();
                     } else {
                         showError(either.getLeft());
