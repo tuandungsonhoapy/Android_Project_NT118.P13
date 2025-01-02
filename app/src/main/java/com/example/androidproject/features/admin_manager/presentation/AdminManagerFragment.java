@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.features.admin_manager.presentation.admin.AdminManagerAdminActivity;
 import com.example.androidproject.features.admin_manager.presentation.brand.AdminBrandManagerActivity;
 import com.example.androidproject.features.admin_manager.presentation.category.AdminCategoryManagerActivity;
@@ -22,8 +24,12 @@ import com.example.androidproject.features.admin_manager.presentation.user.UserM
 import com.example.androidproject.features.admin_manager.presentation.order.AdminOrderManagerActivity;
 
 public class AdminManagerFragment extends Fragment {
+    private UserPreferences userPreferences;
+    private TextView tvUserName;
+
 
     private ImageView btnGoToShop;
+
     public AdminManagerFragment() {
         // Required empty public constructor
     }
@@ -50,6 +56,11 @@ public class AdminManagerFragment extends Fragment {
             startActivity(intent);
             getActivity().finish();
         });
+
+        tvUserName = view.findViewById(R.id.tvUserName);
+
+        userPreferences = new UserPreferences(getContext());
+        tvUserName.setText(userPreferences.getUserDataByKey(UserPreferences.KEY_FIRST_NAME).toString());
 
         startActivityOnClick(view, R.id.item_order_manager, AdminOrderManagerActivity.class);
         startActivityOnClick(view, R.id.item_user_manager, UserManagerAdminActivity.class);
