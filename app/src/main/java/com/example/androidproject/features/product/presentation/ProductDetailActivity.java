@@ -115,10 +115,15 @@ public class ProductDetailActivity extends AppCompatActivity implements ProductD
                     Toast.makeText(this, "Mẫu hàng hiện tại đã hết hàng", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                ProductOption option = (selectedOption != null)
+                        ? selectedOption
+                        : new ProductOption();
+
                 cartUseCase.addProductToCart(
                         productId,
                         Integer.parseInt(tvquantity.getText().toString()),
-                        selectedOption,
+                        option,
                         cartQuantity
                 ).thenAccept(r -> {
                     if (r.isRight()) {

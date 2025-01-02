@@ -151,7 +151,7 @@ public class CheckoutActivity extends AppCompatActivity {
         counterModel.getQuantity("checkout").addOnSuccessListener(quantity -> {
             checkoutQuantity = quantity;
             totalPrice = MoneyFomat.parseMoney(tvNewTotalPrice.getText().toString().replace("đ", ""));
-            totalPriceWithoutVoucher = totalPriceWithoutVoucher > 0 ? MoneyFomat.parseMoney(tvTotalPrice.getText().toString().replace("đ", "")) : 0;
+            totalPriceWithoutVoucher = tvTotalPrice.getVisibility() == View.VISIBLE ? MoneyFomat.parseMoney(tvTotalPrice.getText().toString().replace("đ", "")) : 0;
             CheckoutModel checkoutModel = createCheckoutModel(userId);
             makePayment(checkoutModel, userId);
         });
@@ -176,7 +176,7 @@ public class CheckoutActivity extends AppCompatActivity {
                     if(r.isRight()) {
                         return cartUseCase.deleteCart(userId);
                     } else {
-                        Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Đặt hàng thất bại del cart", Toast.LENGTH_SHORT).show();
                         throw new RuntimeException("Đặt hàng thất bại");
                     }
                 })
@@ -184,7 +184,7 @@ public class CheckoutActivity extends AppCompatActivity {
                     if(r1.isRight()) {
                         return productUseCase.updateProductQuantity(productsOnCart);
                     } else {
-                        Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Đặt hàng thất bại upd quantity", Toast.LENGTH_SHORT).show();
                         throw new RuntimeException("Đặt hàng thất bại");
                     }
                 })
@@ -193,7 +193,7 @@ public class CheckoutActivity extends AppCompatActivity {
                         counterModel.updateQuantity("checkout");
                         return userUseCase.updateTotalSpent(totalPrice);
                     } else {
-                        Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Đặt hàng thất bại upd totalspent", Toast.LENGTH_SHORT).show();
                         throw new RuntimeException("Đặt hàng thất bại");
                     }
                 })
@@ -203,7 +203,7 @@ public class CheckoutActivity extends AppCompatActivity {
                         getIntent().addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         return userUseCase.updateUserTier();
                     } else {
-                        Toast.makeText(this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Đặt hàng thất bại upd tier", Toast.LENGTH_SHORT).show();
                         throw new RuntimeException("Đặt hàng thất bại");
                     }
                 });
@@ -278,24 +278,27 @@ public class CheckoutActivity extends AppCompatActivity {
                             selectedVoucherId = null;
                             Toast.makeText(this, "Yêu cầu đơn hàng tối thiểu " + voucherModel.getMinimalTotal() + "đ", Toast.LENGTH_SHORT).show();
                         } else {
-                            selectedVoucherId = voucherModel.getId();
-                            llTotalPrice.setVisibility(View.VISIBLE);
-                            llDecreasePrice.setVisibility(View.VISIBLE);
-                            llNewTotalPrice.setVisibility(View.VISIBLE);
-                            if(voucherModel.getType().equals("percent")) {
-                                tvTotalPrice.setText(MoneyFomat.format(totalPriceWithoutVoucher) + "đ");
-                                tvDiscount.setText(voucherModel.getId());
-                                double discount = totalPriceWithoutVoucher * voucherModel.getValue() / 100;
-                                tvDecreasePrice.setText(voucherModel.getValue() + "%");
-                                double newTotalPrice = MoneyFomat.parseMoney(tvTotalPrice.getText().toString()) - discount;
-                                tvNewTotalPrice.setText(MoneyFomat.format(newTotalPrice) + "đ");
-                            } else if(voucherModel.getType().equals("minus")) {
-                                tvTotalPrice.setText(MoneyFomat.format(totalPriceWithoutVoucher) + "đ");
-                                tvDiscount.setText(voucherModel.getId());
-                                tvDecreasePrice.setText(MoneyFomat.format(voucherModel.getValue()) + "đ");
-                                double newTotalPrice = totalPriceWithoutVoucher - voucherModel.getValue();
-                                tvNewTotalPrice.setText(MoneyFomat.format(newTotalPrice) + "đ");
-                            }
+                            runOnUiThread(() -> {
+                                selectedVoucherId = voucherModel.getId();
+                                llTotalPrice.setVisibility(View.VISIBLE);
+                                llDecreasePrice.setVisibility(View.VISIBLE);
+                                llNewTotalPrice.setVisibility(View.VISIBLE);
+                                tvTotalPrice.setVisibility(View.VISIBLE);
+                                if(voucherModel.getType().equals("percent")) {
+                                    tvTotalPrice.setText(MoneyFomat.format(totalPriceWithoutVoucher) + "đ");
+                                    tvDiscount.setText(voucherModel.getId());
+                                    tvDecreasePrice.setText(voucherModel.getValue() + "%");
+                                    double discount = totalPriceWithoutVoucher * voucherModel.getValue() / 100;
+                                    double newTotalPrice = totalPriceWithoutVoucher - discount;
+                                    tvNewTotalPrice.setText(MoneyFomat.format(newTotalPrice) + "đ");
+                                } else if(voucherModel.getType().equals("minus")) {
+                                    tvTotalPrice.setText(MoneyFomat.format(totalPriceWithoutVoucher) + "đ");
+                                    tvDiscount.setText(voucherModel.getId());
+                                    tvDecreasePrice.setText(MoneyFomat.format(voucherModel.getValue()) + "đ");
+                                    double newTotalPrice = totalPriceWithoutVoucher - voucherModel.getValue();
+                                    tvNewTotalPrice.setText(MoneyFomat.format(newTotalPrice) + "đ");
+                                }
+                            });
                         }
                     }
                 });
@@ -322,6 +325,7 @@ public class CheckoutActivity extends AppCompatActivity {
         llTotalPrice.setVisibility(View.GONE);
         llApplyDiscount.setVisibility(View.GONE);
         llDecreasePrice.setVisibility(View.GONE);
+        tvTotalPrice.setVisibility(View.GONE);
     }
 
     @Override
