@@ -49,7 +49,7 @@
             android:layout_marginVertical="@dimen/_4dp"
             android:layout_marginStart="8dp"
             android:background="@android:color/transparent"
-            android:hint="Tìm kiếm thương hiệu..."
+            android:hint="Tìm kiếm sản phẩm..."
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
