@@ -3,6 +3,7 @@ package com.example.androidproject.features.setting.presentation;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class OrderSettingDetailActivity extends AppCompatActivity {
     private Button btnUpdateStatus;
     private RecyclerView recycler_products_order_view;
     private ListCheckoutItemAdapter listCartItemAdapter;
+    private Button button6_confirm, button7_cancel, button8_buy_again;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,9 @@ public class OrderSettingDetailActivity extends AppCompatActivity {
         RecyclerView orderDetailRecyclerView = findViewById(R.id.recycler_products_order_view);
         orderStatus = findViewById(R.id.tvOrderStatus);
         recycler_products_order_view = findViewById(R.id.recycler_products_order_view);
+        button6_confirm = findViewById(R.id.button6_confirm);
+        button7_cancel = findViewById(R.id.button7_cancel);
+        button8_buy_again = findViewById(R.id.button8_buy_again);
 
         btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(v -> finish());
@@ -71,11 +76,73 @@ public class OrderSettingDetailActivity extends AppCompatActivity {
         orderTotalPrice.setText(getIntent().getStringExtra("order_total_price"));
         setStatusOrder(Objects.requireNonNull(getIntent().getStringExtra("order_status")));
 
+        String order_status = getIntent().getStringExtra("order_status");
+
+        if (order_status.equals("PENDING")) {
+            button7_cancel.setVisibility(View.VISIBLE);
+        } else if (order_status.equals("INTRANSIT")) {
+            button6_confirm.setVisibility(View.VISIBLE);
+            button7_cancel.setVisibility(View.VISIBLE);
+        } else if (order_status.equals("SUCCESS")) {
+            button8_buy_again.setVisibility(View.GONE);
+            button6_confirm.setVisibility(View.GONE);
+            button7_cancel.setVisibility(View.GONE);
+        } else if (order_status.equals("FAILED")) {
+            button6_confirm.setVisibility(View.GONE);
+            button7_cancel.setVisibility(View.GONE);
+            button8_buy_again.setVisibility(View.VISIBLE);
+        }
+
         List<ProductDataForOrderModel> orderProductDataList = new ArrayList<>();
 
         ProductForDetailOrderAdminAdapter adapter = new ProductForDetailOrderAdminAdapter(orderProductDataList, this);
         orderDetailRecyclerView.setAdapter(adapter);
         orderDetailRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        button6_confirm.setOnClickListener(v -> {
+            checkoutUseCase.updateStatus(orderIdGlobal, "SUCCESS")
+                    .thenAccept(r -> {
+                        if (r.isRight()) {
+                            setStatusOrder("SUCCESS");
+                            button6_confirm.setVisibility(View.GONE);
+                            button7_cancel.setVisibility(View.GONE);
+                            button8_buy_again.setVisibility(View.GONE);
+                        }
+                    })
+                    .exceptionally(e -> {
+                        return null;
+                    });
+        });
+
+        button7_cancel.setOnClickListener(v -> {
+            checkoutUseCase.updateStatus(orderIdGlobal, "FAILED")
+                    .thenAccept(r -> {
+                        if (r.isRight()) {
+                            setStatusOrder("FAILED");
+                            button6_confirm.setVisibility(View.GONE);
+                            button7_cancel.setVisibility(View.GONE);
+                            button8_buy_again.setVisibility(View.VISIBLE);
+                        }
+                    })
+                    .exceptionally(e -> {
+                        return null;
+                    });
+        });
+
+        button8_buy_again.setOnClickListener(v -> {
+            checkoutUseCase.updateStatus(orderIdGlobal, "PENDING")
+                    .thenAccept(r -> {
+                        if (r.isRight()) {
+                            setStatusOrder("PENDING");
+                            button7_cancel.setVisibility(View.VISIBLE);
+                            button8_buy_again.setVisibility(View.GONE);
+                            button6_confirm.setVisibility(View.GONE);
+                        }
+                    })
+                    .exceptionally(e -> {
+                        return null;
+                    });
+        });
     }
 
     public void getCheckoutById() {

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,7 @@ public class OrderHistoryListAdapter extends RecyclerView.Adapter<OrderHistoryLi
     private Context context;
     private List<CheckoutModel> orderList;
     private CheckoutUseCase checkoutUseCase = new CheckoutUseCase();
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     public OrderHistoryListAdapter(Context context, List<CheckoutModel> orderList) {
         this.context = context;
