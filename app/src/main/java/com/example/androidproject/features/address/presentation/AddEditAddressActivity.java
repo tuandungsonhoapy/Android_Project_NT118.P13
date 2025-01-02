@@ -146,6 +146,10 @@ public class AddEditAddressActivity extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String userId = mAuth.getCurrentUser().getUid();
         String street = ETStreet.getText().toString();
+        provinceId = ((AddressProvinceData) spinnerTinh.getSelectedItem()).getId();
+        provinceName = ((AddressProvinceData) spinnerTinh.getSelectedItem()).getName();
+        districtId = ((AddressDistrictData) spinnerHuyen.getSelectedItem()).getId();
+        districtName = ((AddressDistrictData) spinnerHuyen.getSelectedItem()).getName();
         wardName = ((AddressWardData) spinnerXa.getSelectedItem()).getName();
         wardId = ((AddressWardData) spinnerXa.getSelectedItem()).getId();
         AddressModel address = new AddressModel(
