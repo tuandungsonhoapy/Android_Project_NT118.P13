@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -30,6 +31,7 @@ public class ProductOptionManagementActivity extends AppCompatActivity {
     private ProductOptionListAdapter adapter;
     private Button btnAddOption;
     private ActivityResultLauncher<Intent> addOptionLauncher;
+    private ImageButton btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,11 @@ public class ProductOptionManagementActivity extends AppCompatActivity {
         }
 
         btnAddOption = findViewById(R.id.btnAddProductOption);
+
+        btnBack = findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(v -> {
+            finish();
+        });
 
         Intent intent = new Intent(this, AddProductOptionActivity.class);
         Bundle bundle = new Bundle();

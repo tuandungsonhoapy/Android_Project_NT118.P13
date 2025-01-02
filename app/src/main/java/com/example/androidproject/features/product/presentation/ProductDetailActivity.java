@@ -37,7 +37,7 @@ import java.util.List;
 public class ProductDetailActivity extends AppCompatActivity implements ProductDetailImgAdapter.OnImageClickListener, ProductDetailOptionAdapter.OnOptionSelectedListener {
 
     private RecyclerView recyclerProductDetailImgView, recyclerView_options;
-    private ImageView imgProductDetail;
+    private ImageView imgProductDetail, btn_back;
     private ProductDetailImgAdapter productDetailImgAdapter;
     private TextView tvRating, tvStockQuantity, tvBrandName, tvProductName, tvProductPrice, tvProductDescription, tvPrice, tvquantity, tvStock;
     private LinearLayout btnIncrease, btnDecrease;
@@ -88,6 +88,10 @@ public class ProductDetailActivity extends AppCompatActivity implements ProductD
         recyclerProductDetailImgView = findViewById(R.id.recycler_product_images);
         recyclerView_options = findViewById(R.id.recycler_options_pd);
         tvquantity.setText("1");
+        btn_back = findViewById(R.id.btn_back);
+        btn_back.setOnClickListener(v -> {
+            finish();
+        });
 
         btnIncrease.setOnClickListener(v -> {
             int q = Integer.parseInt(tvquantity.getText().toString());
