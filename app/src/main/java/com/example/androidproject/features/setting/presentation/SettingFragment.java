@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.androidproject.R;
 import com.example.androidproject.core.utils.NavigationUtils;
 import com.example.androidproject.features.admin.presentation.AdminHomeActivity;
@@ -122,21 +124,17 @@ public class SettingFragment extends Fragment {
     }
 
     private void loadProfilePhoto() {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    URL url = new URL(settingUseCase.getUser().getPhotoUrl());
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    photoURL.post(new Runnable() {
-                        public void run() {
-                            photoURL.setImageBitmap(bmp);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        String profileImageUrl = "https://i.pinimg.com/originals/ea/1b/b8/ea1bb8dbc5b7eadf836b3a617377b7ff.png";
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            Glide.with(getActivity())
+                    .load(profileImageUrl)
+                    .transform(new CircleCrop())
+                    .placeholder(R.drawable.logo_techo_without_text)
+                    .error(R.drawable.logo_techo_without_text)
+                    .into(photoURL);
+        } else {
+            photoURL.setImageResource(R.drawable.logo_techo_without_text);
+        }
     }
 
     private void handleLogout() {

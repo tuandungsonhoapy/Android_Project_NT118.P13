@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:queryHint="Tìm kiếm coupon..."
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,14 +23,13 @@
         android:id="@+id/btnAddVoucher"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/search_view"
-        android:padding="10dp"
-        android:layout_marginTop="10dp"
-        android:text="Thêm voucher"
         android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
         android:backgroundTint="@color/primary"
-        />
+        android:padding="10dp"
+        android:text="Thêm voucher"
+        app:layout_constraintTop_toBottomOf="@+id/search_view" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/container_admin_filter"

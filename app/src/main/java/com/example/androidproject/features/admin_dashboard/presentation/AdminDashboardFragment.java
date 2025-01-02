@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.core.utils.ConvertFormat;
 import com.example.androidproject.features.checkout.data.model.CheckoutModel;
 import com.example.androidproject.features.checkout.usecase.CheckoutUseCase;
@@ -39,12 +40,12 @@ public class AdminDashboardFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private TextView tvOrderToday, tvOrderOnHold, tvRevenueOnDay, tvRevenueOnMonth, tvUserName;
-    FirebaseAuth auth = FirebaseAuth.getInstance();
-    FirebaseUser currentUser = auth.getCurrentUser();
     private ImageView btnGoToShop;
     private RecyclerView rvAdminDashboardOrders;
     private OrderUseCase orderUseCase = new OrderUseCase();
     private CheckoutUseCase checkoutUseCase = new CheckoutUseCase();
+    private UserPreferences userPreferences;
+
     public AdminDashboardFragment() {
         // Required empty public constructor
     }
@@ -89,7 +90,8 @@ public class AdminDashboardFragment extends Fragment {
         tvRevenueOnMonth = view.findViewById(R.id.tvRevenueOnMonth);
         tvUserName = view.findViewById(R.id.tvUserName);
 
-        tvUserName.setText(currentUser.getDisplayName());
+        userPreferences = new UserPreferences(getContext());
+        tvUserName.setText(userPreferences.getUserDataByKey(UserPreferences.KEY_FIRST_NAME).toString());
 
         btnGoToShop.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -153,7 +155,7 @@ public class AdminDashboardFragment extends Fragment {
                     if (r.isRight()) {
                         double total = 0;
                         for (CheckoutModel checkoutModel : r.getRight()) {
-                            if(checkoutModel.getStatus().equals("SUCCESS"))
+                            if (checkoutModel.getStatus().equals("SUCCESS"))
                                 total += checkoutModel.getTotalPrice();
                         }
                         tvRevenueOnDay.setText(ConvertFormat.formatPriceToVND(total));
@@ -170,7 +172,7 @@ public class AdminDashboardFragment extends Fragment {
                     if (r.isRight()) {
                         double total = 0;
                         for (CheckoutModel checkoutModel : r.getRight()) {
-                            if(checkoutModel.getStatus().equals("SUCCESS"))
+                            if (checkoutModel.getStatus().equals("SUCCESS"))
                                 total += checkoutModel.getTotalPrice();
                         }
                         tvRevenueOnMonth.setText(ConvertFormat.formatPriceToVND(total));

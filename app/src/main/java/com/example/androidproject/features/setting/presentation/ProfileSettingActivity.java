@@ -2,6 +2,7 @@ package com.example.androidproject.features.setting.presentation;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,13 +19,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.core.credential.FirebaseHelper;
 import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.core.credential.data.entity.UserPrefEntity;
 import com.example.androidproject.core.utils.MoneyFomat;
 import com.example.androidproject.core.utils.NavigationUtils;
 import com.example.androidproject.core.utils.UserTierUtils;
 import com.example.androidproject.features.auth.data.entity.UserEntity;
+import com.example.androidproject.features.auth.presentation.LoginActivity;
 import com.example.androidproject.features.setting.data.repository.ProfileRepository;
 
 public class ProfileSettingActivity extends AppCompatActivity {
@@ -42,6 +46,7 @@ public class ProfileSettingActivity extends AppCompatActivity {
     private UserPreferences userPreferences;
     private UserPrefEntity userData;
     private ProfileRepository profileRepository;
+    private FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +69,23 @@ public class ProfileSettingActivity extends AppCompatActivity {
 
     private void init() {
         userPreferences = new UserPreferences(this);
-        userData = userPreferences.getUserEntity();
+        firebaseHelper = new FirebaseHelper(this);
+
+        syncProfileData();
 
         initInsets();
         initViews();
         setupClickListeners();
+    }
+
+    private void syncProfileData() {
+        firebaseHelper.findDocumentDataByUid().thenAccept(userEntity -> {
+            firebaseHelper.saveUserData(userEntity);
+            userData = userPreferences.getUserEntity();
+            updateNormalUI();
+        }).exceptionally(ex -> {
+            return null;
+        });
     }
 
     private void initInsets() {
