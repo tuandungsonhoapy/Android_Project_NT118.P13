@@ -179,7 +179,9 @@
             android:textColor="@color/primary"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:text="12.000.000" />
+            android:text="12.000.000"
+            android:visibility="gone"
+            />
 
     </LinearLayout>
     <LinearLayout

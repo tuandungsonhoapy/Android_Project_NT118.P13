@@ -75,14 +75,19 @@ public class AllProductListAdapter extends RecyclerView.Adapter<AllProductListAd
             counterModel.getQuantity("cart").addOnSuccessListener(quantity -> {
                 cartQuantity = quantity;
 
-                ProductOption option = product.getOptions().get(0);
-                if(option.getQuantity() <= 0) {
+                ProductOption o = (product.getOptions() != null && !product.getOptions().isEmpty())
+                        ? product.getOptions().get(0)
+                        : new ProductOption();
+
+                if(product.getOptions() != null && !product.getOptions().isEmpty() && o.getQuantity() <= 0) {
+                    Toast.makeText(context, "Sản phẩm đã hết hàng", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 cartUseCase.addProductToCart(
                         product.getId(),
                         1,
-                        product.getOptions().get(0),
+                        o,
                         cartQuantity
                 ).thenAccept(r -> {
                     if (r.isRight()) {

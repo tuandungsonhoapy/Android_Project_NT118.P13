@@ -17,9 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.core.errors.Failure;
+import com.example.androidproject.core.utils.counter.CounterModel;
+import com.example.androidproject.features.cart.usecase.CartUseCase;
 import com.example.androidproject.features.product.data.entity.ProductEntity;
+import com.example.androidproject.features.product.data.entity.ProductOption;
 import com.example.androidproject.features.wishlist.data.repository.WishlistRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentWishlist extends Fragment {
@@ -34,6 +38,9 @@ public class FragmentWishlist extends Fragment {
     private List<String> wishlist;
     private WishlistAdapter wishlistAdapter;
     private WishlistRepository wishlistRepository;
+    private CartUseCase cartUseCase = new CartUseCase();
+    private CounterModel counterModel = new CounterModel();
+    private long quantity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,7 +142,26 @@ public class FragmentWishlist extends Fragment {
     }
 
     private void onAddToCart(ProductEntity item) {
-        Toast.makeText(getContext(), item.getId(), Toast.LENGTH_SHORT).show();
+        counterModel.getQuantity("cart")
+                .addOnSuccessListener(q -> {
+                    quantity = q;
+                    ProductOption option = (item.getOptions() != null && !item.getOptions().isEmpty())
+                            ? item.getOptions().get(0)
+                            : new ProductOption();
+
+                    cartUseCase.addProductToCart(
+                            item.getId(),
+                            1,
+                            option,
+                            quantity
+                    ).thenAccept(r -> {
+                       if(r.isRight()) {
+                            Toast.makeText(getContext(), "Product added to cart", Toast.LENGTH_SHORT).show();
+                          } else {
+                            Toast.makeText(getContext(), "Failed to add product to cart", Toast.LENGTH_SHORT).show();
+                       }
+                    });
+                });
     }
 
     //only remove

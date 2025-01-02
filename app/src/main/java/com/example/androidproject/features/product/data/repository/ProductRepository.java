@@ -316,21 +316,29 @@ public class ProductRepository implements IProductRepository{
     public CompletableFuture<Either<Failure, String>> updateProductQuantity(List<ProductsOnCart> productsOnCarts) {
         CompletableFuture<Either<Failure, String>> resultFuture = CompletableFuture.completedFuture(Either.right("Success"));
         for(ProductsOnCart productsOnCart: productsOnCarts) {
-            if (productsOnCart.getProductOptions() == null) {
+            if (productsOnCart.getProductOptions().equals(new ProductOption())) {
                 resultFuture = resultFuture.thenCompose(r -> {
                     if (r.isRight()) {
-                        return updateStockQuantityWithoutOption(productsOnCart.getQuantity(), productsOnCart.getProductId());
+                        return updateStockQuantityWithoutOption(
+                                productsOnCart.getQuantity(),
+                                productsOnCart.getProductId()
+                        );
                     } else {
                         return CompletableFuture.completedFuture(Either.left(r.getLeft()));
                     }
                 });
             } else {
-                resultFuture = resultFuture.thenCompose(previousResult -> {
-                    if (previousResult.isLeft()) {
-                        return CompletableFuture.completedFuture(previousResult);
+                resultFuture = resultFuture.thenCompose(r -> {
+                    if (r.isRight()) {
+                        return updateStockQuantityWithOption(
+                                productsOnCart.getQuantity(),
+                                productsOnCart.getProductId(),
+                                productsOnCart.getProductOptions()
+                        );
+                    } else {
+                        return CompletableFuture.completedFuture(Either.left(r.getLeft()));
                     }
-                    return updateStockQuantityWithOption(productsOnCart.getQuantity(), productsOnCart.getProductId(), productsOnCart.getProductOptions());
-                });;
+                });
             }
         }
 
