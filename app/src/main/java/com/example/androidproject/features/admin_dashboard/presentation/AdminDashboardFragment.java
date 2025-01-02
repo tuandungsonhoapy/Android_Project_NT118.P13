@@ -112,8 +112,6 @@ public class AdminDashboardFragment extends Fragment {
         checkoutUseCase.getLatestCheckouts(6)
                 .thenAccept(r -> {
                     if (r.isRight()) {
-                        CheckoutModel checkoutModel = r.getRight().get(0);
-                        Log.d("Checkout", checkoutModel.getId());
                         rvAdminDashboardOrders.setAdapter(new AdminDashboardOrderAdapter(r.getRight(), getContext()));
                     }
                 })

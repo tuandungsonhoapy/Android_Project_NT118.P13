@@ -59,10 +59,10 @@ public class AdminDashboardOrderAdapter extends RecyclerView.Adapter<AdminDashbo
         } else if (orderStatus.equals("INTRANSIT")) {
             holder.tvOrderStatus.setText("Đang giao");
             holder.tvOrderStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.delivery_order_status));
-        } else if (orderStatus.equals("COMPLETED")) {
+        } else if (orderStatus.equals("SUCCESS")) {
             holder.tvOrderStatus.setText("Thành công");
             holder.tvOrderStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.succes_order_status));
-        } else if (orderStatus.equals("CANCELLED")) {
+        } else if (orderStatus.equals("FAILED")) {
             holder.tvOrderStatus.setText("Thất bại");
             holder.tvOrderStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.reject_order_status));
         }

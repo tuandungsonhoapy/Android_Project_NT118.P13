@@ -1,22 +1,28 @@
 package com.example.androidproject.features.order.presentation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.core.utils.ConvertFormat;
+import com.example.androidproject.features.admin_manager.presentation.order.DetailOrderAdminActivity;
 import com.example.androidproject.features.checkout.data.model.CheckoutModel;
 import com.example.androidproject.features.checkout.usecase.CheckoutUseCase;
 import com.example.androidproject.features.order.data.OrderModel;
+import com.example.androidproject.features.setting.presentation.OrderSettingDetailActivity;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,6 +30,7 @@ public class OrderHistoryListAdapter extends RecyclerView.Adapter<OrderHistoryLi
     private Context context;
     private List<CheckoutModel> orderList;
     private CheckoutUseCase checkoutUseCase = new CheckoutUseCase();
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     public OrderHistoryListAdapter(Context context, List<CheckoutModel> orderList) {
         this.context = context;
@@ -51,7 +58,13 @@ public class OrderHistoryListAdapter extends RecyclerView.Adapter<OrderHistoryLi
         String formattedDate = dateFormat.format(order.getCreatedAt().toDate());
 
         holder.tvOrderDateExport.setText(formattedDate);
-        holder.textView_date_receive.setText(formattedDate);
+        // Tạo ngày nhận bằng ngày tạo cộng thêm 3 ngày
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(order.getCreatedAt().toDate());
+        calendar.add(Calendar.DAY_OF_MONTH, 3); // Cộng thêm 3 ngày
+
+        String formattedReceiveDate = dateFormat.format(calendar.getTime());
+        holder.textView_date_receive.setText(formattedReceiveDate);
         holder.tvAddress.setText(order.getFullAddress());
         holder.button6_confirm.setVisibility(View.GONE);
         holder.button7_cancel.setVisibility(View.GONE);
@@ -124,6 +137,16 @@ public class OrderHistoryListAdapter extends RecyclerView.Adapter<OrderHistoryLi
                     .exceptionally(e -> {
                         return null;
                     });
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, OrderSettingDetailActivity.class);
+            intent.putExtra("order_id", order.getId());
+            intent.putExtra("order_date", formattedDate);
+            intent.putExtra("order_total_price", ConvertFormat.formatPriceToVND(order.getTotalPrice()));
+            intent.putExtra("order_status", order.getStatus());
+
+            context.startActivity(intent);
         });
     }
 
