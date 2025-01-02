@@ -28,4 +28,8 @@ public interface IProductRepository {
     CompletableFuture<Either<Failure, List<ProductModelFB>>> getProductsAndMapBrands();
 
     CompletableFuture<Either<Failure, String>> updateProductQuantity(List<ProductsOnCart> productsOnCart);
+
+    CompletableFuture<Either<Failure, List<ProductModelFB>>> getProductPage(int page, int limit);
+
+    CompletableFuture<Either<Failure, List<ProductModelFB>>> getOutOfStockProducts();
 }

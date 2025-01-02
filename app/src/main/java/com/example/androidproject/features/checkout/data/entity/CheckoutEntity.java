@@ -1,5 +1,6 @@
 package com.example.androidproject.features.checkout.data.entity;
 
+import com.example.androidproject.features.auth.data.entity.UserEntity;
 import com.example.androidproject.features.cart.data.entity.ProductsOnCart;
 import com.google.firebase.Timestamp;
 
@@ -18,6 +19,7 @@ public class CheckoutEntity {
     private double totalPrice;
     private String voucherId;
     private double oldTotalPrice;
+    private UserEntity user;
 
     public CheckoutEntity() {
     }
@@ -46,6 +48,14 @@ public class CheckoutEntity {
         this.products = products;
         this.fullAddress = fullAddress;
         this.totalPrice = totalPrice;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public String getId() {

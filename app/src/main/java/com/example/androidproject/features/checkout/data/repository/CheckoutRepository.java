@@ -23,4 +23,16 @@ public interface CheckoutRepository {
     CompletableFuture<Either<Failure, List<CheckoutModel>>> getCheckoutListByUserId(String userId);
 
     CompletableFuture<Either<Failure, List<CheckoutModel>>> getCheckoutListByFilter(String field, String filter, String userId);
+
+    CompletableFuture<Either<Failure, List<CheckoutModel>>> getCheckoutsThisMonth();
+
+    CompletableFuture<Either<Failure, List<CheckoutModel>>> getCheckoutsToday();
+
+    CompletableFuture<Either<Failure, Boolean>> updateStatus(String checkoutId, String status);
+
+    CompletableFuture<Either<Failure, List<CheckoutModel>>> getAllCheckouts();
+
+    CompletableFuture<Either<Failure, List<CheckoutModel>>> getALlCheckoutsByStatus(String status);
+
+    CompletableFuture<Either<Failure, CheckoutModel>> getCheckoutById(String checkoutId);
 }

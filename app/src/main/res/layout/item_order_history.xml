@@ -154,5 +154,36 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/button7_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:text="Hủy đơn hàng" />
+
+        <Button
+            android:id="@+id/button6_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:text="Đã nhận hàng" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button8_buy_again"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:visibility="gone"
+        android:text="Mua lại" />
 
 </LinearLayout>

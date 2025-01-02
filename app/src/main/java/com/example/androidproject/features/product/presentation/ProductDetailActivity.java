@@ -87,7 +87,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ProductD
         imgProductDetail = findViewById(R.id.imgProductDetail);
         recyclerProductDetailImgView = findViewById(R.id.recycler_product_images);
         recyclerView_options = findViewById(R.id.recycler_options_pd);
-        tvquantity.setText("0");
+        tvquantity.setText("1");
 
         btnIncrease.setOnClickListener(v -> {
             int q = Integer.parseInt(tvquantity.getText().toString());

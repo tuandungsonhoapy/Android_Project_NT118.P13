@@ -1,12 +1,15 @@
 package com.example.androidproject.features.checkout.data.model;
 
+import com.example.androidproject.features.auth.data.entity.UserEntity;
 import com.example.androidproject.features.cart.data.entity.ProductsOnCart;
 import com.example.androidproject.features.checkout.data.entity.CheckoutEntity;
+import com.google.firebase.Timestamp;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CheckoutModel extends CheckoutEntity {
+
     public CheckoutModel() {
     }
 
@@ -76,6 +79,56 @@ public class CheckoutModel extends CheckoutEntity {
 
     public void setTotalPrice(double totalPrice) {
         super.setTotalPrice(totalPrice);
+    }
+
+    @Override
+    public UserEntity getUser() {
+        return super.getUser();
+    }
+
+    @Override
+    public void setUser(UserEntity user) {
+        super.setUser(user);
+    }
+
+    @Override
+    public Timestamp getCreatedAt() {
+        return super.getCreatedAt();
+    }
+
+    @Override
+    public Timestamp getUpdatedAt() {
+        return super.getUpdatedAt();
+    }
+
+    @Override
+    public String getVoucherId() {
+        return super.getVoucherId();
+    }
+
+    @Override
+    public double getOldTotalPrice() {
+        return super.getOldTotalPrice();
+    }
+
+    @Override
+    public void setCreatedAt(Timestamp createdAt) {
+        super.setCreatedAt(createdAt);
+    }
+
+    @Override
+    public void setUpdatedAt(Timestamp updatedAt) {
+        super.setUpdatedAt(updatedAt);
+    }
+
+    @Override
+    public void setVoucherId(String voucherId) {
+        super.setVoucherId(voucherId);
+    }
+
+    @Override
+    public void setOldTotalPrice(double oldTotalPrice) {
+        super.setOldTotalPrice(oldTotalPrice);
     }
 
     public void setProducts(List<ProductsOnCart> products) {

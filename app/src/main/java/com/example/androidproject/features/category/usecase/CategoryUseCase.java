@@ -92,4 +92,14 @@ public class CategoryUseCase {
             }
         });
     }
+
+    public CompletableFuture<Either<Failure, List<CategoryModel>>> getAllCategories() {
+        return categoryRepository.getAllCategories().thenApply(r -> {
+            if (r.isRight()) {
+                return Either.right(r.getRight());
+            } else {
+                return Either.left(r.getLeft());
+            }
+        });
+    }
 }

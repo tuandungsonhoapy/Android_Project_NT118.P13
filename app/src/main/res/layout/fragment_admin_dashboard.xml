@@ -105,7 +105,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
-            android:padding="20dp"
+            android:paddingTop="20dp"
+            android:paddingLeft="10dp"
             android:background="@drawable/item_with_grey_rounded_border"
             >
 
@@ -119,7 +120,7 @@
                     android:id="@+id/tvOrderToday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="27"
+                    android:text="0"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     />
@@ -150,7 +151,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
-            android:padding="20dp"
+            android:paddingTop="20dp"
+            android:paddingLeft="10dp"
             android:background="@drawable/item_with_grey_rounded_border"
             >
 
@@ -164,7 +166,7 @@
                     android:id="@+id/tvOrderOnHold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="25"
+                    android:text="0"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     />
@@ -195,7 +197,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
-            android:padding="20dp"
+            android:paddingTop="20dp"
+            android:paddingLeft="10dp"
             android:background="@drawable/item_with_grey_rounded_border"
             >
 
@@ -209,19 +212,12 @@
                     android:id="@+id/tvRevenueOnDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="25.550.000"
+                    android:text="0đ"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:layout_marginEnd="5dp"
                     />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="đ"
-                    android:textStyle="bold"
-                    android:textSize="22sp"
-                    />
             </LinearLayout>
 
             <TextView
@@ -241,7 +237,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
-            android:padding="20dp"
+            android:paddingTop="20dp"
+            android:paddingLeft="10dp"
             android:background="@drawable/item_with_grey_rounded_border"
             >
 
@@ -255,19 +252,12 @@
                     android:id="@+id/tvRevenueOnMonth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="25.550.000"
+                    android:text="0đ"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:layout_marginEnd="5dp"
                     />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="đ"
-                    android:textStyle="bold"
-                    android:textSize="22sp"
-                    />
             </LinearLayout>
 
             <TextView

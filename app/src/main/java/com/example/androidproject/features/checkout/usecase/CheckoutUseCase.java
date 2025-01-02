@@ -83,4 +83,92 @@ public class CheckoutUseCase {
                     }
                 });
     }
+
+    public CompletableFuture<Either<Failure, List<CheckoutModel>>> getCheckoutListByUserId(String userId) {
+        return checkoutRepository.getCheckoutListByUserId(userId)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, List<CheckoutModel>>> getCheckoutListByFilter(String field, String filter, String userId) {
+        return checkoutRepository.getCheckoutListByFilter(field, filter, userId)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, List<CheckoutModel>>> getCheckoutsThisMonth() {
+        return checkoutRepository.getCheckoutsThisMonth()
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, List<CheckoutModel>>> getCheckoutsToday() {
+        return checkoutRepository.getCheckoutsToday()
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, Boolean>> updateStatus(String checkoutId, String status) {
+        return checkoutRepository.updateStatus(checkoutId, status)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, List<CheckoutModel>>> getAllCheckouts() {
+        return checkoutRepository.getAllCheckouts()
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, List<CheckoutModel>>> getAllCheckoutsByStatus(String status) {
+        return checkoutRepository.getALlCheckoutsByStatus(status)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, CheckoutModel>> getCheckoutById(String checkoutId) {
+        return checkoutRepository.getCheckoutById(checkoutId)
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
 }

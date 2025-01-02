@@ -107,4 +107,26 @@ public class ProductUseCase {
                     }
                 });
     }
+
+    public CompletableFuture<Either<Failure, List<ProductModelFB>>> getProductPage(int page, int limit) {
+        return productRepository.getProductPage(page, limit)
+                .thenApply(r -> {
+                    if (r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, List<ProductModelFB>>> getOutOfStockProducts() {
+        return productRepository.getOutOfStockProducts()
+                .thenApply(r -> {
+                    if (r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
 }

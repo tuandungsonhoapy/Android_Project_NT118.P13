@@ -9,7 +9,7 @@ public class ProductManagementUsecase {
         List<String> statusList = new ArrayList<>();
         statusList.add("Tất cả");
         statusList.add("Còn hàng");
-        statusList.add("Sắp hết");
+//        statusList.add("Sắp hết");
         statusList.add("Hết hàng");
         return statusList;
     }

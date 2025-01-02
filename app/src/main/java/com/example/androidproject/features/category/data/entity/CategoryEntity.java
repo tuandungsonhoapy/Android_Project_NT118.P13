@@ -85,4 +85,12 @@ public class CategoryEntity {
     public void setProductCount(int productCount) {
         this.productCount = productCount;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
 }

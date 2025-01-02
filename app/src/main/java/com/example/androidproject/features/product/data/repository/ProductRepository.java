@@ -72,6 +72,7 @@ public class ProductRepository implements IProductRepository{
         boolean trang_dau = pageInt == 1;
 
         Query query = db.collection("products")
+                .orderBy("id", Query.Direction.DESCENDING) // Sắp xếp theo id giảm dần
                 .limit(limitInt);
 
         if (!trang_dau && lastDocument != null) {
@@ -80,7 +81,7 @@ public class ProductRepository implements IProductRepository{
 
         query.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if(queryDocumentSnapshots.isEmpty()) {
+                    if (queryDocumentSnapshots.isEmpty()) {
                         future.complete(Either.right(Collections.emptyList()));
                     } else {
                         lastDocument = queryDocumentSnapshots.getDocuments()
@@ -101,6 +102,68 @@ public class ProductRepository implements IProductRepository{
 
                         future.complete(Either.right(filterProductList));
                     }
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, List<ProductModelFB>>> getProductPage(int page, int limit) {
+        CompletableFuture<Either<Failure, List<ProductModelFB>>> future = new CompletableFuture<>();
+        List<ProductModelFB> productList = new ArrayList<>();
+
+        int pageInt = page;
+        int limitInt = limit;
+
+        // Đặt lại lastDocument nếu là trang đầu tiên
+        if (pageInt == 1) {
+            lastDocument = null;
+        }
+
+        Query query = db.collection("products")
+                .orderBy("id", Query.Direction.DESCENDING) // Sắp xếp theo id giảm dần
+                .limit(limitInt);
+
+        // Áp dụng startAfter nếu không phải trang đầu tiên
+        if (lastDocument != null) {
+            query = query.startAfter(lastDocument);
+        }
+
+        query.get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        future.complete(Either.right(Collections.emptyList()));
+                    } else {
+                        // Cập nhật lastDocument cho trang tiếp theo
+                        lastDocument = queryDocumentSnapshots.getDocuments()
+                                .get(queryDocumentSnapshots.size() - 1);
+
+                        for (DocumentSnapshot document : queryDocumentSnapshots) {
+                            ProductModelFB product = document.toObject(ProductModelFB.class);
+                            productList.add(product);
+                        }
+
+                        future.complete(Either.right(productList));
+                    }
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Either<Failure, List<ProductModelFB>>> getOutOfStockProducts() {
+        CompletableFuture<Either<Failure, List<ProductModelFB>>> future = new CompletableFuture<>();
+        List<ProductModelFB> productList = new ArrayList<>();
+
+        db.collection("products")
+                .whereEqualTo("stockQuantity", 0)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        ProductModelFB product = document.toObject(ProductModelFB.class);
+                        productList.add(product);
+                    }
+                    future.complete(Either.right(productList));
                 })
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
         return future;
@@ -246,6 +309,8 @@ public class ProductRepository implements IProductRepository{
                 });
         return future;
     }
+
+
 
     @Override
     public CompletableFuture<Either<Failure, String>> updateProductQuantity(List<ProductsOnCart> productsOnCarts) {

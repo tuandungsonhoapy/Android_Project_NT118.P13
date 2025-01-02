@@ -17,9 +17,12 @@ import android.widget.TextView;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.core.utils.ConvertFormat;
 import com.example.androidproject.features.checkout.data.model.CheckoutModel;
 import com.example.androidproject.features.checkout.usecase.CheckoutUseCase;
 import com.example.androidproject.features.order.usecase.OrderUseCase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +38,9 @@ public class AdminDashboardFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private TextView tvOrderToday, tvOrderOnHold;
+    private TextView tvOrderToday, tvOrderOnHold, tvRevenueOnDay, tvRevenueOnMonth, tvUserName;
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = auth.getCurrentUser();
     private ImageView btnGoToShop;
     private RecyclerView rvAdminDashboardOrders;
     private OrderUseCase orderUseCase = new OrderUseCase();
@@ -80,6 +85,11 @@ public class AdminDashboardFragment extends Fragment {
 
         tvOrderToday = view.findViewById(R.id.tvOrderToday);
         tvOrderOnHold = view.findViewById(R.id.tvOrderOnHold);
+        tvRevenueOnDay = view.findViewById(R.id.tvRevenueOnDay);
+        tvRevenueOnMonth = view.findViewById(R.id.tvRevenueOnMonth);
+        tvUserName = view.findViewById(R.id.tvUserName);
+
+        tvUserName.setText(currentUser.getDisplayName());
 
         btnGoToShop.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -92,6 +102,8 @@ public class AdminDashboardFragment extends Fragment {
         getCheckoutList();
         getNumberOrderToday();
         getNumberCheckoutByStatus("PENDING");
+        getRevenueOnDay();
+        getRevenueOnMonth();
 
         return view;
     }
@@ -99,7 +111,6 @@ public class AdminDashboardFragment extends Fragment {
     private void getCheckoutList() {
         checkoutUseCase.getLatestCheckouts(6)
                 .thenAccept(r -> {
-                    Log.d("Checkout", "get checkout list success");
                     if (r.isRight()) {
                         CheckoutModel checkoutModel = r.getRight().get(0);
                         Log.d("Checkout", checkoutModel.getId());
@@ -129,6 +140,40 @@ public class AdminDashboardFragment extends Fragment {
                 .thenAccept(r -> {
                     if (r.isRight()) {
                         tvOrderOnHold.setText(String.valueOf(r.getRight().size()));
+                    }
+                })
+                .exceptionally(e -> {
+                    return null;
+                });
+    }
+
+    private void getRevenueOnDay() {
+        checkoutUseCase.getCheckoutsToday()
+                .thenAccept(r -> {
+                    if (r.isRight()) {
+                        double total = 0;
+                        for (CheckoutModel checkoutModel : r.getRight()) {
+                            if(checkoutModel.getStatus().equals("SUCCESS"))
+                                total += checkoutModel.getTotalPrice();
+                        }
+                        tvRevenueOnDay.setText(ConvertFormat.formatPriceToVND(total));
+                    }
+                })
+                .exceptionally(e -> {
+                    return null;
+                });
+    }
+
+    private void getRevenueOnMonth() {
+        checkoutUseCase.getCheckoutsThisMonth()
+                .thenAccept(r -> {
+                    if (r.isRight()) {
+                        double total = 0;
+                        for (CheckoutModel checkoutModel : r.getRight()) {
+                            if(checkoutModel.getStatus().equals("SUCCESS"))
+                                total += checkoutModel.getTotalPrice();
+                        }
+                        tvRevenueOnMonth.setText(ConvertFormat.formatPriceToVND(total));
                     }
                 })
                 .exceptionally(e -> {

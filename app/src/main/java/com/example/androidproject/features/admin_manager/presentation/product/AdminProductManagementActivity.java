@@ -31,6 +31,7 @@ import com.example.androidproject.features.admin_manager.presentation.widgets.Pr
 import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.home.usecase.HomeUseCase;
 import com.example.androidproject.features.product.data.entity.ProductEntity;
+import com.example.androidproject.features.product.data.model.ProductModelFB;
 import com.example.androidproject.features.product.usecase.ProductUseCase;
 
 import java.util.ArrayList;
@@ -88,26 +89,43 @@ public class AdminProductManagementActivity extends AdminBaseManagerLayout {
         recyclerView_products.setLayoutManager(new LinearLayoutManager(this));
         recyclerView_products.setAdapter(adapter);
 
-        getProductList();
+        getProductList(page);
+
+        btnNext.setOnClickListener(v -> {
+            getProductList(++page);
+        });
+
+        btnPrevious.setOnClickListener(v -> {
+            getProductList(--page);
+        });
     }
 
-    public void getProductList() {
-        productUseCase.getProducts(String.valueOf(page),String.valueOf(limit), search).thenAccept(r -> {
-            if (r.isRight()) {
-                List<ProductEntity> productList = r.getRight();
-                adapter.setProductList(productList);
+    public void getProductList(int pageNumber) {
+        Log.d("AdminProductManagementActivity", "getProductList: " + page);
+        productUseCase.getProductPage(pageNumber, limit)
+                .thenAccept(r -> {
+                    if (r.isRight()) {
+                        List<ProductModelFB> productModels = r.getRight();
+                        List<ProductEntity> productEntities = new ProductModelFB().toProductEntityList(productModels);
+                        adapter.setProductList(productEntities);
 
-                pageNumber = page;
-                tvPageNumber.setText(String.format("Trang %d", pageNumber));
+                        tvPageNumber.setText(String.format("Trang %d", pageNumber));
 
-                btnPrevious.setEnabled(page > 1);
-                if (productList.size() >= limit) {
-                    btnNext.setEnabled(true);
-                } else {
-                    btnNext.setEnabled(false);
-                }
-            }
-        });
+                        if(productEntities.size() < limit) {
+                            btnNext.setEnabled(false);
+                        } else {
+                            btnNext.setEnabled(true);
+                        }
+
+                        if(page > 1) {
+                            btnPrevious.setEnabled(true);
+                        } else {
+                            btnPrevious.setEnabled(false);
+                        }
+                    } else {
+                        Toast.makeText(this, "Lỗi khi lấy danh sách sản phẩm", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
@@ -127,7 +145,7 @@ public class AdminProductManagementActivity extends AdminBaseManagerLayout {
 
         if (requestCode == ADD_PRODUCT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             // Gọi hàm cập nhật danh sách sản phẩm
-            getProductList();
+            getProductList(page);
         }
     }
 

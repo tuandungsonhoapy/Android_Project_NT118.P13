@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -83,9 +84,6 @@ public class OrderSettingActivity extends AppCompatActivity {
                 } else if (position == 4) {
                     getCheckoutListByStatus("FAILED"); // Hiển thị các đơn hàng đã thất bại
                 }
-                else {
-                    Log.d("OrderSettingActivity", "Invalid status");
-                }
             }
 
             @Override
@@ -118,7 +116,7 @@ public class OrderSettingActivity extends AppCompatActivity {
                         }
                     });
         } else {
-            Log.d("OrderSettingActivity", "User is not logged in");
+            Toast.makeText(this, "Vui lòng đăng nhập để xem lịch sử đơn hàng", Toast.LENGTH_SHORT).show();
         }
     }
 
