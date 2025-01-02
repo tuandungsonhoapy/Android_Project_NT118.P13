@@ -1,5 +1,6 @@
 package com.example.androidproject.features.setting.presentation;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -53,12 +54,11 @@ public class ProfileSettingActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         userData = userPreferences.getUserEntity();
         profileRepository = new ProfileRepository();
 
-        updateNormalUI();
         updateEditUI();
     }
 
@@ -189,6 +189,7 @@ public class ProfileSettingActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateNormalUI() {
         if (userData != null) {
             ivUserImage.setImageResource(R.drawable.logo_techo_without_text);

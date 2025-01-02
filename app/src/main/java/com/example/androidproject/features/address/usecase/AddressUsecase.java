@@ -1,5 +1,7 @@
 package com.example.androidproject.features.address.usecase;
 
+import android.util.Log;
+
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.address.data.model.AddressModel;
@@ -15,6 +17,17 @@ public class AddressUsecase {
 
     public CompletableFuture<Either<Failure, List<AddressModel>>> getAddresses() {
         return addressRepository.getAddressRepository()
+                .thenApply(r -> {
+                    if (r.isRight()) {
+                        return Either.right(r.getRight());
+                    } else {
+                        return Either.left(r.getLeft());
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, List<AddressModel>>> getAddresses(String uid) {
+        return addressRepository.getAddressRepository(uid)
                 .thenApply(r -> {
                     if (r.isRight()) {
                         return Either.right(r.getRight());
@@ -80,6 +93,24 @@ public class AddressUsecase {
                 .thenCompose(result -> {
                     if (result.isRight()) {
                         return addressRepository.updateUserAddress(addressId, fullAddress)
+                                .thenApply(userUpdateResult -> {
+                                    if (userUpdateResult.isRight()) {
+                                        return Either.right("Địa chỉ mặc định đã được cập nhật thành công");
+                                    } else {
+                                        return Either.left(userUpdateResult.getLeft());
+                                    }
+                                });
+                    } else {
+                        return CompletableFuture.completedFuture(Either.left(result.getLeft()));
+                    }
+                });
+    }
+
+    public CompletableFuture<Either<Failure, String>> updateAddressDefault(String userId, String addressId, String fullAddress) {
+        return addressRepository.updateAddressDefault(userId, addressId)
+                .thenCompose(result -> {
+                    if (result.isRight()) {
+                        return addressRepository.updateUserAddress(userId, addressId, fullAddress)
                                 .thenApply(userUpdateResult -> {
                                     if (userUpdateResult.isRight()) {
                                         return Either.right("Địa chỉ mặc định đã được cập nhật thành công");

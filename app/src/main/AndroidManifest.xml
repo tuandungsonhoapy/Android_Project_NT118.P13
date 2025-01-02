@@ -87,7 +87,7 @@
             android:name=".features.admin_manager.presentation.user.DetailUserAdminActivity"
             android:exported="false" />
         <activity
-            android:name=".features.admin_manager.presentation.user.AdminUserManagerActivity"
+            android:name=".features.admin_manager.presentation.user.UserManagerAdminActivity"
             android:exported="false" />
         <activity
             android:name=".features.product.presentation.ProductDetailActivity"

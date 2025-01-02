@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.banner.presentation.BannerAdapter;
-import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.cart.presentation.CartActivity;
 import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.presentation.CategoryAdapter;
@@ -29,17 +27,10 @@ import com.example.androidproject.features.product.data.model.ProductModelFB;
 import com.example.androidproject.features.product.presentation.AllProductActivity;
 import com.example.androidproject.features.product.presentation.ProductAdapter;
 import com.example.androidproject.features.product.usecase.ProductUseCase;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class HomeFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -104,7 +95,7 @@ public class HomeFragment extends Fragment {
         BannerAdapter bannerAdapter = new BannerAdapter(getContext(), homeUseCase.getBannersList());
         viewPagerBanner.setAdapter(bannerAdapter);
 
-        img_search = view.findViewById(R.id.img_search);
+        img_search = view.findViewById(R.id.btnSearch);
         edt_search = view.findViewById(R.id.edt_search);
         img_search.setOnClickListener(v -> {
             String search = edt_search.getText().toString();

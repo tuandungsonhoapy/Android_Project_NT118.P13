@@ -2,7 +2,6 @@ package com.example.androidproject.features.product.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,21 +13,16 @@ import android.widget.Spinner;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
-import com.example.androidproject.core.utils.ItemData;
 import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.brand.usecase.BrandUseCase;
 import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.usecase.CategoryUseCase;
 import com.example.androidproject.features.product.data.model.ProductModelFB;
 import com.example.androidproject.features.product.usecase.ProductUseCase;
-import com.example.androidproject.features.wishlist.data.repository.WishlistRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +52,7 @@ public class AllProductActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        img_search = findViewById(R.id.img_search);
+        img_search = findViewById(R.id.btnSearch);
         edt_search = findViewById(R.id.edt_search);
 
         getBrandIntent();
