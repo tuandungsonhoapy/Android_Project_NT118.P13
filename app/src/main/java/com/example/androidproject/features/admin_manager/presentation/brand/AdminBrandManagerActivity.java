@@ -2,7 +2,6 @@ package com.example.androidproject.features.admin_manager.presentation.brand;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,11 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidproject.R;
 import com.example.androidproject.features.admin_manager.presentation.AdminBaseManagerLayout;
 import com.example.androidproject.features.admin_manager.presentation.widgets.ListBrandItemAdminAdapter;
-import com.example.androidproject.features.admin_manager.presentation.widgets.ListCategoryItemAdminAdapter;
 import com.example.androidproject.features.brand.data.entity.BrandEntity;
 import com.example.androidproject.features.brand.usecase.BrandUseCase;
-import com.example.androidproject.features.category.data.entity.CategoryEntity;
-import com.example.androidproject.features.category.usecase.CategoryUseCase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +82,7 @@ public class AdminBrandManagerActivity extends AdminBaseManagerLayout {
             }
         });
 
-        iconSearch = findViewById(R.id.img_search);
+        iconSearch = findViewById(R.id.btnSearch);
         iconSearch.setOnClickListener(v -> {
             search = editSearch.getText().toString();
             page = 1;

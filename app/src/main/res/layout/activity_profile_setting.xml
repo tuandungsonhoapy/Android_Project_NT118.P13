@@ -341,6 +341,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivUserEdit">
 
+
+        <!--    role    -->
+        <TextView
+            android:id="@+id/tvRoleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/et_auth_horizontal"
+            android:text="@string/txt_role"
+            android:textColor="@color/grey"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <RadioGroup
+            android:id="@+id/rgRole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/auth_input_gap"
+            android:background="@drawable/rounded_12dp_input_text"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/et_auth_horizontal"
+            android:paddingVertical="@dimen/_4dp"
+            android:visibility="gone">
+
+            <RadioButton
+                android:id="@+id/rbAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/radio_gap"
+                android:text="@string/txt_admin"
+                android:textColor="@color/grey" />
+
+            <RadioButton
+                android:id="@+id/rbGuest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/radio_gap"
+                android:text="@string/txt_guest"
+                android:textColor="@color/grey" />
+        </RadioGroup>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -380,6 +420,7 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+        <!--    gender    -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

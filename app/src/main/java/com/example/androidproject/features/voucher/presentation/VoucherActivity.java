@@ -1,10 +1,8 @@
 package com.example.androidproject.features.voucher.presentation;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -22,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.auth.usecase.UserUseCase;
-import com.example.androidproject.features.voucher.data.model.VoucherModel;
 import com.example.androidproject.features.voucher.usecase.VoucherUseCase;
 
 import java.util.List;
@@ -62,7 +58,7 @@ public class VoucherActivity extends AppCompatActivity {
 
         recyclerViewAllVouchers = findViewById(R.id.recyclerViewAllVouchers);
         tvNoVoucher = findViewById(R.id.tvNoVoucher);
-        img_search = findViewById(R.id.img_search);
+        img_search = findViewById(R.id.btnSearch);
         edt_search = findViewById(R.id.edt_search);
 
         img_search.setOnClickListener(v -> {

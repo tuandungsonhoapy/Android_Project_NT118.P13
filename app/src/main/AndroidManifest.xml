@@ -57,7 +57,7 @@
             android:name=".features.admin_manager.presentation.admin.DetailAdminAdminActivity"
             android:exported="false" />
         <activity
-            android:name=".features.admin_manager.presentation.admin.AdminAdminManagerActivity"
+            android:name=".features.admin_manager.presentation.admin.AdminManagerAdminActivity"
             android:exported="false" />
         <activity
             android:name=".features.admin_manager.presentation.product.ProductDetailAdminActivity"
@@ -87,7 +87,7 @@
             android:name=".features.admin_manager.presentation.user.DetailUserAdminActivity"
             android:exported="false" />
         <activity
-            android:name=".features.admin_manager.presentation.user.AdminUserManagerActivity"
+            android:name=".features.admin_manager.presentation.user.UserManagerAdminActivity"
             android:exported="false" />
         <activity
             android:name=".features.product.presentation.ProductDetailActivity"

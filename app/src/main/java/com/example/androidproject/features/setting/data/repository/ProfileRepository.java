@@ -6,6 +6,7 @@ import com.example.androidproject.features.auth.data.entity.UserEntity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -29,7 +30,8 @@ public class ProfileRepository {
                         "lastName", user.getLastName(),
                         "gender", user.getGender(),
                         "email", user.getEmail(),
-                        "phone", user.getPhone()
+                        "phone", user.getPhone(),
+                        "updatedAt", new Date()
                 ).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         future.complete(Either.right("Cập nhật thành công"));

@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,9 @@ import android.widget.ImageView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.brand.data.entity.BrandEntity;
-import com.example.androidproject.features.brand.data.model.BrandModel;
 import com.example.androidproject.features.brand.presentation.BrandAdapter;
 import com.example.androidproject.features.brand.usecase.BrandUseCase;
 import com.example.androidproject.features.category.data.entity.CategoryEntity;
-import com.example.androidproject.features.category.data.model.CategoryModel;
 import com.example.androidproject.features.category.presentation.CategoryToBrandAdapter;
 import com.example.androidproject.features.category.usecase.CategoryUseCase;
 import com.example.androidproject.features.product.presentation.AllProductActivity;
@@ -128,7 +125,7 @@ public class StoreFragment extends Fragment {
             }
         });
 
-        img_search = view.findViewById(R.id.img_search);
+        img_search = view.findViewById(R.id.btnSearch);
         edt_search = view.findViewById(R.id.edt_search);
         img_search.setOnClickListener(v -> {
             String search = edt_search.getText().toString();

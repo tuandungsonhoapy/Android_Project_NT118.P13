@@ -1,7 +1,5 @@
 package com.example.androidproject.features.address.data.repository;
 
-import android.util.Log;
-
 import com.example.androidproject.core.errors.Failure;
 import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.address.data.model.AddressModel;
@@ -13,16 +11,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class AddressRepositoryImpl implements AddressRepository {
     private final FirebaseFirestore db;
+
     public AddressRepositoryImpl(FirebaseFirestore db) {
         this.db = db;
     }
+
     private String userId;
 
     @Override
@@ -49,7 +51,7 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
-    public CompletableFuture<Either<Failure,String>> updateAddressRepository(AddressModel address) {
+    public CompletableFuture<Either<Failure, String>> updateAddressRepository(AddressModel address) {
         CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
         Map<String, Object> addressData = new HashMap<>();
 
@@ -70,22 +72,54 @@ public class AddressRepositoryImpl implements AddressRepository {
     @Override
     public CompletableFuture<Either<Failure, String>> deleteAddressRepository(String id) {
         CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
+        db.collection("addresses").document(id).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+                        future.complete(Either.left(new Failure("Address not found")));
+                        return;
+                    }
+
+                    AddressModel address = documentSnapshot.toObject(AddressModel.class);
+                    if (address != null && address.getIsDefault()) {
+                        String userId = address.getUserId();
+
+                        updateUserAddress(userId, "", "").thenAccept(result -> {
+                            if (result.isRight()) {
+                                deleteAddress(id, future);
+                            } else {
+                                future.complete(Either.left(new Failure("Failed to update user: " + result.getLeft().getErrorMessage())));
+                            }
+                        });
+                    } else {
+                        deleteAddress(id, future);
+                    }
+                })
+                .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
+
+        return future;
+    }
+
+    private void deleteAddress(String id, CompletableFuture<Either<Failure, String>> future) {
         db.collection("addresses").document(id).delete()
                 .addOnSuccessListener(unused -> future.complete(Either.right("Success")))
                 .addOnFailureListener(e -> future.complete(Either.left(new Failure(e.getMessage()))));
-        future.complete(Either.right("Success"));
-        return future;
     }
 
     @Override
     public CompletableFuture<Either<Failure, String>> updateAddressDefault(String id) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+        return updateAddressDefault(userId, id);
+    }
+
+    public CompletableFuture<Either<Failure, String>> updateAddressDefault(String userId, String id) {
         CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
         WriteBatch batch = db.batch();
         DocumentReference addressRef = db.collection("addresses").document(id);
+
         batch.update(addressRef, "isDefault", true);
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        userId = mAuth.getCurrentUser().getUid();
         db.collection("addresses")
                 .whereEqualTo("userId", userId)
                 .get()
@@ -105,10 +139,16 @@ public class AddressRepositoryImpl implements AddressRepository {
 
     @Override
     public CompletableFuture<Either<Failure, List<AddressModel>>> getAddressRepository() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+        return getAddressRepository(userId);
+    }
+
+    public CompletableFuture<Either<Failure, List<AddressModel>>> getAddressRepository(String userId) {
         CompletableFuture<Either<Failure, List<AddressModel>>> future = new CompletableFuture<>();
         List<AddressModel> addressList = new ArrayList<>();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        userId = mAuth.getCurrentUser().getUid();
+
         db.collection("addresses")
                 .whereEqualTo("userId", userId)
                 .get()
@@ -157,14 +197,19 @@ public class AddressRepositoryImpl implements AddressRepository {
 
     // update users collection address
     public CompletableFuture<Either<Failure, String>> updateUserAddress(String addressId, String fullAddress) {
-        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
-
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        userId = mAuth.getCurrentUser().getUid();
+        userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+        return updateUserAddress(userId, addressId, fullAddress);
+    }
+
+    public CompletableFuture<Either<Failure, String>> updateUserAddress(String userId, String addressId, String fullAddress) {
+        CompletableFuture<Either<Failure, String>> future = new CompletableFuture<>();
 
         Map<String, Object> userUpdateData = new HashMap<>();
         userUpdateData.put("addressId", addressId);
         userUpdateData.put("fullAddress", fullAddress);
+        userUpdateData.put("updatedAt", new Date());
 
         db.collection("users").document(userId)
                 .update(userUpdateData)

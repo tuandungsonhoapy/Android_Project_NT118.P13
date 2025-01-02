@@ -23,14 +23,16 @@ import java.util.List;
 
 public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressSettingAdapter.ListAddressSettingViewHolder> {
     private List<AddressModel> addresses;
+    private final String userId;
     private Context context;
     private OnItemClickListener onItemClickListener;
     private AddressUsecase addressUsecase = new AddressUsecase();
     UserPreferences userPreferences;
 
-    public ListAddressSettingAdapter(Context context, List<AddressModel> addresses) {
+    public ListAddressSettingAdapter(Context context, String userId, List<AddressModel> addresses) {
         this.context = context;
         this.addresses = addresses;
+        this.userId = userId;
         userPreferences = new UserPreferences(context);
     }
 
@@ -77,20 +79,33 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
         holder.rbDefault.setOnClickListener(v -> {
             String addressId = address.getId();
             String fullAddress = address.getFullAddress();
-            addressUsecase.updateAddressDefault(addressId, fullAddress)
-                    .thenAccept(r -> {
-                        if (r.isRight()) {
-                            for (AddressModel a : addresses) {
-                                a.setIsDefault(a.getId().equals(address.getId()));
+            if (userId == null || userId.equals(userPreferences.getUserDataByKey(UserPreferences.KEY_DOC_ID))) {
+                addressUsecase.updateAddressDefault(addressId, fullAddress)
+                        .thenAccept(r -> {
+                            if (r.isRight()) {
+                                for (AddressModel a : addresses) {
+                                    a.setIsDefault(a.getId().equals(address.getId()));
+                                }
+
+                                ((Activity) context).runOnUiThread(() -> notifyDataSetChanged());
+                                updateUserPrefs(addressId, fullAddress);
+
+                                Toast.makeText(context, "Đặt làm địa chỉ mặc định thành công", Toast.LENGTH_SHORT).show();
                             }
+                        });
+            } else {
+                addressUsecase.updateAddressDefault(userId, addressId, fullAddress)
+                        .thenAccept(r -> {
+                            if (r.isRight()) {
+                                for (AddressModel a : addresses) {
+                                    a.setIsDefault(a.getId().equals(address.getId()));
+                                }
 
-                            ((Activity) context).runOnUiThread(() -> notifyDataSetChanged());
-
-                            userPreferences.setUserDataByKey(UserPreferences.KEY_ADDRESS_ID, addressId);
-                            userPreferences.setUserDataByKey(UserPreferences.KEY_FULL_ADDRESS, fullAddress);
-                            Toast.makeText(context, "Đặt làm địa chỉ mặc định thành công", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                                ((Activity) context).runOnUiThread(() -> notifyDataSetChanged());
+                                Toast.makeText(context, "Đặt làm địa chỉ mặc định thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
         });
     }
 
@@ -105,16 +120,21 @@ public class ListAddressSettingAdapter extends RecyclerView.Adapter<ListAddressS
         notifyDataSetChanged();
     }
 
+    private void updateUserPrefs(String addressId, String fullAddress) {
+        userPreferences.setUserDataByKey(UserPreferences.KEY_ADDRESS_ID, addressId);
+        userPreferences.setUserDataByKey(UserPreferences.KEY_FULL_ADDRESS, fullAddress);
+    }
+
     public static class ListAddressSettingViewHolder extends RecyclerView.ViewHolder {
-          TextView userAddress;
-          Button btnDelete;
-          RadioButton rbDefault;
-          
-            public ListAddressSettingViewHolder(@NonNull View itemView) {
-                super(itemView);
-                userAddress = itemView.findViewById(R.id.tv_address);
-                btnDelete = itemView.findViewById(R.id.btn_del_address);
-                rbDefault = itemView.findViewById(R.id.rb_default_address);
-            }
+        TextView userAddress;
+        Button btnDelete;
+        RadioButton rbDefault;
+
+        public ListAddressSettingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            userAddress = itemView.findViewById(R.id.tv_address);
+            btnDelete = itemView.findViewById(R.id.btn_del_address);
+            rbDefault = itemView.findViewById(R.id.rb_default_address);
+        }
     }
 }
