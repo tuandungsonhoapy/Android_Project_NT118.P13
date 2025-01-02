@@ -150,7 +150,8 @@ public class AllProductActivity extends AppCompatActivity {
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                categoryId = categoryList.get(i).getId();
+                CategoryModel selectedCategory = categoryAdapter.getItem(i);
+                categoryId = selectedCategory.getId();
             }
 
             @Override
@@ -162,7 +163,8 @@ public class AllProductActivity extends AppCompatActivity {
         brandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                brandId = brandList.get(i).getId();
+                BrandModel selectedBrand = brandAdapter.getItem(i);
+                brandId = selectedBrand.getId();
             }
 
             @Override

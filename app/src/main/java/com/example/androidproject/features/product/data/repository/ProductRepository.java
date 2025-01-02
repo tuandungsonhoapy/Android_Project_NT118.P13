@@ -232,11 +232,11 @@ public class ProductRepository implements IProductRepository{
         Query query = db.collection("products")
                 .limit(limitInt);
 
-        if (categoryId != null && !categoryId.isEmpty()) {
+        if (categoryId != null && !categoryId.isEmpty() && !categoryId.equals("0")) {
             query = query.whereEqualTo("categoryId", categoryId);
         }
 
-        if (brandId != null && !brandId.isEmpty()) {
+        if (brandId != null && !brandId.isEmpty() && !brandId.equals("0")) {
             query = query.whereEqualTo("brandId", brandId);
         }
 
