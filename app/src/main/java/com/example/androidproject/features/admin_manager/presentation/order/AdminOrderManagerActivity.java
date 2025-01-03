@@ -132,4 +132,20 @@ public class AdminOrderManagerActivity extends AdminBaseManagerLayout {
                     }
                 });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(currentPosition == 0) {
+            getAllCheckouts();
+        } else if (currentPosition == 1) {
+            getAllCheckoutsByStatus("PENDING");
+        } else if (currentPosition == 2) {
+            getAllCheckoutsByStatus("INTRANSIT");
+        } else if (currentPosition == 3) {
+            getAllCheckoutsByStatus("SUCCESS");
+        } else if (currentPosition == 4) {
+            getAllCheckoutsByStatus("FAILED");
+        }
+    }
 }

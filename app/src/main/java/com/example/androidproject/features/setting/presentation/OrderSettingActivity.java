@@ -38,6 +38,7 @@ public class OrderSettingActivity extends AppCompatActivity {
     private CheckoutUseCase checkoutUseCase = new CheckoutUseCase();
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = auth.getCurrentUser();
+    private int positionGlobal = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,14 +76,19 @@ public class OrderSettingActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     getCheckoutList(); // Hiển thị tất cả các đơn hàng
+                    positionGlobal = 0;
                 } else if (position == 1) {
                     getCheckoutListByStatus("PENDING"); // Hiển thị các đơn hàng đang xử lý
+                    positionGlobal = 1;
                 } else if (position == 2) {
                     getCheckoutListByStatus("INTRANSIT"); // Hiển thị các đơn hàng đang giao
+                    positionGlobal = 2;
                 } else if (position == 3) {
                     getCheckoutListByStatus("SUCCESS"); // Hiển thị các đơn hàng đã thành công
+                    positionGlobal = 3;
                 } else if (position == 4) {
                     getCheckoutListByStatus("FAILED"); // Hiển thị các đơn hàng đã thất bại
+                    positionGlobal = 4;
                 }
             }
 
@@ -133,6 +139,22 @@ public class OrderSettingActivity extends AppCompatActivity {
                     });
         } else {
             Log.d("OrderSettingActivity", "User is not logged in");
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(positionGlobal == 0) {
+            getCheckoutList();
+        } else if (positionGlobal == 1) {
+            getCheckoutListByStatus("PENDING");
+        } else if (positionGlobal == 2) {
+            getCheckoutListByStatus("INTRANSIT");
+        } else if (positionGlobal == 3) {
+            getCheckoutListByStatus("SUCCESS");
+        } else if (positionGlobal == 4) {
+            getCheckoutListByStatus("FAILED");
         }
     }
 }
