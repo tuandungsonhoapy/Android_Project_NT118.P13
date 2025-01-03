@@ -343,6 +343,7 @@ public class CheckoutRepositoryImpl implements CheckoutRepository {
 
         // Truy vấn collection "checkouts"
         db.collection("checkouts")
+                .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(checkoutSnapshots -> {
                     // Thu thập thông tin checkouts và userId

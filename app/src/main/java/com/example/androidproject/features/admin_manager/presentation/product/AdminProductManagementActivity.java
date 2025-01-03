@@ -149,4 +149,10 @@ public class AdminProductManagementActivity extends AdminBaseManagerLayout {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getProductList(page);
+    }
+
 }

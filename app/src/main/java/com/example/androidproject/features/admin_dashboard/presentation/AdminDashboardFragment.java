@@ -19,6 +19,7 @@ import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
 import com.example.androidproject.core.credential.UserPreferences;
 import com.example.androidproject.core.utils.ConvertFormat;
+import com.example.androidproject.features.admin_manager.presentation.order.AdminOrderManagerActivity;
 import com.example.androidproject.features.checkout.data.model.CheckoutModel;
 import com.example.androidproject.features.checkout.usecase.CheckoutUseCase;
 import com.example.androidproject.features.order.usecase.OrderUseCase;
@@ -39,7 +40,7 @@ public class AdminDashboardFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private TextView tvOrderToday, tvOrderOnHold, tvRevenueOnDay, tvRevenueOnMonth, tvUserName;
+    private TextView tvOrderToday, tvOrderOnHold, tvRevenueOnDay, tvRevenueOnMonth, tvUserName, tvViewAllOrder;
     private ImageView btnGoToShop;
     private RecyclerView rvAdminDashboardOrders;
     private OrderUseCase orderUseCase = new OrderUseCase();
@@ -89,6 +90,12 @@ public class AdminDashboardFragment extends Fragment {
         tvRevenueOnDay = view.findViewById(R.id.tvRevenueOnDay);
         tvRevenueOnMonth = view.findViewById(R.id.tvRevenueOnMonth);
         tvUserName = view.findViewById(R.id.tvUserName);
+        tvViewAllOrder = view.findViewById(R.id.tvViewAllOrder);
+
+        tvViewAllOrder.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AdminOrderManagerActivity.class);
+            startActivity(intent);
+        });
 
         userPreferences = new UserPreferences(getContext());
         tvUserName.setText(userPreferences.getUserDataByKey(UserPreferences.KEY_FIRST_NAME).toString());
