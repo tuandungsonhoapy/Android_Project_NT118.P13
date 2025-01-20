@@ -14,17 +14,60 @@ import com.example.androidproject.R;
 import com.example.androidproject.features.cart.usecase.CartUseCase;
 import com.example.androidproject.features.checkout.presentation.CheckoutActivity;
 
+import java.util.concurrent.CompletableFuture;
+
 public class CartActivity extends AppCompatActivity {
 
     private LinearLayout emptyCartLayout;
     private RecyclerView cartItemsLayout;
     private Button btnCheckout, btnContinueShopping;
     private CartUseCase cartUseCase = new CartUseCase();
+    private static final int REQUEST_CHECKOUT = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
+        initView();
+
+        isCartEmpty().thenAccept(r -> {
+            if(r) {
+                emptyCartLayout.setVisibility(View.VISIBLE);
+                cartItemsLayout.setVisibility(View.GONE);
+                btnCheckout.setVisibility(View.GONE);
+            } else {
+                cartUseCase.getCurrentUserCart()
+                        .thenAccept(r1 -> {
+                            if(r1.isRight()) {
+                                emptyCartLayout.setVisibility(View.GONE);
+                                cartItemsLayout.setVisibility(View.VISIBLE);
+                                btnCheckout.setVisibility(View.VISIBLE);
+                                ListCartItemAdapter adapter = new ListCartItemAdapter(r1.getRight().getProducts(), this);
+                                cartItemsLayout.setLayoutManager(new LinearLayoutManager(this));
+                                cartItemsLayout.setAdapter(adapter);
+                            }
+                        });
+            }
+        });
+
+        btnContinueShopping.setOnClickListener(v -> finish());
+
+        btnCheckout.setOnClickListener(v -> openOrderReviewScreen());
+    }
+
+    private CompletableFuture<Boolean> isCartEmpty() {
+        return cartUseCase.getCurrentUserCart()
+                .thenApply(r -> {
+                    if(r.isRight()) {
+                        return r.getRight().getProducts().isEmpty();
+                    } else {
+                        return true;
+                    }
+                });
+    }
+
+    private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -35,30 +78,42 @@ public class CartActivity extends AppCompatActivity {
         cartItemsLayout = findViewById(R.id.rvCartItem);
         btnCheckout = findViewById(R.id.btn_checkout);
         btnContinueShopping = findViewById(R.id.btn_continue_shopping);
-
-        if (isCartEmpty()) {
-            emptyCartLayout.setVisibility(View.VISIBLE);
-            cartItemsLayout.setVisibility(View.GONE);
-        } else {
-            emptyCartLayout.setVisibility(View.GONE);
-            cartItemsLayout.setVisibility(View.VISIBLE);
-            btnCheckout.setVisibility(View.VISIBLE);
-            cartItemsLayout.setAdapter(new ListCartItemAdapter(cartUseCase.getCart(), this));
-            cartItemsLayout.setLayoutManager(new LinearLayoutManager(this));
-        }
-
-        btnContinueShopping.setOnClickListener(v -> finish());
-
-        btnCheckout.setOnClickListener(v -> openOrderReviewScreen());
     }
 
-    private boolean isCartEmpty() {
-        return false;
+    public void updateUI() {
+        cartUseCase.getCurrentUserCart().thenAccept(r -> {
+            if (r.isRight() && (r.getRight().getProducts() == null || r.getRight().getProducts().isEmpty())) {
+                emptyCartLayout.setVisibility(View.VISIBLE);
+                cartItemsLayout.setVisibility(View.GONE);
+                btnCheckout.setVisibility(View.GONE);
+            } else {
+                emptyCartLayout.setVisibility(View.GONE);
+                cartItemsLayout.setVisibility(View.VISIBLE);
+                btnCheckout.setVisibility(View.VISIBLE);
+                ListCartItemAdapter adapter = new ListCartItemAdapter(r.getRight().getProducts(), this);
+                cartItemsLayout.setLayoutManager(new LinearLayoutManager(this));
+                cartItemsLayout.setAdapter(adapter);
+            }
+        });
     }
 
     private void openOrderReviewScreen() {
         Intent intent = new Intent(this, CheckoutActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CHECKOUT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CHECKOUT && resultCode == RESULT_OK) {
+            updateUI();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUI();
     }
 
     @Override

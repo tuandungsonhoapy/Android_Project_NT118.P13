@@ -12,72 +12,54 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.androidproject.R;
-import com.example.androidproject.features.banner.data.model.BannerModel;
 import com.example.androidproject.features.banner.presentation.BannerAdapter;
 import com.example.androidproject.features.cart.presentation.CartActivity;
-import com.example.androidproject.features.category.data.model.CategoryModel;
+import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.presentation.CategoryAdapter;
+import com.example.androidproject.features.category.usecase.CategoryUseCase;
 import com.example.androidproject.features.home.usecase.HomeUseCase;
-import com.example.androidproject.features.product.data.model.ProductModel;
+import com.example.androidproject.features.product.data.model.ProductModelFB;
 import com.example.androidproject.features.product.presentation.AllProductActivity;
 import com.example.androidproject.features.product.presentation.ProductAdapter;
+import com.example.androidproject.features.product.usecase.ProductUseCase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    List<ProductModelFB> productList = new ArrayList<>();
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private RecyclerView recyclerCategoryView;
     private RecyclerView recyclerProductView;
     private ViewPager2 viewPagerBanner;
-    private ImageView cartIcon;
-    private TextView viewAllProduct;
+    private ImageView cartIcon, img_search;
+    private EditText edt_search;
+    private TextView viewAllProduct, tvUserName;
     private HomeUseCase homeUseCase = new HomeUseCase();
+    private CategoryUseCase categoryUseCase = new CategoryUseCase();
+    private ProductUseCase productUseCase = new ProductUseCase();
+
+    // others
+    private Bundle userDataBundle;
+
     public HomeFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // get arg
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userDataBundle = getArguments();
         }
     }
 
@@ -92,21 +74,38 @@ public class HomeFragment extends Fragment {
         viewPagerBanner = view.findViewById(R.id.view_pager);
         cartIcon = view.findViewById(R.id.cartIcon);
         viewAllProduct = view.findViewById(R.id.viewAllProduct);
+        tvUserName = view.findViewById(R.id.tvUserName);
+
+        //username
+        updateUserName();
 
         //view categories
-        CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), homeUseCase.getCategoriesList());
-        recyclerCategoryView.setAdapter(categoryAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerCategoryView.setLayoutManager(layoutManager);
+        List<CategoryEntity> categoryList = new ArrayList<>();
+        categoryUseCase.getCategoryList().thenAccept(r -> {
+            if (r.isRight()) {
+                categoryList.addAll(r.getRight());
+                CategoryAdapter categoryAdapter = new CategoryAdapter(getContext(), categoryList);
+                recyclerCategoryView.setAdapter(categoryAdapter);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                recyclerCategoryView.setLayoutManager(layoutManager);
+            }
+        });
 
         //view banners
         BannerAdapter bannerAdapter = new BannerAdapter(getContext(), homeUseCase.getBannersList());
         viewPagerBanner.setAdapter(bannerAdapter);
 
+        img_search = view.findViewById(R.id.btnSearch);
+        edt_search = view.findViewById(R.id.edt_search);
+        img_search.setOnClickListener(v -> {
+            String search = edt_search.getText().toString();
+            Intent intent = new Intent(getActivity(), AllProductActivity.class);
+            intent.putExtra("search", search);
+            startActivity(intent);
+        });
+
         //view products
-        ProductAdapter productAdapter = new ProductAdapter(getContext(), homeUseCase.getProductsList());
-        recyclerProductView.setAdapter(productAdapter);
-        recyclerProductView.setLayoutManager(new GridLayoutManager(getContext(), homeUseCase.getColumns(2)));
+        fetchTop10ProductsFromFirestore();
 
         cartIcon.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), CartActivity.class);
@@ -119,5 +118,25 @@ public class HomeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void updateUserName() {
+        if (userDataBundle != null) {
+            String name = userDataBundle.getString("name");
+            tvUserName.setText("Hello, " + name);
+        } else {
+            tvUserName.setText("Hello, User");
+        }
+    }
+
+    private void fetchTop10ProductsFromFirestore() {
+        productUseCase.getProductsAndMapBrands().thenAccept(r -> {
+            if (r.isRight()) {
+                productList.addAll(r.getRight());
+                ProductAdapter productAdapter = new ProductAdapter(getContext(), productList);
+                recyclerProductView.setAdapter(productAdapter);
+                recyclerProductView.setLayoutManager(new GridLayoutManager(getContext(), homeUseCase.getColumns(2)));
+            }
+        });
     }
 }

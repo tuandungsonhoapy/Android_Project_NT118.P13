@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
+import com.example.androidproject.features.product.data.entity.ProductOption;
 
 import java.util.List;
 
@@ -18,6 +19,15 @@ public class ProductDetailImgAdapter extends RecyclerView.Adapter<ProductDetailI
 
     private List<String> productDetailImgList;
     private Context context;
+    private OnImageClickListener onImageClickListener;
+
+    public void setOnImageClickListener(OnImageClickListener listener) {
+        this.onImageClickListener = listener;
+    }
+
+    public interface OnImageClickListener {
+        void onImageClick(String imageUrl);
+    }
 
     public ProductDetailImgAdapter(Context context, List<String> productDetailImgList) {
         this.context = context;
@@ -44,6 +54,13 @@ public class ProductDetailImgAdapter extends RecyclerView.Adapter<ProductDetailI
                 .load(img)
                 .error(R.drawable.warning_icon)
                 .into(holder.imgProductDetail);
+
+        // Xử lý sự kiện click
+        holder.itemView.setOnClickListener(v -> {
+            if (onImageClickListener != null) {
+                onImageClickListener.onImageClick(img);
+            }
+        });
     }
 
     @Override

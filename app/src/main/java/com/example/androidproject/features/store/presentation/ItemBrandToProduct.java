@@ -1,6 +1,7 @@
 package com.example.androidproject.features.store.presentation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,21 +15,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.androidproject.R;
+import com.example.androidproject.features.brand.data.entity.BrandEntity;
 import com.example.androidproject.features.brand.data.model.BrandModel;
+import com.example.androidproject.features.category.data.entity.CategoryEntity;
 import com.example.androidproject.features.category.data.model.CategoryModel;
+import com.example.androidproject.features.product.presentation.AllProductActivity;
 
 import java.util.List;
 
 public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.ViewHolder> {
-    private List<CategoryModel> categoryList;
-    private List<BrandModel> brandList;
+    private List<BrandEntity> brandList;
     private Context context;
 
-    public ItemBrandToProduct(Context context, List<BrandModel> brandList, List<CategoryModel> categoryList) {
+    public ItemBrandToProduct(Context context, List<BrandEntity> brandList) {
         this.context = context;
         this.brandList = brandList;
-        this.categoryList = categoryList;
     }
 
     @NonNull
@@ -40,46 +43,19 @@ public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        BrandModel brand = brandList.get(position);
+        BrandEntity brand = brandList.get(position);
         holder.brandName.setText(brand.getName());
-        holder.brandQuantity.setText(brand.getQuantity() + " products");
-        holder.brandImage.setImageResource(brand.getImageResource());
+        Glide.with(context).load(brand.getImageUrl()).into(holder.brandImage);
         holder.gridLayout.removeAllViews();
 
-        for (CategoryModel category : categoryList) {
-            ImageView imageView = new ImageView(context);
-            if(category.getCategoryName() == "Laptop") {
-                imageView.setImageResource(category.getCategoryImage());
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.width = 200;
-                params.height = 200;
-                params.setMargins(10, 10, 10, 10);
-                params.setGravity(Gravity.CENTER);
-                imageView.setLayoutParams(params);
-
-                holder.gridLayout.addView(imageView);
-            } else if (category.getCategoryName() == "Phone") {
-                imageView.setImageResource(category.getCategoryImage());
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.width = 200;
-                params.height = 200;
-                params.setMargins(10, 10, 10, 10);
-                params.setGravity(Gravity.CENTER);
-                imageView.setLayoutParams(params);
-
-                holder.gridLayout.addView(imageView);
-            } else if (category.getCategoryName() == "Monitor") {
-                imageView.setImageResource(category.getCategoryImage());
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.width = 200;
-                params.height = 200;
-                params.setMargins(10, 10, 10, 10);
-                params.setGravity(Gravity.CENTER);
-                imageView.setLayoutParams(params);
-
-                holder.gridLayout.addView(imageView);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AllProductActivity.class);
+                intent.putExtra("brandId", brand.getId());
+                context.startActivity(intent);
             }
-        }
+        });
     }
 
     @Override
@@ -90,14 +66,12 @@ public class ItemBrandToProduct extends RecyclerView.Adapter<ItemBrandToProduct.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView brandImage;
         TextView brandName;
-        TextView brandQuantity;
         GridLayout gridLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             brandImage = itemView.findViewById(R.id.store_brand_img);
             brandName = itemView.findViewById(R.id.store_brand_name);
-            brandQuantity = itemView.findViewById(R.id.store_brand_quantity);
             gridLayout = itemView.findViewById(R.id.grid_images);
         }
     }

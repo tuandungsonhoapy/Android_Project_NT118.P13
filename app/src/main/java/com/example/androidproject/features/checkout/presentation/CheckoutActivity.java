@@ -2,12 +2,17 @@ package com.example.androidproject.features.checkout.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
@@ -18,19 +23,101 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.core.credential.UserPreferences;
+import com.example.androidproject.core.utils.MoneyFomat;
+import com.example.androidproject.core.utils.counter.CounterModel;
+import com.example.androidproject.features.address.data.model.AddressModel;
+import com.example.androidproject.features.address.usecase.AddressUsecase;
+import com.example.androidproject.features.auth.usecase.UserUseCase;
+import com.example.androidproject.features.cart.data.entity.ProductsOnCart;
+import com.example.androidproject.features.cart.usecase.CartUseCase;
+import com.example.androidproject.features.checkout.data.model.CheckoutModel;
 import com.example.androidproject.features.checkout.usecase.CheckoutUseCase;
+import com.example.androidproject.features.product.usecase.ProductUseCase;
+import com.example.androidproject.features.voucher.data.model.VoucherModel;
+import com.example.androidproject.features.voucher.usecase.VoucherUseCase;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class CheckoutActivity extends AppCompatActivity {
-    private LinearLayout paymentSuccessLayout, llTotalPrice;
+    private LinearLayout paymentSuccessLayout, llTotalPrice, llApplyDiscount, llDecreasePrice, llNewTotalPrice ;
     private RecyclerView rvCheckoutItem;
-    private Button btnPayment, btnContinueShopping;
+    private Button btnPayment, btnContinueShopping, btnApplyDiscount;
+    private TextView tvTotalPrice, tvDiscount, tvNewTotalPrice, tvDecreasePrice;
+    private TextView tvUserAddress, tvUserInformation;
+    private EditText etNote;
+    private LinearLayout llNote,llUserAddress;
     private CheckoutUseCase checkoutUseCase = new CheckoutUseCase();
+    private CartUseCase cartUseCase = new CartUseCase();
+    private AddressUsecase addressUsecase = new AddressUsecase();
+    private CounterModel counterModel = new CounterModel();
+    private ProductUseCase productUseCase = new ProductUseCase();
+    private long checkoutQuantity;
+    private String addressId;
+    private String fullAddress;
+    private List<ProductsOnCart> productsOnCart;
+    private List<String> voucherIds;
+    private String selectedVoucherId = null;
+    private UserUseCase userUseCase;
+    private VoucherUseCase voucherUseCase = new VoucherUseCase();
+    private double totalPrice;
+    private double totalPriceWithoutVoucher;
+    private UserPreferences userPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
+        userUseCase = new UserUseCase(this);
+        userPreferences = new UserPreferences(this);
 
+        initView();
+        updateUI();
+        setupUserAddress();
+
+        tvUserAddress.setOnClickListener(v -> {
+            addressDialog();
+        });
+
+        getUserVoucher();
+        btnApplyDiscount.setOnClickListener(v -> {
+            voucherDialog();
+        });
+
+        btnPayment.setOnClickListener(v -> {
+            if (!tvUserAddress.getText().toString().isEmpty()) {
+                makeOrder();
+            } else {
+                Toast.makeText(this, "Vui lòng thêm địa chỉ giao hàng", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnContinueShopping.setOnClickListener(v -> {
+            setResult(RESULT_OK);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
+    }
+
+    public void updateUI() {
+        cartUseCase.getCurrentUserCart()
+                        .thenAccept(r -> {
+                            if(r.isRight()) {
+                                productsOnCart = r.getRight().getProducts();
+                                rvCheckoutItem.setAdapter(new ListCheckoutItemAdapter(r.getRight().getProducts(), this));
+                                rvCheckoutItem.setLayoutManager(new LinearLayoutManager(this));
+                                tvNewTotalPrice.setText(MoneyFomat.format(r.getRight().getTotal()) + "đ");
+                                totalPriceWithoutVoucher = r.getRight().getTotal();
+                            }
+                        });
+    }
+                
+    private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -42,22 +129,203 @@ public class CheckoutActivity extends AppCompatActivity {
         btnPayment = findViewById(R.id.btnPayment);
         btnContinueShopping = findViewById(R.id.btn_continue_shopping);
         llTotalPrice = findViewById(R.id.llTotalPrice);
+        tvTotalPrice = findViewById(R.id.tvTotalPrice);
+        tvUserAddress = findViewById(R.id.tvUserAddress);
+        tvUserInformation = findViewById(R.id.tvUserInformation);
+        etNote = findViewById(R.id.etNote);
+        llNote = findViewById(R.id.llNote);
+        llUserAddress = findViewById(R.id.llUserAddress);
+        llApplyDiscount = findViewById(R.id.llApplyDiscount);
+        llDecreasePrice = findViewById(R.id.llDecreasePrice);
+        llNewTotalPrice = findViewById(R.id.llNewTotalPrice);
+        tvDiscount = findViewById(R.id.tvDiscount);
+        tvNewTotalPrice = findViewById(R.id.tvNewTotalPrice);
+        tvDecreasePrice = findViewById(R.id.tvDecreasePrice);
+        btnApplyDiscount = findViewById(R.id.btnApplyDiscount);
 
-        rvCheckoutItem.setAdapter(new ListCheckoutItemAdapter(checkoutUseCase.getCheckout(), this));
-        rvCheckoutItem.setLayoutManager(new LinearLayoutManager(this));
+    }
 
-        btnPayment.setOnClickListener(v -> {
-            paymentSuccessLayout.setVisibility(paymentSuccessLayout.getVisibility() == android.view.View.VISIBLE ? android.view.View.GONE : android.view.View.VISIBLE);
-            btnPayment.setVisibility(View.GONE);
-            rvCheckoutItem.setVisibility(View.GONE);
-            llTotalPrice.setVisibility(View.GONE);
-            btnContinueShopping.setVisibility(View.VISIBLE);
+    private void makeOrder() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userId = auth.getCurrentUser().getUid();
+        counterModel.getQuantity("checkout").addOnSuccessListener(quantity -> {
+            checkoutQuantity = quantity;
+            totalPrice = MoneyFomat.parseMoney(tvNewTotalPrice.getText().toString().replace("đ", ""));
+            totalPriceWithoutVoucher = tvTotalPrice.getVisibility() == View.VISIBLE ? MoneyFomat.parseMoney(tvTotalPrice.getText().toString().replace("đ", "")) : 0;
+            CheckoutModel checkoutModel = createCheckoutModel(userId);
+            makePayment(checkoutModel, userId);
         });
+    }
 
-        btnContinueShopping.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        });
+    private CheckoutModel createCheckoutModel(String userId) {
+        return new CheckoutModel(
+                userId,
+                addressId,
+                etNote.getText().toString(),
+                productsOnCart,
+                fullAddress,
+                totalPrice,
+                selectedVoucherId,
+                totalPriceWithoutVoucher
+        );
+    }
+
+    private void makePayment(CheckoutModel checkoutModel, String userId) {
+        checkoutUseCase.addCheckout(checkoutModel, checkoutQuantity)
+                .thenCompose(r -> {
+                    if(r.isRight()) {
+                        return cartUseCase.deleteCart(userId);
+                    } else {
+                        Toast.makeText(this, "Đặt hàng thất bại del cart", Toast.LENGTH_SHORT).show();
+                        throw new RuntimeException("Đặt hàng thất bại");
+                    }
+                })
+                .thenCompose(r1 -> {
+                    if(r1.isRight()) {
+                        return productUseCase.updateProductQuantity(productsOnCart);
+                    } else {
+                        Toast.makeText(this, "Đặt hàng thất bại upd quantity", Toast.LENGTH_SHORT).show();
+                        throw new RuntimeException("Đặt hàng thất bại");
+                    }
+                })
+                .thenCompose(r2 -> {
+                    if(r2.isRight()) {
+                        counterModel.updateQuantity("checkout");
+                        return userUseCase.updateTotalSpent(totalPrice);
+                    } else {
+                        Toast.makeText(this, "Đặt hàng thất bại upd totalspent", Toast.LENGTH_SHORT).show();
+                        throw new RuntimeException("Đặt hàng thất bại");
+                    }
+                })
+                .thenCompose(r3 -> {
+                    if(r3.isRight()) {
+                        updateUIAfterPayment();
+                        getIntent().addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        return userUseCase.updateUserTier();
+                    } else {
+                        Toast.makeText(this, "Đặt hàng thất bại upd tier", Toast.LENGTH_SHORT).show();
+                        throw new RuntimeException("Đặt hàng thất bại");
+                    }
+                });
+    }
+
+    private void setupUserAddress() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userEmail = auth.getCurrentUser().getEmail();
+        String userName = userPreferences.getUserDataByKey(UserPreferences.KEY_FIRST_NAME) + " " + userPreferences.getUserDataByKey(UserPreferences.KEY_LAST_NAME);
+
+        tvUserInformation.setText(userName + " - " + userEmail);
+        addressUsecase.getDefaultAddress()
+                .thenAccept(r -> {
+                    if(r.isRight()) {
+                        String address = r.getRight().getFullAddress();
+                        addressId = r.getRight().getId();
+                        fullAddress = address;
+                        tvUserAddress.setText(address);
+                    }
+                });
+    }
+
+    private void addressDialog() {
+        addressUsecase.getAddresses()
+                .thenAccept(r -> {
+                   if(r.isRight()) {
+                       List<AddressModel> addressModels = r.getRight();
+                       String[] addressList = addressModels.stream()
+                               .map(AddressModel::getFullAddress)
+                               .toArray(String[]::new);
+
+                       AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                               .setTitle("Chọn địa chỉ")
+                               .setItems(addressList, (dialog, which) -> {
+                                      AddressModel addressModel = addressModels.get(which);
+                                      tvUserAddress.setText(addressModel.getFullAddress());
+                                      addressId = addressModel.getId();
+                                      fullAddress = addressModel.getFullAddress();
+                               })
+                               .setNegativeButton("Hủy", (dialog, which) -> {
+                                   dialog.dismiss();
+                               });
+
+                          builder.show();
+                   }
+                });
+    }
+
+    private void voucherDialog() {
+        String[] voucherList = voucherIds.stream()
+                .toArray(String[]::new);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Chọn voucher")
+                .setItems(voucherList, (dialog, which) -> {
+                    selectedVoucherId = voucherIds.get(which);
+                    fetchDetailVoucher();
+                })
+                .setNegativeButton("Hủy", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+
+        builder.show();
+    }
+
+    private void fetchDetailVoucher() {
+        voucherUseCase.getVoucherById(selectedVoucherId)
+                .thenAccept(r -> {
+                    if (r.isRight()) {
+                        VoucherModel voucherModel = r.getRight();
+                        if(totalPriceWithoutVoucher < voucherModel.getMinimalTotal()) {
+                            selectedVoucherId = null;
+                            Toast.makeText(this, "Yêu cầu đơn hàng tối thiểu " + voucherModel.getMinimalTotal() + "đ", Toast.LENGTH_SHORT).show();
+                        } else {
+                            runOnUiThread(() -> {
+                                selectedVoucherId = voucherModel.getId();
+                                llTotalPrice.setVisibility(View.VISIBLE);
+                                llDecreasePrice.setVisibility(View.VISIBLE);
+                                llNewTotalPrice.setVisibility(View.VISIBLE);
+                                tvTotalPrice.setVisibility(View.VISIBLE);
+                                if(voucherModel.getType().equals("percent")) {
+                                    tvTotalPrice.setText(MoneyFomat.format(totalPriceWithoutVoucher) + "đ");
+                                    tvDiscount.setText(voucherModel.getId());
+                                    tvDecreasePrice.setText(voucherModel.getValue() + "%");
+                                    double discount = totalPriceWithoutVoucher * voucherModel.getValue() / 100;
+                                    double newTotalPrice = totalPriceWithoutVoucher - discount;
+                                    tvNewTotalPrice.setText(MoneyFomat.format(newTotalPrice) + "đ");
+                                } else if(voucherModel.getType().equals("minus")) {
+                                    tvTotalPrice.setText(MoneyFomat.format(totalPriceWithoutVoucher) + "đ");
+                                    tvDiscount.setText(voucherModel.getId());
+                                    tvDecreasePrice.setText(MoneyFomat.format(voucherModel.getValue()) + "đ");
+                                    double newTotalPrice = totalPriceWithoutVoucher - voucherModel.getValue();
+                                    tvNewTotalPrice.setText(MoneyFomat.format(newTotalPrice) + "đ");
+                                }
+                            });
+                        }
+                    }
+                });
+    }
+
+    private void getUserVoucher() {
+        userUseCase.getAllUserVouchers()
+                .thenAccept(r -> {
+                    if (r.isRight()) {
+                        voucherIds = r.getRight().getVouchers();
+                    }
+                });
+    }
+
+    private void updateUIAfterPayment(){
+        paymentSuccessLayout.setVisibility(View.VISIBLE);
+        btnPayment.setVisibility(View.GONE);
+        rvCheckoutItem.setVisibility(View.GONE);
+        llNewTotalPrice.setVisibility(View.GONE);
+        btnContinueShopping.setVisibility(View.VISIBLE);
+        llUserAddress.setVisibility(View.GONE);
+        tvUserInformation.setVisibility(View.GONE);
+        llNote.setVisibility(View.GONE);
+        llTotalPrice.setVisibility(View.GONE);
+        llApplyDiscount.setVisibility(View.GONE);
+        llDecreasePrice.setVisibility(View.GONE);
+        tvTotalPrice.setVisibility(View.GONE);
     }
 
     @Override

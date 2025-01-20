@@ -22,14 +22,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
 import com.example.androidproject.features.admin_manager.presentation.widgets.ProductForDetailOrderAdminAdapter;
+import com.example.androidproject.features.cart.presentation.ListCartItemAdapter;
+import com.example.androidproject.features.checkout.data.model.CheckoutModel;
+import com.example.androidproject.features.checkout.usecase.CheckoutUseCase;
 import com.example.androidproject.features.order.data.ProductDataForOrderModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DetailOrderAdminActivity extends AppCompatActivity {
     private ImageButton btnBack;
     private Button btnEdit;
+    private CheckoutModel checkoutModelGlobal = new CheckoutModel();
+    private CheckoutUseCase checkoutUseCase = new CheckoutUseCase();
+    private String orderIdGlobal, statusGlobal;
+    private TextView orderStatus;
+    private Button btnUpdateStatus;
+    private RecyclerView recycler_products_order_view;
+    private ListCheckoutItemAdapter listCartItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,35 +61,28 @@ public class DetailOrderAdminActivity extends AppCompatActivity {
         TextView orderTotalPrice = findViewById(R.id.tvOrderTotalPrice);
         TextView orderCustomerName = findViewById(R.id.tvCustomerName);
         TextView orderCustomerID = findViewById(R.id.tvCustomerID);
-        TextView orderStatus = findViewById(R.id.tvOrderStatus);
         TextView orderCustomerPhone = findViewById(R.id.tvCustomerPhone);
         TextView orderCustomerEmail = findViewById(R.id.tvCustomerEmail);
         RecyclerView orderDetailRecyclerView = findViewById(R.id.recycler_products_order_view);
+        orderStatus = findViewById(R.id.tvOrderStatus);
+        btnUpdateStatus = findViewById(R.id.btnUpdateOrderStatus);
+        recycler_products_order_view = findViewById(R.id.recycler_products_order_view);
 
-
-        String status = getIntent().getStringExtra("order_status");
-        if (status.equals("pending")) {
-            orderStatus.setText("Đang xử lý");
-            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.pending_order_status));
-        } else if (status.equals("on_delivery")) {
-            orderStatus.setText("Đang giao");
-            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.delivery_order_status));
-        } else if (status.equals("completed")) {
-            orderStatus.setText("Thành công");
-            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.succes_order_status));
-        } else if (status.equals("rejected")) {
-            orderStatus.setText("Thất bại");
-            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.reject_order_status));
-        }
+        statusGlobal = getIntent().getStringExtra("order_status");
+        setStatusOrder(statusGlobal);
 
         // Retrieve data from Intent
         orderId.setText(getIntent().getStringExtra("order_id"));
+        orderIdGlobal = getIntent().getStringExtra("order_id");
+
+        getCheckoutById();
+
         orderDate.setText(getIntent().getStringExtra("order_date"));
-        orderTotalPrice.setText(String.valueOf(getIntent().getDoubleExtra("order_total_price", 0.0)));
+        orderTotalPrice.setText(getIntent().getStringExtra("order_total_price"));
         orderCustomerName.setText(getIntent().getStringExtra("order_customer_name"));
         orderCustomerID.setText(getIntent().getStringExtra("order_customer_id"));
-        orderCustomerPhone.setText("123142352345");
-        orderCustomerEmail.setText("cc@gmail.com");
+        orderCustomerPhone.setText(getIntent().getStringExtra("order_customer_phone"));
+        orderCustomerEmail.setText(getIntent().getStringExtra("order_customer_email"));
         Parcelable[] parcelableArray = getIntent().getParcelableArrayExtra("product_data_for_order");
 
         List<ProductDataForOrderModel> orderProductDataList = new ArrayList<>();
@@ -131,6 +135,14 @@ public class DetailOrderAdminActivity extends AppCompatActivity {
 
             builder.create().show();
         });
+
+        btnUpdateStatus.setOnClickListener(v -> {
+            updateOrder();
+        });
+
+        if (statusGlobal.equals("SUCCESS") || statusGlobal.equals("FAILED")) {
+            btnUpdateStatus.setEnabled(false);
+        }
     }
 
     private void setupButtons() {
@@ -139,7 +151,66 @@ public class DetailOrderAdminActivity extends AppCompatActivity {
 
         btnEdit = findViewById(R.id.btn_admin_order_edit);
         btnEdit.setOnClickListener(v -> {
-            Toast.makeText(this, "Edit button clicked", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Edit order", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    public void getCheckoutById() {
+
+        checkoutUseCase.getCheckoutById(orderIdGlobal)
+                .thenAccept(r -> {
+                    if(r.isRight()) {
+                        Log.d("DetailOrderAdminActivity", "Getting checkout by order id: " + orderIdGlobal);
+                        checkoutModelGlobal = new CheckoutModel();
+                        checkoutModelGlobal = r.getRight();
+
+                        listCartItemAdapter = new ListCheckoutItemAdapter(checkoutModelGlobal.getProducts(), this);
+                        recycler_products_order_view.setLayoutManager(new LinearLayoutManager(this));
+                        recycler_products_order_view.setAdapter(listCartItemAdapter);
+                    }
+                    else {
+                        Log.d("DetailOrderAdminActivity", "Error getting checkout by order id: " + orderIdGlobal);
+                    }
+                });
+    }
+
+    public void updateOrder() {
+
+        if(statusGlobal == null || statusGlobal.isEmpty() || statusGlobal.equals("SUCCESS") || statusGlobal.equals("FAILED")) {
+            return;
+        }
+
+        if(Objects.equals(statusGlobal, "PENDING")) {
+            statusGlobal = "INTRANSIT";
+            updateStatusOrder(orderIdGlobal, statusGlobal);
+        } else if (Objects.equals(statusGlobal, "INTRANSIT")) {
+            statusGlobal = "SUCCESS";
+            updateStatusOrder(orderIdGlobal, statusGlobal);
+        }
+    }
+
+    public void updateStatusOrder(String orderId, String status) {
+        checkoutUseCase.updateStatus(orderId, status)
+                .thenAccept(r -> {
+                    setStatusOrder(statusGlobal);
+                });
+    }
+
+    public void setStatusOrder(String status){
+        if (status.equals("PENDING")) {
+            orderStatus.setText("Đang xử lý");
+            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.pending_order_status));
+        } else if (status.equals("INTRANSIT")) {
+            orderStatus.setText("Đang giao");
+            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.delivery_order_status));
+        } else if (status.equals("SUCCESS")) {
+            orderStatus.setText("Thành công");
+            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.succes_order_status));
+            btnUpdateStatus.setEnabled(false);
+        } else if (status.equals("FAILED")) {
+            orderStatus.setText("Thất bại");
+            orderStatus.setBackground(ContextCompat.getDrawable(this, R.drawable.reject_order_status));
+            btnUpdateStatus.setEnabled(false);
+        }
     }
 }

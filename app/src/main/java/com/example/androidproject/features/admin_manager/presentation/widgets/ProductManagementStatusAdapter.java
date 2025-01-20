@@ -10,18 +10,28 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.R;
+import com.example.androidproject.core.errors.Failure;
+import com.example.androidproject.core.utils.Either;
 import com.example.androidproject.features.admin_manager.usecase.ProductManagementUsecase;
+import com.example.androidproject.features.category.data.entity.CategoryEntity;
+import com.example.androidproject.features.category.data.model.CategoryModel;
+import com.example.androidproject.features.category.usecase.CategoryUseCase;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class ProductManagementStatusAdapter extends RecyclerView.Adapter<ProductManagementStatusAdapter.ProductManagementStatusViewHolder> {
     private List<String> statusList;
     Context context;
     private int selectedItem = 0;
-    private ProductManagementUsecase productManagementUsecase = new ProductManagementUsecase();
+//    private ProductManagementUsecase productManagementUsecase = new ProductManagementUsecase();
+    private CategoryUseCase categoryUseCase = new CategoryUseCase();
 
     public ProductManagementStatusAdapter(Context context) {
-        this.statusList = productManagementUsecase.getStatusList();
+
+        this.statusList = getAllNameCategory();
         this.context = context;
     }
 
@@ -29,6 +39,22 @@ public class ProductManagementStatusAdapter extends RecyclerView.Adapter<Product
         this.statusList = list;
         this.context = context;
     }
+
+    public List<String> getAllNameCategory() {
+        categoryUseCase.getAllCategories().thenApply(r -> {
+            if (r.isRight()) {
+                List<CategoryModel> categoryEntities = r.getRight();
+                List<String> categoryNames = categoryEntities.stream().map(CategoryModel::getName).collect(Collectors.toList());
+                return categoryNames;
+            } else {
+                return Collections.emptyList();
+            }
+        });
+
+        return Collections.emptyList();
+    }
+
+
 
     @NonNull
     @Override

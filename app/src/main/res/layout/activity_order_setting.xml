@@ -51,57 +51,6 @@
                 android:layout_marginTop="6dp"/>
 
 
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Tìm đơn hàng"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_search_product_admin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/btnAddProduct"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            android:layout_marginEnd="30dp"
-            android:background="@drawable/item_white_background_radius_border"
-            android:padding="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            >
-            <ImageView
-                android:id="@+id/img_search"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@android:drawable/ic_menu_search"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
-                app:tint="@color/black"
-                />
-            <EditText
-                android:id="@+id/edt_search_order_admin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="@id/img_search"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="60dp"
-                android:hint="Tìm kiếm đơn hàng..."
-                android:background="@android:color/transparent"
-                android:paddingTop="5dp"
-                android:layout_marginStart="20dp"
-                />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

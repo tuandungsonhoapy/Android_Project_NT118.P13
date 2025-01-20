@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="@dimen/_4gr" />
+        app:layout_constraintGuide_percent="@dimen/_5gr" />
 
     <LinearLayout
         android:layout_width="match_parent"

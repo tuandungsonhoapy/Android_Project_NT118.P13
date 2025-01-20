@@ -1,60 +1,71 @@
 package com.example.androidproject.features.brand.data.model;
+import android.util.Log;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.example.androidproject.features.brand.data.entity.BrandEntity;
 
-public class BrandModel implements Parcelable {
-    private int id;
-    private String name;
-    private int imageResource;
-    private int quantity;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    public BrandModel(int id, String name, int imageResource, int quantity) {
-        this.id = id;
-        this.name = name;
-        this.imageResource = imageResource;
-        this.quantity = quantity;
+public class BrandModel extends BrandEntity {
+    public BrandModel() {
     }
 
-    protected BrandModel(Parcel in) {
-        id = in.readInt();
-        name = in.readString();
-        imageResource = in.readInt();
-        quantity = in.readInt();
+    public BrandModel(String name, String imageUrl, String description) {
+        super(name, imageUrl, description);
     }
 
-    public static final Creator<BrandModel> CREATOR = new Creator<BrandModel>() {
-        @Override
-        public BrandModel createFromParcel(Parcel in) {
-            return new BrandModel(in);
-        }
+    public String getId() {
+        return super.getId();
+    }
 
-        @Override
-        public BrandModel[] newArray(int size) {
-            return new BrandModel[size];
-        }
-    };
+    public String getName() {
+        return super.getName();
+    }
+
+    public String getImageUrl() {
+        return super.getImageUrl();
+    }
+
+    public String getDescription() {
+        return super.getDescription();
+    }
+
+
+    public void setId(String id) {
+        super.setId(id);
+    }
+
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    public void setImageUrl(String imageUrl) {
+        super.setImage(imageUrl);
+    }
+
+    public void setDescription(String description) {
+        super.setDescription(description);
+    }
+
+    public List<BrandEntity> toBrandEntityList(List<BrandModel> items) {
+        return items.stream()
+                .map(item -> {
+                    BrandEntity brandEntity = new BrandEntity();
+                    brandEntity.setId(item.getId());
+                    brandEntity.setName(item.getName());
+                    brandEntity.setImage(item.getImageUrl());
+                    brandEntity.setDescription(item.getDescription());
+                    return brandEntity;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public String prefixBrandID(long quantity) {
+        return "brand" + String.format("%05d", quantity);
+    }
 
     @Override
-    public int describeContents() {
-        return 0;
+    public String toString() {
+        return getName();
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(name);
-        dest.writeInt(imageResource);
-        dest.writeInt(quantity);
-    }
-
-    // Getters and setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public int getImageResource() { return imageResource; }
-    public void setImageResource(int imageResource) { this.imageResource = imageResource; }
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
 }

@@ -7,68 +7,50 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.androidproject.R;
+import com.example.androidproject.core.utils.NavigationUtils;
 import com.example.androidproject.features.admin.presentation.AdminHomeActivity;
 import com.example.androidproject.features.auth.presentation.LoginActivity;
 import com.example.androidproject.features.cart.presentation.CartActivity;
 import com.example.androidproject.features.setting.usecase.SettingUseCase;
+import com.example.androidproject.features.voucher.presentation.VoucherActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.net.URL;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SettingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SettingFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    // views
+    private ImageButton ibProfileSetting;
+    private TextView name, email;
+    private ImageView photoURL;
+    LinearLayout llAdminMenu, addressLayout, cartLayout, orderLayout, voucherLayout, informationLayout;
+    Button btnLogout;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    //others
     private SettingUseCase settingUseCase = new SettingUseCase();
+    private Bundle userDataBundle;
+
     public SettingFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SettingFragment newInstance(String param1, String param2) {
-        SettingFragment fragment = new SettingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userDataBundle = getArguments();
         }
     }
 
@@ -77,101 +59,89 @@ public class SettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
+        init(view);
 
-        ImageView photoURL = view.findViewById(R.id.iv_setting_profile);
-        TextView name = view.findViewById(R.id.tv_setting_profile_name);
-        TextView email = view.findViewById(R.id.tv_setting_profile_tier);
+        return view;
+    }
 
-        name.setText(settingUseCase.getUser().getDisplayName());
-        email.setText(settingUseCase.getUser().getEmail());
+    private void init(View view) {
+        initViews(view);
 
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    URL url = new URL(settingUseCase.getUser().getPhotoUrl());
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    photoURL.post(new Runnable() {
-                        public void run() {
-                            photoURL.setImageBitmap(bmp);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        loadNameAndEmail();
+        loadProfilePhoto();
 
-        name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(requireActivity(), AdminHomeActivity.class);
-                startActivity(intent);
-                getActivity().finish();
-            }
-        });
+        setupClickListeners();
+    }
+
+    private void initViews(View view) {
+        ibProfileSetting = view.findViewById(R.id.ib_setting_profile_edit);
+        name = view.findViewById(R.id.tv_setting_profile_name);
+        email = view.findViewById(R.id.tv_setting_profile_tier);
+        photoURL = view.findViewById(R.id.iv_setting_profile);
+        btnLogout = view.findViewById(R.id.btn_setting_profile_logout);
+
+        llAdminMenu = view.findViewById(R.id.ll_admin_manager);
+        addressLayout = view.findViewById(R.id.ll_setting_profile_address);
+        cartLayout = view.findViewById(R.id.ll_setting_profile_cart);
+        orderLayout = view.findViewById(R.id.ll_setting_profile_order);
+        voucherLayout = view.findViewById(R.id.ll_setting_profile_voucher);
+        informationLayout = view.findViewById(R.id.ll_setting_profile_notification);
+    }
+
+    private void setupClickListeners() {
+        ibProfileSetting.setOnClickListener(v -> NavigationUtils.navigateTo(getActivity(), ProfileSettingActivity.class, false));
+
+        // admin menu
+        if (userDataBundle != null && userDataBundle.getBoolean("isAdmin", false)) {
+            llAdminMenu.setVisibility(View.VISIBLE);
+            llAdminMenu.setOnClickListener(v -> NavigationUtils.navigateTo(getActivity(), AdminHomeActivity.class));
+        }
 
         // Address Layout
-        LinearLayout addressLayout = view.findViewById(R.id.ll_setting_profile_address);
-        addressLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                 Intent intent = new Intent(getActivity(), AddressSettingActivity.class);
-                 startActivity(intent);
-            }
-        });
+        addressLayout.setOnClickListener(v -> NavigationUtils.navigateTo(getActivity(), AddressSettingActivity.class, false));
 
         // Cart Layout
-        LinearLayout cartLayout = view.findViewById(R.id.ll_setting_profile_cart);
-        cartLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                 Intent intent = new Intent(getActivity(), CartActivity.class);
-                 startActivity(intent);
-            }
-        });
+        cartLayout.setOnClickListener(v -> NavigationUtils.navigateTo(getActivity(), CartActivity.class, false));
 
         // Order Layout
-        LinearLayout orderLayout = view.findViewById(R.id.ll_setting_profile_order);
-        orderLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                 Intent intent = new Intent(getActivity(), OrderSettingActivity.class);
-                 startActivity(intent);
-            }
-        });
+        orderLayout.setOnClickListener(v -> NavigationUtils.navigateTo(getActivity(), OrderSettingActivity.class, false));
 
         // Voucher Layout
-        LinearLayout voucherLayout = view.findViewById(R.id.ll_setting_profile_voucher);
-        voucherLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                 Intent intent = new Intent(getActivity(), VoucherSettingActivity.class);
-                 startActivity(intent);
-            }
-        });
+        voucherLayout.setOnClickListener(v -> NavigationUtils.navigateTo(getActivity(), VoucherActivity.class, false));
 
         // Notification Layout
-        LinearLayout informationLayout = view.findViewById(R.id.ll_setting_profile_notification);
-        informationLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                 Intent intent = new Intent(getActivity(), NotificationSettingActivity.class);
-                 startActivity(intent);
-            }
-        });
+        informationLayout.setOnClickListener(v -> NavigationUtils.navigateTo(getActivity(), NotificationSettingActivity.class, false));
 
         //Logout
-        Button buttonLogout = view.findViewById(R.id.btn_setting_profile_logout);
-        buttonLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
+        btnLogout.setOnClickListener(v -> handleLogout());
+    }
 
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-                getActivity().finish();
-            }
-        });
-        return view;
+    private void loadNameAndEmail() {
+        if (userDataBundle != null) {
+            name.setText(userDataBundle.getString("name"));
+            email.setText(userDataBundle.getString("email"));
+        }
+    }
+
+    private void loadProfilePhoto() {
+        String profileImageUrl = "https://i.pinimg.com/originals/ea/1b/b8/ea1bb8dbc5b7eadf836b3a617377b7ff.png";
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            Glide.with(getActivity())
+                    .load(profileImageUrl)
+                    .transform(new CircleCrop())
+                    .placeholder(R.drawable.logo_techo_without_text)
+                    .error(R.drawable.logo_techo_without_text)
+                    .into(photoURL);
+        } else {
+            photoURL.setImageResource(R.drawable.logo_techo_without_text);
+        }
+    }
+
+    private void handleLogout() {
+        FirebaseAuth.getInstance().signOut();
+
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 }

@@ -61,21 +61,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tồn kho"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"/>
-            <EditText
-                android:id="@+id/etProductInventory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Nhập giá sản phẩm"
-                android:inputType="number"
-                android:background="@drawable/item_with_grey_rounded_border"
-                android:padding="10dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="Mô tả sản phẩm"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"/>
@@ -105,6 +90,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Hãng"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"/>
+
+            <Spinner
+                android:id="@+id/spBrand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_with_grey_rounded_border"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Hình ảnh"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"/>
@@ -118,7 +118,7 @@
                 />
 
             <ImageView
-                android:id="@+id/ivCategoryImagePreview"
+                android:id="@+id/ivProductImagePreview"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_marginTop="10dp"

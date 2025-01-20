@@ -1,47 +1,66 @@
 package com.example.androidproject.features.category.data.model;
 
-public class CategoryModel {
-    private String id;
-    private String name;
-    private int image;
-    private String description;
 
-    public CategoryModel(String id, String name, int image, String description) {
-        this.name = name;
-        this.image = image;
-        this.id = id;
-        this.description = description;
+import com.example.androidproject.features.category.data.entity.CategoryEntity;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class CategoryModel extends CategoryEntity {
+    public CategoryModel() {
     }
 
-    public String getCategoryName() {
-        return name;
-    }
-
-    public int getCategoryImage() {
-        return image;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
+    public CategoryModel(String name, String imageUrl, String description) {
+        super(name, imageUrl, description);
     }
 
     public String getId() {
-        return id;
+        return super.getId();
+    }
+
+    public String getName() {
+        return super.getCategoryName();
+    }
+
+    public String getImageUrl() {
+        return super.getImageUrl();
     }
 
     public String getDescription() {
-        return description;
+        return super.getDescription();
+    }
+
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    public void setImageUrl(String imageUrl) {
+        super.setImageUrl(imageUrl);
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        super.setDescription(description);
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public List<CategoryEntity> toCategoryEntityList(List<CategoryModel> items) {
+        return items.stream()
+                .map(item -> {
+                    CategoryEntity categoryEntity = new CategoryEntity();
+                    categoryEntity.setId(item.getId());
+                    categoryEntity.setName(item.getName());
+                    categoryEntity.setImageUrl(item.getImageUrl());
+                    categoryEntity.setDescription(item.getDescription());
+                    return categoryEntity;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public String prefixCategoryID(long quantity) {
+        return "category" + String.format("%05d", quantity);
+    }
+
+    @Override
+    public String toString() {
+        return getCategoryName();
     }
 }

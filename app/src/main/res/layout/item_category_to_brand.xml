@@ -42,13 +42,6 @@
                 android:text="Brand Name"
                 android:textStyle="bold"
                 android:textSize="18sp"/>
-
-            <TextView
-                android:id="@+id/store_brand_quantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="60 products"
-                android:textSize="14sp"/>
         </LinearLayout>
     </LinearLayout>
 

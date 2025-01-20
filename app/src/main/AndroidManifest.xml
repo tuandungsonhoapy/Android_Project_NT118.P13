@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".Application"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,6 +17,33 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidProject"
         tools:targetApi="31">
+        <activity
+            android:name=".features.setting.presentation.OrderSettingDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.setting.presentation.ProfileSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.coupon.AddVoucherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.voucher.presentation.VoucherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.product.ProductOptionManagementActivity"
+            android:exported="true" />
+        <activity
+            android:name=".features.admin_manager.presentation.product.AddProductOptionActivity"
+            android:exported="true" />
+        <activity
+            android:name=".features.admin_manager.presentation.brand.DetailBrandAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.brand.AddBrandActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.admin_manager.presentation.brand.AdminBrandManagerActivity"
+            android:exported="false" />
         <activity
             android:name=".features.checkout.presentation.CheckoutActivity"
             android:exported="false" />
@@ -32,7 +60,7 @@
             android:name=".features.admin_manager.presentation.admin.DetailAdminAdminActivity"
             android:exported="false" />
         <activity
-            android:name=".features.admin_manager.presentation.admin.AdminAdminManagerActivity"
+            android:name=".features.admin_manager.presentation.admin.AdminManagerAdminActivity"
             android:exported="false" />
         <activity
             android:name=".features.admin_manager.presentation.product.ProductDetailAdminActivity"
@@ -62,7 +90,7 @@
             android:name=".features.admin_manager.presentation.user.DetailUserAdminActivity"
             android:exported="false" />
         <activity
-            android:name=".features.admin_manager.presentation.user.AdminUserManagerActivity"
+            android:name=".features.admin_manager.presentation.user.UserManagerAdminActivity"
             android:exported="false" />
         <activity
             android:name=".features.product.presentation.ProductDetailActivity"
